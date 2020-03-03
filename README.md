@@ -65,7 +65,7 @@
 - Presenting the data cleanly and with a easy-to-use interface (i.e. intuitive and comprehensive GUI)
 
 **Other Components**
-- What algorithms?
+- Either a content-based algorithm where we create a profile of the user's preferences and use this information to recommend new recipes, or a collaborative system where we ask users to rate recipes and recommend them based on these ratings. These methods are sourced from [here](https://en.wikipedia.org/wiki/Recommender_system#Approaches)
 
 
 ### Idea 3
