@@ -91,7 +91,7 @@
 - Presenting the information cleanly and with a easy-to-use interface (i.e. intuitive and comprehensive GUI)
 
 **Other Components**
-- What algorithms?
+- We will use a shortest path algorithm such as A* to match destinations and meeting points, taking into account meeting times as well. 
 
 
 ### Project Mentor
