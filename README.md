@@ -1,11 +1,25 @@
 # cs0320 Term Project 2020
 
-**Team Members:** _Fill this in!_
+**Team Members:** 
+- Annabeth Stokely, Cameron Wenzel, Morgann Thain, Olivia Johnson
 
-**Team Strengths and Weaknesses:** _Fill this in!_
+**Team Strengths and Weaknesses:** 
+- Annabeth Stokely:
+	- Strengths: Debugging, Design 
+	- Weaknesses: Starting with hard parts of the program, Testing
+- Cameron Wenzel:
+	- Strengths: Starting early, Java
+	- Weaknesses: Very proactive by himself, less communicative
+- Morgann Thain:
+	- Strengths: Structure/Outline/Abstraction, Deep Learning
+	- Weaknesses: Testing well, Spending too much time on small details
+- Olivia Johnson: 
+	- Strengths: Communicative, Good team player 
+	- Weaknesses: Not spending enough time thinking through design before coding, Indecisive
 
 **Project Idea(s):** _Fill this in with three unique ideas! (Due by March 2)_
 ### Idea 1
+
 
 ### Idea 2
 
