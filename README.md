@@ -43,7 +43,7 @@
 **Other Components**
 - Possibly using Topological Sorting algorithm to model the order of courses that could be taken for each concentration
 
-
+Approved - less focus on scraping and more focus on an algorithm for ranking courses
 
 ### Idea 2
 **Project Idea:** Cooking application that recommends recipes/dishes based on your current food supply and personal taste, keeps track of your inventory, and reminds you to go grocery shopping when supplies run low with a recommended shopping list.
@@ -67,6 +67,7 @@
 **Other Components**
 - Either a content-based algorithm where we create a profile of the user's preferences and use this information to recommend new recipes, or a collaborative system where we ask users to rate recipes and recommend them based on these ratings. These methods are sourced from [here](https://en.wikipedia.org/wiki/Recommender_system#Approaches).
 
+Approved - algorithm for combining ingredients and ranking dishes should be the main component
 
 ### Idea 3
 **Project Idea:** Car-pool University, an application that coordinates ride-share trips to & from common destinations (e.g. airport/train stations) with other college students.
@@ -92,6 +93,10 @@
 
 **Other Components**
 - We will use a shortest path algorithm such as A* to match destinations and meeting points, taking into account meeting times as well. 
+
+Rejected - common idea with few interesting design decisions
+
+Note: you do not need to resubmit final project ideas. 
 
 
 ### Project Mentor
