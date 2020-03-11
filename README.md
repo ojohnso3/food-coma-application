@@ -101,7 +101,7 @@ Note: you do not need to resubmit final project ideas.
 
 ### Project Mentor
 
-**Mentor TA:** _ Put your mentor TA's name and email here once you're assigned one! _
+**Mentor TA:** Gabi, gabriella_vogel-freedman@brown.edu
 
 ## Meetings
 _On your first meeting with your mentor TA, you should plan dates for at least the following meetings:_
