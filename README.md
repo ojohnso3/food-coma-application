@@ -106,7 +106,7 @@ Note: you do not need to resubmit final project ideas.
 ## Meetings
 _On your first meeting with your mentor TA, you should plan dates for at least the following meetings:_
 
-**Specs, Mockup, and Design Meeting:** _(Schedule for on or before March 13)_
+**Specs, Mockup, and Design Meeting:** April 3rd
 
 **4-Way Checkpoint:** _(Schedule for on or before April 23)_
 

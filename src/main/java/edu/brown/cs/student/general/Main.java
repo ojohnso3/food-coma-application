@@ -34,7 +34,7 @@ public final class Main {
    * @param args An array of command line arguments
    * @throws IOException throws exception if necessary
    */
-  public static void main(String[] args) throws IOException {
+  public static void main(String[] args) {
     new Main(args).run();
   }
 
@@ -44,7 +44,7 @@ public final class Main {
     this.args = args;
   }
 
-  private void run() throws IOException {
+  private void run() {
     // Parse command line arguments
     OptionParser parser = new OptionParser();
     parser.accepts("gui");
@@ -57,6 +57,8 @@ public final class Main {
 
     
     // TODO: add functionality here
+    
+    
     
   }
 
@@ -80,114 +82,14 @@ public final class Main {
     FreeMarkerEngine freeMarker = createEngine();
     
     // TODO: add new spark routes here
-
-    // Setup Spark Routes for Stars
+    // SHOULD this method be in gui package ?
+    
+    // Setup previous Spark Routes
     Spark.get("/stars", new FrontHandler(), freeMarker);
-    Spark.get("/radius", new SubmitHandler(), freeMarker);
-    // Setup Spark Routes for TIMDB
-    Spark.get("/timdb", new TimdbFrontHandler(), freeMarker);
-    Spark.post("/handoff", new DbFrontSubmitHandler(), freeMarker);
-    Spark.get("/actor/:id", new ActorHandler(), freeMarker);
-    Spark.get("/film/:id", new FilmHandler(), freeMarker);
+
+    // Spark.post("/results", new SubmitHandler(), freeMarker);
   }
 
-  /**
-   * Handle requests to the front page of our tIMDB website.
-   *
-   */
-  private static class TimdbFrontHandler implements TemplateViewRoute {
-    /**
-     * Creates map and returns an instance with model and view name.
-     *
-     * @param req The request
-     * @param res The response
-     * @return A model and view.
-     */
-    @Override
-    public ModelAndView handle(Request req, Response res) {
-      Map<String, Object> variables = ImmutableMap.of("title", "timdb", "hints",
-          "Use the command line to upload a database! Also enter the Actors' names "
-              + "without quotes!");
-      return new ModelAndView(variables, "timdb.ftl");
-    }
-  }
-
-  /**
-   * Handle return requests on the tIMDB website.
-   *
-   */
-  private static class DbFrontSubmitHandler implements TemplateViewRoute {
-    /**
-     * This is the main functionality of the first page submission for timdb.
-     *
-     * @param request  The request.
-     * @param response The response.
-     * @return A model and view.
-     */
-    @Override
-
-    public ModelAndView handle(Request request, Response response) throws Exception {
-      Map<String, Object> variables = null;
-      
-      // TODO: add to this handler
-
-      request.queryMap();
-
-
-      return new ModelAndView(variables, "timdb.ftl");
-
-    }
-
-  }
-
-  /**
-   * Handles the actor's individual pages.
-   *
-   */
-  private static class ActorHandler implements TemplateViewRoute {
-    /**
-     * This is the main functionality of the Actor's pages.
-     *
-     * @param request  The request.
-     * @param response The response.
-     * @return A model and view.
-     */
-    @Override
-    public ModelAndView handle(Request request, Response response) throws Exception {
-      Map<String, Object> variables = null;
-
-      request.params(":id");
-
-      // TODO: add to this handler
-      
-      return new ModelAndView(variables, "actor.ftl");
-
-    }
-  }
-
-  /**
-   * Handles the film's individual pages.
-   *
-   */
-  private static class FilmHandler implements TemplateViewRoute {
-    /**
-     * This is the main functionality of the Film's pages.
-     *
-     * @param request  The request.
-     * @param response The response.
-     * @return A model and view.
-     */
-    @Override
-    public ModelAndView handle(Request req, Response res) {
-      Map<String, Object> variables = null;
-      
-      req.params(":id");
-
-      // TODO: add to this handler
-      
-      return new ModelAndView(variables, "film.ftl");
-    }
-  }
 
   /**
    * Handle requests to the front page of our Stars website.
