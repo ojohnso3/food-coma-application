@@ -1,0 +1,15 @@
+body {
+    background-color: #fee6c2;
+    font: 18px monospace;
+    color: #8aa1e6;
+    text-align: center;
+    /* background-image: url('light-stars.jpg');
+    background-size: cover; */
+}
+
+h1 {
+    font: 75px monospace;
+    /* text-shadow: 0 0 3px #FF0000; */
+    color: #5e6ac7;
+    /* text-shadow: 0 0 3px red, 0 0 5px orange; */
+}

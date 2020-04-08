@@ -9,6 +9,7 @@ import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
 
+import edu.brown.cs.student.gui.Gui;
 import freemarker.template.Configuration;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -52,7 +53,8 @@ public final class Main {
     OptionSet options = parser.parse(args);
 
     if (options.has("gui")) {
-      runSparkServer((int) options.valueOf("port"));
+      Gui gui = new Gui();
+      gui.runSparkServer((int) options.valueOf("port"));
     }
 
     
@@ -60,96 +62,5 @@ public final class Main {
     
     
     
-  }
-
-  private static FreeMarkerEngine createEngine() {
-    Configuration config = new Configuration();
-    File templates = new File("src/main/resources/spark/template/freemarker");
-    try {
-      config.setDirectoryForTemplateLoading(templates);
-    } catch (IOException ioe) {
-      System.out.printf("ERROR: Unable use %s for template loading.%n", templates);
-      System.exit(1);
-    }
-    return new FreeMarkerEngine(config);
-  }
-
-  private void runSparkServer(int port) {
-    Spark.port(port);
-    Spark.externalStaticFileLocation("src/main/resources/static");
-    Spark.exception(Exception.class, new ExceptionPrinter());
-
-    FreeMarkerEngine freeMarker = createEngine();
-    
-    // TODO: add new spark routes here
-    // SHOULD this method be in gui package ?
-    
-    // Setup previous Spark Routes
-    Spark.get("/stars", new FrontHandler(), freeMarker);
-
-    // Spark.post("/results", new SubmitHandler(), freeMarker);
-  }
-
-
-  /**
-   * Handle requests to the front page of our Stars website.
-   *
-   */
-  private static class FrontHandler implements TemplateViewRoute {
-    /**
-     * Creates map and returns an instance with model and view name.
-     *
-     * @param req The request
-     * @param res The response
-     * @return A model and view.
-     */
-    @Override
-    public ModelAndView handle(Request req, Response res) {
-      Map<String, Object> variables = ImmutableMap.of("title", "Stars: Query the database",
-          "suggestions", "");
-      return new ModelAndView(variables, "query.ftl");
-    }
-  }
-
-  /**
-   * Handle return requests on the Stars website.
-   *
-   */
-  private static class SubmitHandler implements TemplateViewRoute {
-    /**
-     * This is the main functionality of the GUI.
-     *
-     * @param request  The request.
-     * @param response The response.
-     * @return A model and view.
-     */
-    @Override
-    public ModelAndView handle(Request request, Response response) throws Exception {
-      Map<String, Object> variables = null;
-      
-      request.queryMap();
-
-      // TODO: add to this handler
-      
-      return new ModelAndView(variables, "query.ftl");
-    }
-  }
-
-  /**
-   * Display an error page when an exception occurs in the server.
-   *
-   */
-  private static class ExceptionPrinter implements ExceptionHandler {
-    @Override
-    public void handle(Exception e, Request req, Response res) {
-      res.status(500);
-      StringWriter stacktrace = new StringWriter();
-      try (PrintWriter pw = new PrintWriter(stacktrace)) {
-        pw.println("<pre>");
-        e.printStackTrace(pw);
-        pw.println("</pre>");
-      }
-      res.body(stacktrace.toString());
-    }
   }
 }

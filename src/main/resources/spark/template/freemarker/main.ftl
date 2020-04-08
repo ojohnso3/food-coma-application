@@ -9,17 +9,6 @@
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/html5bp.css">
     <link rel="stylesheet" href="css/main.css">
-    
-    <style>
-    
-    body {background-image: url('https://www.mariowiki.com/images/8/8a/New_Super_Mario_Bros._U_Deluxe_Super_Star.png');
-    background-size: 250px 400px;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-attachment: fixed;
-    }
-    
-    </style>
   </head>
   <body>
      ${content}
