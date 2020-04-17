@@ -1,6 +1,7 @@
 package edu.brown.cs.student.recommendation;
 
 import edu.brown.cs.student.food.Recipe;
+import edu.brown.cs.student.kdtree.KDNode;
 
 /**
  * 
