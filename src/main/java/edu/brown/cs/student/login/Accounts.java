@@ -30,7 +30,7 @@ public class Accounts {
     try {
       scan = new Scanner(new File("the\\dir\\myFile.extension"));
     } catch (FileNotFoundException e) {
-      throw new LoginException("ERROR: checkLogin: account user/pass file not found");
+      throw new LoginException("ERROR: checkLogin: account user/pass file not found", e);
     }
 
     String[] account;
@@ -48,7 +48,7 @@ public class Accounts {
       }
     }
 
-    return "ERROR: reached end of checkLogin";
+    throw new LoginException("ERROR: reached end of checkLogin");
   }
 
   public String login(String user, String pass) {

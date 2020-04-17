@@ -60,7 +60,7 @@ public final class Main {
 
     
     // TODO: add functionality here
-    Recipe rec = new Recipe();
+    Recipe rec = new Recipe("-1");
 
 
   }
