@@ -10,11 +10,11 @@ import java.util.Scanner;
  *
  */
 public class Accounts {
-  private File accounts;
+  private File users;
   
   
-  public Accounts(File accounts) {
-    this.accounts = accounts;
+  public Accounts(File users) {
+    this.users = users;
   }
   // Store w/cookies, database, or hashmap
   
