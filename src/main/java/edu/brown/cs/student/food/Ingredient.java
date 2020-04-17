@@ -1,6 +1,11 @@
 package edu.brown.cs.student.food;
 
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
+
 /**
  * 
  * Class comment.
@@ -9,11 +14,8 @@ package edu.brown.cs.student.food;
 public class Ingredient {
   
   public Ingredient() {
-    
   }
-  
-  
-  
-  
+
+
   
 }
