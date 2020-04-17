@@ -27,6 +27,8 @@ import com.google.common.io.Files;
  */
 public class RecipeDatabase {
   
+  private static Connection conn;
+  
   public RecipeDatabase() {
     
   }
@@ -53,7 +55,7 @@ public class RecipeDatabase {
     Class.forName("org.sqlite.JDBC");
     String urlToDB = "jdbc:sqlite:" + fileName;
 
-    Connection conn = DriverManager.getConnection(urlToDB);
+    conn = DriverManager.getConnection(urlToDB);
     Statement stat = conn.createStatement();
     stat.executeUpdate("PRAGMA foreign_keys=ON;");
   }
@@ -87,23 +89,30 @@ public class RecipeDatabase {
    * @return Recipe object
    */
   public Recipe getRecipeByID(String recipeID) {
-    Recipe recipe = new Recipe();
+    Recipe recipe = new Recipe(recipeID);
     try {
       PreparedStatement prep = conn.prepareStatement(
-          "SELECT actor_film.film FROM actor_film WHERE actor_film.actor = ?;");
-      prep.setString(1, actorId);
+          "SELECT * FROM recipes WHERE recipes.id = ?;");
+      // recipe cols: name, num, diet, health, cuisine, meal, dish, cals, time
+      prep.setString(1, recipeID);
       ResultSet results = prep.executeQuery();
 
       while (results.next()) {
-        films.add(results.getString(1));
+        recipe.loadRecipe(results.getString(1), results.getInt(2),
+            results.getString(3), results.getString(4), results.getString(5),
+            results.getString(6), results.getString(7), results.getDouble(8),
+            results.getDouble(9));
       }
       results.close();
     } catch (SQLException e) {
-      System.err.println("ERROR: Database unable to perform given SQL.");
+      System.err.println("ERROR: Database unable to perform given SQL call.");
     }
-    return films;
-    return null;
+    return recipe;
   }
+  
+  
+  
+  
   
   
   /**
