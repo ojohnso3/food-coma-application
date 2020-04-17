@@ -10,23 +10,24 @@ import java.util.Scanner;
  *
  */
 public class Accounts {
+  private File accounts;
   
   
-  public Accounts() {
-    
+  public Accounts(File accounts) {
+    this.accounts = accounts;
   }
   // Store w/cookies, database, or hashmap
   
   // Validate method, which affirms that the given password and username are valid and match.
   // https://stackoverflow.com/questions/16627910/how-to-code-a-very-simple-login-system-with-java
-  public String checkLogin() throws LoginException {
+  public String naiveCheckLogin() throws LoginException {
     Scanner keyboard = new Scanner (System.in);
     // get input from user
     System.out.println("Username: ");
     String inpUser = keyboard.nextLine();
     System.out.println("Password: ");
     String inpPass = keyboard.nextLine();
-    Scanner scan = null;
+    Scanner scan;
     try {
       scan = new Scanner(new File("the\\dir\\myFile.extension"));
     } catch (FileNotFoundException e) {

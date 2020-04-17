@@ -19,8 +19,6 @@ public class User {
     username = user;
     previousRecipes = new ArrayList<Recipe>();
     dietaryRestrictions = new ArrayList<Ingredient>();
-
-    
   }
   
   // TODO: figure out how to encode/store passwords
