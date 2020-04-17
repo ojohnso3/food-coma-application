@@ -17,14 +17,25 @@ public class Recipe {
   private String dishType;
   private double calories;
   private double timeRange;
-
-
+  
   
   
   public Recipe(String id) {
     recipeID = id;
   }
   
+  /**
+   * Loads in attributes of a Recipe. 
+   * @param name
+   * @param num
+   * @param diet
+   * @param health
+   * @param cuisine
+   * @param meal
+   * @param dish
+   * @param cals
+   * @param time
+   */
   public void loadRecipe(String name, int num, String diet, String health, String cuisine, String meal, String dish, double cals, double time) {
     recipeName = name;
     numIngredients = num;
@@ -36,7 +47,6 @@ public class Recipe {
     calories = cals;
     timeRange = time;
   }
-  
   
   
   
