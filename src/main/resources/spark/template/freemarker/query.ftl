@@ -18,11 +18,18 @@
   <input type="submit">
 </form>
 </p>
+  <p class="output">
+
+  <#list recipeList as r>
+    <h6><a href="http://localhost:4567/recipe/${r.getRecipeID()}" ${r.getRecipeID()}</a></h6>
+
+  </#list>
+
+  </p>
 
 
 <br><br>
 
-<h3>${recipes}</h3>
 
 <br><br>
 

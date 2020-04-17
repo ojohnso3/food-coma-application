@@ -4,10 +4,13 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
 
+import edu.brown.cs.student.food.Recipe;
 import freemarker.template.Configuration;
 import spark.ExceptionHandler;
 import spark.ModelAndView;
@@ -68,7 +71,7 @@ public class Gui {
     @Override
     public ModelAndView handle(Request req, Response res) {
       Map<String, Object> variables = ImmutableMap.of("title",
-          "foodCOMA Query", "recipes", "Recipe Output!");
+          "foodCOMA Query", "recipeList", new ArrayList<Recipe>());
       return new ModelAndView(variables, "query.ftl");
     }
   }
@@ -86,9 +89,13 @@ public class Gui {
     public ModelAndView handle(Request req, Response res) {
       QueryParamsMap qm = req.queryMap();
       String textFromTextField = qm.value("text");
+      List<Recipe> recipeList = new ArrayList<Recipe>();
+
+      Recipe tempRecp = new Recipe("0000");
+      tempRecp.setName("Temporary Recipe");
+      recipeList.add(tempRecp);
       // replace default with new String output
-      Map<String, Object> variables = ImmutableMap.of("title",
-          "foodCOMA Query", "recipes", textFromTextField);
+      Map<String, Object> variables = ImmutableMap.of("title", "foodCOMA Query", "recipeList", recipeList);
       return new ModelAndView(variables, "query.ftl");
     }
   }

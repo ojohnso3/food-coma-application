@@ -26,21 +26,22 @@ import com.google.common.io.Files;
  *
  */
 public class RecipeDatabase {
-  
+
   public RecipeDatabase() {
-    
+
   }
-  
-  
+
+
   /**
    * Loads in database.
-   * @throws FileNotFoundException 
-   * @throws ClassNotFoundException 
-   * @throws SQLException 
+   *
+   * @throws FileNotFoundException
+   * @throws ClassNotFoundException
+   * @throws SQLException
    */
   public void loadDatabase(String fileName) throws FileNotFoundException,
-    ClassNotFoundException, SQLException {
-    
+          ClassNotFoundException, SQLException {
+
     String ext = Files.getFileExtension(fileName);
     if (!ext.equals("sqlite3")) {
       throw new FileNotFoundException("ERROR: File must be .sqlite3!");
@@ -64,9 +65,9 @@ public class RecipeDatabase {
   public void apiCall() {
     HttpClient httpClient = HttpClient.newBuilder().build();
     HttpRequest httpRequest = HttpRequest.newBuilder().GET()
-        .uri(URI.create("https://api.edamam.com/search?q=chicken&app_id=2a676518"
-            + "&app_key=" +
-            "158f55a83eee58aff1544072b788784f&from=0&to=3&calories=591-722&health=alcohol-free")).build();
+            .uri(URI.create("https://api.edamam.com/search?q=chicken&app_id=2a676518"
+                    + "&app_key=" +
+                    "158f55a83eee58aff1544072b788784f&from=0&to=3&calories=591-722&health=alcohol-free")).build();
 
     try {
       HttpResponse<String> response = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
@@ -77,66 +78,63 @@ public class RecipeDatabase {
     }
 
 
-
   }
-  
-  
+
+
   /**
    * Gets a Recipe from id from the database.
+   *
    * @param recipeID string id that corresponds to a recipe
    * @return Recipe object
    */
   public Recipe getRecipeByID(String recipeID) {
-    Recipe recipe = new Recipe();
-    try {
-      PreparedStatement prep = conn.prepareStatement(
-          "SELECT actor_film.film FROM actor_film WHERE actor_film.actor = ?;");
-      prep.setString(1, actorId);
-      ResultSet results = prep.executeQuery();
+//    Recipe recipe = new Recipe();
+//    try {
+//      PreparedStatement prep = conn.prepareStatement(
+//          "SELECT actor_film.film FROM actor_film WHERE actor_film.actor = ?;");
+//      prep.setString(1, actorId);
+//      ResultSet results = prep.executeQuery();
+//
+//      while (results.next()) {
+//        films.add(results.getString(1));
+//      }
+//      results.close();
+//    } catch (SQLException e) {
+//      System.err.println("ERROR: Database unable to perform given SQL.");
+//    }
+//    return films;
+    return null;
+  }
 
-      while (results.next()) {
-        films.add(results.getString(1));
-      }
-      results.close();
-    } catch (SQLException e) {
-      System.err.println("ERROR: Database unable to perform given SQL.");
+
+    /**
+     * Gets a list of Ingredients from recipe id from the database.
+     * @param recipeID string id that corresponds to a recipe
+     * @return List of Ingredients
+     */
+    public List<Ingredient> getIngredientsByRecipeID (String recipeID){
+      return null;
     }
-    return films;
-    return null;
-  }
-  
-  
-  /**
-   * Gets a list of Ingredients from recipe id from the database.
-   * @param recipeID string id that corresponds to a recipe
-   * @return List of Ingredients
-   */
-  public List<Ingredient> getIngredientsByRecipeID(String recipeID) {
-    return null;
-  }
-  
-  
-  /**
-   * 
-   * @param ingredients
-   * @return
-   */
-  public Recipe getRecipeByIngriedentList(List<Ingredient> ingredients) {
-    return null;
-  }
-  
-  
-  /**
-   * 
-   * @param ingredients
-   * @return
-   */
+
+
+    /**
+     *
+     * @param ingredients
+     * @return
+     */
+//  public Recipe getRecipeByIngriedentList(List<Ingredient> ingredients) {
+//    return null;
+//  }
+
+
+    /**
+     *
+     * @param ingredients
+     * @return
+     */
   public List<Recipe> getRecipeListByIngriedent(Ingredient ingredients) {
     return null;
   }
-  
-  
-  
-  
-  
-}
+
+
+  }

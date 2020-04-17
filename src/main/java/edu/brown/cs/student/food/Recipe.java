@@ -27,14 +27,15 @@ public class Recipe {
   private String dishType;
   private double calories;
   private double timeRange;
-
-
-  
   
   public Recipe(String id) {
     recipeID = id;
   }
-  
+
+  public String getRecipeID(){
+    return recipeID;
+  }
+
   public void loadRecipe(String name, int num, String diet, String health, String cuisine, String meal, String dish, double cals, double time) {
     recipeName = name;
     numIngredients = num;
@@ -45,6 +46,10 @@ public class Recipe {
     dishType = dish;
     calories = cals;
     timeRange = time;
+  }
+
+  public void setName(String inpName){
+    recipeName = inpName;
   }
 
 }
