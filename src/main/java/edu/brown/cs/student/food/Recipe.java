@@ -1,15 +1,7 @@
 package edu.brown.cs.student.food;
 
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLEncoder;
-//import com.mashape.unirest.http.HttpResponse;
-//import com.mashape.unirest.http.JsonNode;
-//import com.mashape.unirest.http.Unirest;
+import com.google.gson.annotations.SerializedName;
 
 /**
  * 
@@ -17,39 +9,71 @@ import java.net.URLEncoder;
  *
  */
 public class Recipe {
-  private String recipeID;
-  private String recipeName;
-  private int numIngredients;
-  private String dietLabel;
-  private String healthLabel;
-  private String cuisineType;
-  private String mealType;
-  private String dishType;
-  private double calories;
-  private double timeRange;
-  
-  public Recipe(String id) {
-    recipeID = id;
+  private String uri;
+  private String label;
+  private String image;
+  private String source;
+  private String url;
+  private int yield;
+  private float calories;
+  private float totalWeight;
+  private Ingredient[] ingredients;
+  private NutrientInfo[] totalNutrients;
+  private NutrientInfo[] totalDaily;
+  private String[] dietLabels;
+  private String[] healthLabels;
+
+  enum Diet {
+    balanced,
+    @SerializedName("high-fiber") highFiber,
+    @SerializedName("high-protein") highProtein,
+    @SerializedName("low-carb") lowCarb,
+    @SerializedName("low-fat") lowFat,
+    @SerializedName("low-sodium") lowSodium
   }
 
-  public String getRecipeID(){
-    return recipeID;
+  enum Health {
+    @SerializedName("alcohol-free") alcoholFree,
+    @SerializedName("celery-free") celeryFree,
+    @SerializedName("crustacean-free") crustaceanFree,
+    @SerializedName("dairy-free") dairyFree,
+    @SerializedName("egg-free") eggFree,
+    @SerializedName("fish-free") fishFree,
+    @SerializedName("fodmap-free") fodmapFree,
+    @SerializedName("gluten-free") glutenFree,
+    @SerializedName("keto-friendly") ketoFriendly,
+    kosher,
+    @SerializedName("low-potassium") lowPotassium,
+    @SerializedName("lupine-free") lupineFree,
+    @SerializedName("mustard-free") mustardFree,
+    @SerializedName("low-fat-abs") lowFatAbs,
+    @SerializedName("no-oil-added") noOilAdded,
+    @SerializedName("low-sugar") lowSugar,
+    paleo,
+    @SerializedName("peanut-free") peanutFree,
+    pescatarian,
+    @SerializedName("pork-free") porkFree,
+    @SerializedName("red-meat-free") redMeatFree,
+    @SerializedName("seasame-free") sesameFree,
+    @SerializedName("shellfish-free") shellfishFree,
+    @SerializedName("soy-free") soyFree,
+    @SerializedName("sugar-conscious") sugarConscious,
+    @SerializedName("tree-nut-free") treeNutFree,
+    vegan,
+    vegetarian,
+    @SerializedName("wheat-free") wheatFree
   }
 
-  public void loadRecipe(String name, int num, String diet, String health, String cuisine, String meal, String dish, double cals, double time) {
-    recipeName = name;
-    numIngredients = num;
-    dietLabel = diet;
-    healthLabel = health;
-    cuisineType = cuisine;
-    mealType = meal;
-    dishType = dish;
-    calories = cals;
-    timeRange = time;
+  public Ingredient[] getIngredients() {
+    return ingredients;
   }
 
-  public void setName(String inpName){
-    recipeName = inpName;
+  public String getUri() {
+    return uri;
+  }
+
+  public Recipe(String uri) {
+    this.uri = uri;
   }
 
 }

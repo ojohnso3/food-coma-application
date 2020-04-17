@@ -9,6 +9,7 @@ import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
 
+import edu.brown.cs.student.database.RecipeDatabase;
 import edu.brown.cs.student.food.Recipe;
 import edu.brown.cs.student.gui.Gui;
 import freemarker.template.Configuration;
@@ -60,7 +61,6 @@ public final class Main {
 
     
     // TODO: add functionality here
-
 
   }
 }
