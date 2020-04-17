@@ -12,6 +12,13 @@ import java.net.URLConnection;
  *
  */
 public class Ingredient {
+
+  private String foodId;
+  private float quantity;
+  private Measure measure;
+  private float weight;
+  private Food food;
+
   
   public Ingredient() {
   }

@@ -1,10 +1,13 @@
 package edu.brown.cs.student.database;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import edu.brown.cs.student.food.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -17,6 +20,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.Connection;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 
 import com.google.common.io.Files;
 
@@ -25,7 +30,7 @@ import com.google.common.io.Files;
  * Class comment.
  *
  */
-public class RecipeDatabase {
+public final class RecipeDatabase {
   
   private static Connection conn;
   
@@ -63,57 +68,62 @@ public class RecipeDatabase {
   /**
    * Test api function
    */
-  public void apiCall() {
+  public static String apiCall() {
     HttpClient httpClient = HttpClient.newBuilder().build();
     HttpRequest httpRequest = HttpRequest.newBuilder().GET()
-        .uri(URI.create("https://api.edamam.com/search?q=chicken&app_id=2a676518"
+        .uri(URI.create("https://api.edamam.com/search?r=http%3A%2F%2Fwww.edamam.com%2Fontologies%2" +
+            "Fedamam.owl%23recipe_9b5945e03f05acbf9d69625138385408&app_id=2a676518" //need to parse uris we get from JSON
             + "&app_key=" +
-            "158f55a83eee58aff1544072b788784f&from=0&to=3&calories=591-722&health=alcohol-free")).build();
+            "158f55a83eee58aff1544072b788784f")).build();
 
     try {
       HttpResponse<String> response = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
-      System.out.println(response.body());
       System.out.println(response.statusCode());
+      System.out.println(response.body());
+      return response.body();
     } catch (IOException | InterruptedException ioe) {
       ioe.printStackTrace();
+      return null;
     }
-
-
-
   }
-  
-  
+
+  /**
+   * Test Gson function
+   */
+  public static void parseJSON() {
+    String json = apiCall();
+    Gson gson = new Gson();
+    Recipe[] parsed = gson.fromJson(json, Recipe[].class);
+
+    System.out.println(parsed[0].getUri());
+  }
+
   /**
    * Gets a Recipe from id from the database.
    * @param recipeID string id that corresponds to a recipe
    * @return Recipe object
    */
-  public Recipe getRecipeByID(String recipeID) {
-    Recipe recipe = new Recipe(recipeID);
-    try {
-      PreparedStatement prep = conn.prepareStatement(
-          "SELECT * FROM recipes WHERE recipes.id = ?;");
-      // recipe cols: name, num, diet, health, cuisine, meal, dish, cals, time
-      prep.setString(1, recipeID);
-      ResultSet results = prep.executeQuery();
-
-      while (results.next()) {
-        recipe.loadRecipe(results.getString(1), results.getInt(2),
-            results.getString(3), results.getString(4), results.getString(5),
-            results.getString(6), results.getString(7), results.getDouble(8),
-            results.getDouble(9));
-      }
-      results.close();
-    } catch (SQLException e) {
-      System.err.println("ERROR: Database unable to perform given SQL call.");
-    }
-    return recipe;
-  }
-  
-  
-  
-  
-  
+//  public Recipe getRecipeByID(String recipeID) {
+//    Recipe recipe = new Recipe(recipeID);
+//    try {
+//      PreparedStatement prep = conn.prepareStatement(
+//          "SELECT * FROM recipes WHERE recipes.id = ?;");
+//      // recipe cols: name, num, diet, health, cuisine, meal, dish, cals, time
+//      prep.setString(1, recipeID);
+//      ResultSet results = prep.executeQuery();
+//
+//      while (results.next()) {
+//        recipe.loadRecipe(results.getString(1), results.getInt(2),
+//            results.getString(3), results.getString(4), results.getString(5),
+//            results.getString(6), results.getString(7), results.getDouble(8),
+//            results.getDouble(9));
+//      }
+//      results.close();
+//    } catch (SQLException e) {
+//      System.err.println("ERROR: Database unable to perform given SQL call.");
+//    }
+//    return recipe;
+//  }
   
   /**
    * Gets a list of Ingredients from recipe id from the database.
