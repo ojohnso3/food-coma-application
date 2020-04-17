@@ -25,25 +25,25 @@ public class Proxy {
   }
   
   
-  /**
-   * Loads in database.
-   */
-  public void setCaches() {
-    recipeCache = CacheBuilder.newBuilder().maximumSize(CACHE_SIZE)
-        .build(new CacheLoader<String, Recipe>() {
-          @Override
-          public Recipe load(String id) throws Exception {
-              return database.getRecipeByID(id);
-          }
-        });
-    ingredientCache = CacheBuilder.newBuilder().maximumSize(CACHE_SIZE)
-        .build(new CacheLoader<Ingredient, List<Recipe>>() {
-          @Override
-          public List<Recipe> load(Ingredient ingredient) throws Exception {
-              return database.getRecipeListByIngriedent(ingredient);
-          }
-        });
-  }
+//  /**
+//   * Loads in database.
+//   */
+//  public void setCaches() {
+//    recipeCache = CacheBuilder.newBuilder().maximumSize(CACHE_SIZE)
+//        .build(new CacheLoader<String, Recipe>() {
+//          @Override
+//          public Recipe load(String id) throws Exception {
+//              return database.getRecipeByID(id);
+//          }
+//        });
+//    ingredientCache = CacheBuilder.newBuilder().maximumSize(CACHE_SIZE)
+//        .build(new CacheLoader<Ingredient, List<Recipe>>() {
+//          @Override
+//          public List<Recipe> load(Ingredient ingredient) throws Exception {
+//              return database.getRecipeListByIngriedent(ingredient);
+//          }
+//        });
+//  }
   
   
   /**
