@@ -8,6 +8,7 @@ import com.google.common.collect.MinMaxPriorityQueue;
 
 import edu.brown.cs.student.database.RecipeDatabase;
 import edu.brown.cs.student.food.Recipe;
+import edu.brown.cs.student.kdtree.KDTree;
 
 /**
  * 
