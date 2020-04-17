@@ -61,9 +61,6 @@ public final class Main {
 
     
     // TODO: add functionality here
-    RecipeDatabase db = new RecipeDatabase();
-
-    db.parseJSON();
 
   }
 }

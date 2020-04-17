@@ -2,6 +2,7 @@ package edu.brown.cs.student.login;
 
 import edu.brown.cs.student.food.*;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,12 +16,14 @@ public class User {
   private List<Recipe> previousRecipes;
   private List<Ingredient> dietaryRestrictions;
   
-  public User(String user) {
+  public User(String user, String pass, File users) {
     username = user;
     previousRecipes = new ArrayList<Recipe>();
     dietaryRestrictions = new ArrayList<Ingredient>();
 
-    
+    if(users.canWrite()) {
+      ;
+    }
   }
   
   // TODO: figure out how to encode/store passwords
