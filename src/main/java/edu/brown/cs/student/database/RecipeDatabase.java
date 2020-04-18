@@ -24,6 +24,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
 import com.google.common.io.Files;
+import edu.brown.cs.student.recommendation.RecipeNode;
 
 /**
  * 
@@ -118,7 +119,9 @@ public final class RecipeDatabase {
 //    return null;
 //  }
 
-
+  public static List<RecipeNode> getRecipeSubset(){
+    return null;
+  }
     /**
      *
      * @param ingredients
