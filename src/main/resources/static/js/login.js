@@ -11,6 +11,7 @@ $(document).ready(() => {
 const user = $("#user");
 const pass = $("#pass");
 const button = $("#sub");
+let output;
 
 // const user = $("#username");
 // const pass = $("#password");
@@ -41,14 +42,17 @@ button.click(event => {
       console.log("RESP" + response);
       // Do something with the response here
 
-      const output = JSON.parse(response);
+      output = JSON.parse(response);
       console.log("OUT " + output.output);
 
       document.getElementById("validity").innerHTML = output.output;
     });
 
     console.log("end!");
-
 // document.getElementById("validity").innerHTML = output.output;
 
 });
+
+if (condition) {
+    //  block of code to be executed if the condition is true
+} 
