@@ -16,11 +16,14 @@ public class Ingredient {
   private String foodId;
   private float quantity;
   private Measure measure;
-  private float weight;
+  private double weight;
   private Food food;
+  private String text;
 
   
-  public Ingredient() {
+  public Ingredient(String text, double weight) {
+    this.text = text;
+    this.weight = weight;
   }
 
 
