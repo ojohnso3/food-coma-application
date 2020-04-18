@@ -9,6 +9,10 @@ import edu.brown.cs.student.food.Ingredient;
 
 import java.lang.reflect.Type;
 
+/**
+ * This class is used to provide a deserializer to parse the Edamam Api JSON. It implements the
+ * JsonDeserializer interface, which takes in an object of type Ingredient.
+ */
 public class IngredientDeserializer implements JsonDeserializer<Ingredient> {
 
   @Override

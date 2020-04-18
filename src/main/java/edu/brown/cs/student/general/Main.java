@@ -9,6 +9,7 @@ package edu.brown.cs.student.general;
 
 import com.google.common.collect.ImmutableMap;
 
+import edu.brown.cs.student.database.FieldParser;
 import edu.brown.cs.student.database.RecipeDatabase;
 import edu.brown.cs.student.food.Recipe;
 import edu.brown.cs.student.gui.Gui;
@@ -60,7 +61,7 @@ public final class Main {
 
     
     // TODO: add functionality here
-    RecipeDatabase.parseJSON();
+    FieldParser.parseJSON();
 
   }
 }

@@ -13,6 +13,10 @@ import com.google.gson.JsonDeserializer;
 
 import java.lang.reflect.Type;
 
+/**
+ * This class is used to provide a deserializer to parse the Edamam Api JSON. It implements the
+ * JsonDeserializer interface, which takes in an object of type Ingredient.
+ */
 public class RecipeDeserializer implements JsonDeserializer<Recipe> {
   @Override
   public Recipe deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext)
@@ -43,14 +47,14 @@ public class RecipeDeserializer implements JsonDeserializer<Recipe> {
     }
 
 
-    JsonElement ingredientsArray = jsonObject.get("ingredients");
-    JsonArray jsonIngredients = ingredientsArray.getAsJsonArray();
+    JsonElement ingredientsArray = jsonObject.get("ingredients"); //get the json for the array of ingredients
+    JsonArray jsonIngredients = ingredientsArray.getAsJsonArray(); //get the array from the json
     Ingredient[] ingredients = new Ingredient[jsonIngredients.size()];
     for (int k = 0; k < jsonIngredients.size(); k++) {
       JsonDeserializer<Ingredient> ingredientDeserializer = new IngredientDeserializer();
       gsonBuilder.registerTypeAdapter(Ingredient.class, ingredientDeserializer);
       Gson customGson = gsonBuilder.create();
-      Ingredient currIngredient = customGson.fromJson(ingredientsArray, Ingredient.class);
+      Ingredient currIngredient = customGson.fromJson(jsonIngredients, Ingredient.class);
       ingredients[k] = currIngredient;
     }
 
