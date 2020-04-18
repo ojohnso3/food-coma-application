@@ -121,11 +121,11 @@
         Dependency for hashing and salting passwords.
         https://github.com/jeremyh/jBCrypt
     -->
-    <dependency>
+   <!-- <dependency>
       <groupId>org.mindrot</groupId>
       <artifactId>jbcrypt</artifactId>
       <version>0.3</version>
-    </dependency>
+    </dependency>-->
   </dependencies>
 
   <!-- Build section -->
