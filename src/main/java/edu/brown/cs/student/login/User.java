@@ -30,7 +30,9 @@ public class User {
       throw new LoginException("login info file corrupted");
     }
     //
-    String salt = Accounts.getNextSalt();
+    String salt = "";
+    // Hash a password for the first time
+//    String hashed = BCrypt.hashpw(password, BCrypt.gensalt());
     writer.write(user + "," + pass + "," + salt);
   }
   
