@@ -6,9 +6,14 @@
         
         <h2> LOG-IN </h2>
         <div class="buttonBox">
-          <input id="login" name="text" class="u-full-width"
+          <input id="user" class="u-full-width"
             type="text"
             placeholder="username"
+            value=""></input>
+          <br>
+          <input id="pass" class="u-full-width"
+            type="text"
+            placeholder="password"
             value=""></input>
             <#--  <form method="POST" action="/login">  -->
                 <#--  <h4 for="login">Username</h4>  -->
@@ -25,6 +30,7 @@
                 <br>
                 <input type="submit">  -->
             <#--  </form>  -->
+        <br>
         <button id="sub">Submit</button> 
 
         <br>
