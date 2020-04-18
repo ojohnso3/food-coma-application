@@ -1,6 +1,7 @@
 let d = new Date();
 alert("Today's date is " + d);
 
+
 console.log("first print line!");
 
 $(document).ready(() => {
@@ -11,7 +12,10 @@ $(document).ready(() => {
 const user = $("#user");
 const pass = $("#pass");
 const button = $("#sub");
-let output;
+
+// function setValue(val) {
+//     output = val;
+// }
 
 // const user = $("#username");
 // const pass = $("#password");
@@ -42,17 +46,21 @@ button.click(event => {
       console.log("RESP" + response);
       // Do something with the response here
 
-      output = JSON.parse(response);
+      const output = JSON.parse(response);
       console.log("OUT " + output.output);
 
       document.getElementById("validity").innerHTML = output.output;
+
+      if (output.output == "Valid username!") {
+        console.log("yayayayayayayyayayayay");
+        window.location.href = "/foodCOMA";
+        }
     });
+
+
 
     console.log("end!");
 // document.getElementById("validity").innerHTML = output.output;
 
 });
 
-if (condition) {
-    //  block of code to be executed if the condition is true
-} 
