@@ -3,6 +3,8 @@ package edu.brown.cs.student.recommendation;
 import edu.brown.cs.student.food.Recipe;
 import edu.brown.cs.student.kdtree.KDNode;
 
+import java.util.List;
+
 /**
  * 
  * Class comment.
@@ -36,54 +38,32 @@ public class RecipeNode implements KDNode<RecipeNode> {
 
 
   @Override
-  public void setLeft(RecipeNode left) {
-    leftNode = left;
+  public String getId() {
+    return null;
   }
-
-
 
   @Override
-  public void setRight(RecipeNode right) {
-    rightNode = right;
+  public List<Double> getCoords() {
+    return null;
   }
-
-
 
   @Override
-  public RecipeNode getLeft() {
-    return leftNode;
+  public RecipeNode getLeftChild() {
+    return null;
   }
-
-
 
   @Override
-  public RecipeNode getRight() {
-    return rightNode;
+  public void setLeftChild(RecipeNode lc) {
+
   }
-
-
 
   @Override
-  public double[] getCoords() {
-    return coordinates;
+  public RecipeNode getRightChild() {
+    return null;
   }
-
-
 
   @Override
-  public void setCoords(double[] coords) {
-    coordinates = coords;
-    
+  public void setRightChild(RecipeNode rc) {
+
   }
-
-
-
-  @Override
-  public double euclidDist(RecipeNode distToNode) {
-    // TODO Auto-generated method stub
-    return 0;
-  }
-  
-
-
 }

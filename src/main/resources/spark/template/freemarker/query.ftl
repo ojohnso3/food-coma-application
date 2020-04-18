@@ -21,7 +21,7 @@
   <p class="output">
 
   <#list recipeList as r>
-    <h6><a href="http://localhost:4567/recipe/${r.getRecipeID()}" ${r.getRecipeID()}</a></h6>
+    <h6><a href="http://localhost:4567/recipe/${r.getURI()}" ${r.getURI()}</a></h6>
 
   </#list>
 

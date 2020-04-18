@@ -50,7 +50,7 @@ public class Gui {
   public void runSparkServer(int port) {
     Spark.port(port);
     Spark.externalStaticFileLocation("src/main/resources/static");
-    Spark.exception(Exception.class, new ExceptionPrinter());
+//    Spark.exception(Exception.class, new ExceptionPrinter());
 
     FreeMarkerEngine freeMarker = createEngine();
 
@@ -92,8 +92,13 @@ public class Gui {
       List<Recipe> recipeList = new ArrayList<Recipe>();
 
       Recipe tempRecp = new Recipe("0000");
-      tempRecp.setName("Temporary Recipe");
+      Recipe tempRecpO = new Recipe("0001");
+      Recipe tempRecpT = new Recipe("0002");
+
       recipeList.add(tempRecp);
+      recipeList.add(tempRecpO);
+      recipeList.add(tempRecpT);
+
       // replace default with new String output
       Map<String, Object> variables = ImmutableMap.of("title", "foodCOMA Query", "recipeList", recipeList);
       return new ModelAndView(variables, "query.ftl");

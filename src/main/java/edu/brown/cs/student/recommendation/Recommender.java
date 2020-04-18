@@ -52,10 +52,10 @@ public class Recommender {
       Recipe rootRecipe = new Recipe("ROOT"); // fake node
       RecipeNode rootNode = new RecipeNode(rootRecipe);
       int dims = 6; // make dims based on user or universal?
-      kdtree = new KDTree<RecipeNode>(dims, rootNode);
+      kdtree = new KDTree<RecipeNode>(dims);
       List<RecipeNode> nodes = RecipeDatabase.getRecipeSubset(); // TODO: make method in RecipeDatabase class
       nodes.addAll(this.convertRecipesToRecipeNodes(userRecs.get(userID))); // adds user history to nodes list
-      kdtree.buildTree(0, nodes);
+      kdtree.initializeTree(nodes);
       userTrees.put(userID, kdtree);
     }
     return kdtree;
