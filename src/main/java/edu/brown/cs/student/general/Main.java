@@ -48,15 +48,15 @@ public final class Main {
 
   private void run() {
     // Parse command line arguments
-//    OptionParser parser = new OptionParser();
-//    parser.accepts("gui");
-//    parser.accepts("port").withRequiredArg().ofType(Integer.class).defaultsTo(DEFAULT_PORT);
-//    OptionSet options = parser.parse(args);
-//
-//    if (options.has("gui")) {
-//      Gui gui = new Gui();
-//      gui.runSparkServer((int) options.valueOf("port"));
-//    }
+    OptionParser parser = new OptionParser();
+    parser.accepts("gui");
+    parser.accepts("port").withRequiredArg().ofType(Integer.class).defaultsTo(DEFAULT_PORT);
+    OptionSet options = parser.parse(args);
+
+    if (options.has("gui")) {
+      Gui gui = new Gui();
+      gui.runSparkServer((int) options.valueOf("port"));
+    }
 
     
     // TODO: add functionality here
