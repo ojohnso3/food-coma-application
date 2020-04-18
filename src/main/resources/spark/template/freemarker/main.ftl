@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="css/main.css">
   </head>
   <body>
-     ${content}
+    ${content}
      <!-- Again, we're serving up the unminified source for clarity. -->
      <script src="js/jquery-2.1.1.js"></script>
   </body>

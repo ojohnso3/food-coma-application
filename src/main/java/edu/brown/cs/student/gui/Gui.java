@@ -56,6 +56,7 @@ public class Gui {
 
     // Setup Spark Routes
     Spark.get("/foodCOMA", new FrontHandler(), freeMarker);
+    Spark.get("/login", new LoginHandler(), freeMarker);
     // more routes (post too!)
     Spark.get("/recipe", new SubmitHandler(), freeMarker);
 
@@ -102,6 +103,28 @@ public class Gui {
       // replace default with new String output
       Map<String, Object> variables = ImmutableMap.of("title", "foodCOMA Query", "recipeList", recipeList);
       return new ModelAndView(variables, "query.ftl");
+    }
+  }
+  
+  /**
+   * Handles the functionality of printing out the result of the Stars algorithms.
+   *
+   */
+  private static class LoginHandler implements TemplateViewRoute {
+
+    LoginHandler() {
+    }
+
+    @Override
+    public ModelAndView handle(Request req, Response res) {
+      QueryParamsMap qm = req.queryMap();
+      String textFromTextField = qm.value("text");
+      
+      String text = "hi";
+
+      // replace default with new String output
+      Map<String, Object> variables = ImmutableMap.of("title", "foodCOMA Query", "recipeList", text);
+      return new ModelAndView(variables, "login.ftl");
     }
   }
 

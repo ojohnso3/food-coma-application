@@ -29,7 +29,7 @@
 
 
 <br><br>
-
+<a href="/login"><h1>Go to Login by pressing here!</h1></a>
 
 <br><br>
 
