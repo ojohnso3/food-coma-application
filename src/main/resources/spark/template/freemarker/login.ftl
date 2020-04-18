@@ -6,14 +6,31 @@
         
         <h2> LOG-IN </h2>
         <div class="buttonBox">
-            <form method="GET" action="/login">
-                <h4 for="text">Username</h4>
+          <input id="login" name="text" class="u-full-width"
+            type="text"
+            placeholder="username"
+            value=""></input>
+            <#--  <form method="POST" action="/login">  -->
+                <#--  <h4 for="login">Username</h4>  -->
                 <#--  <label for="text">Username here!</label><br>  -->
-                <textarea name="username" id="text"></textarea>
-                <h4 for="text">Password</h4>
-                <textarea name="password" id="text"></textarea>
-                <input type="submit">
-            </form>
+                <#--  <textarea name="username" id="login"
+                          type="text"
+                          placeholder="username here"
+                          value=""></textarea>
+                <h4 for="login">Password</h4>
+                <textarea name="password" id="login"
+                          type="text"
+                          placeholder="password here"
+                          value=""></textarea>
+                <br>
+                <input type="submit">  -->
+            <#--  </form>  -->
+        <button id="sub">Submit</button> 
+
+        <br>
+        <p id="validity" aria-live=polite></p>
+        <h3>${output}</h3>
+
           <#--  <form action="userqueue.ftl">
             <div class="formItem">
               Username: <input type="text" name="username", id="name">
@@ -24,6 +41,8 @@
             <input type="button" value="Submit">  -->
             <#--  , onclick="createUser()"  -->
         </div>
+
+        <script src="js/login.js"></script>
 
 </#assign>
 <#include "main.ftl">
