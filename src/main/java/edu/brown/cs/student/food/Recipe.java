@@ -14,56 +14,36 @@ public class Recipe {
   private String image;
   private String source;
   private String url;
-  private int yield;
-  private float calories;
-  private float totalWeight;
+  private double yield;
+  private double calories;
+  private double totalWeight;
+  private double totalTime;
   private Ingredient[] ingredients;
   private NutrientInfo[] totalNutrients;
   private NutrientInfo[] totalDaily;
   private String[] dietLabels;
   private String[] healthLabels;
 
-  enum Diet {
-    balanced,
-    @SerializedName("high-fiber") highFiber,
-    @SerializedName("high-protein") highProtein,
-    @SerializedName("low-carb") lowCarb,
-    @SerializedName("low-fat") lowFat,
-    @SerializedName("low-sodium") lowSodium
-  }
 
-  enum Health {
-    @SerializedName("alcohol-free") alcoholFree,
-    @SerializedName("celery-free") celeryFree,
-    @SerializedName("crustacean-free") crustaceanFree,
-    @SerializedName("dairy-free") dairyFree,
-    @SerializedName("egg-free") eggFree,
-    @SerializedName("fish-free") fishFree,
-    @SerializedName("fodmap-free") fodmapFree,
-    @SerializedName("gluten-free") glutenFree,
-    @SerializedName("keto-friendly") ketoFriendly,
-    kosher,
-    @SerializedName("low-potassium") lowPotassium,
-    @SerializedName("lupine-free") lupineFree,
-    @SerializedName("mustard-free") mustardFree,
-    @SerializedName("low-fat-abs") lowFatAbs,
-    @SerializedName("no-oil-added") noOilAdded,
-    @SerializedName("low-sugar") lowSugar,
-    paleo,
-    @SerializedName("peanut-free") peanutFree,
-    pescatarian,
-    @SerializedName("pork-free") porkFree,
-    @SerializedName("red-meat-free") redMeatFree,
-    @SerializedName("seasame-free") sesameFree,
-    @SerializedName("shellfish-free") shellfishFree,
-    @SerializedName("soy-free") soyFree,
-    @SerializedName("sugar-conscious") sugarConscious,
-    @SerializedName("tree-nut-free") treeNutFree,
-    vegan,
-    vegetarian,
-    @SerializedName("wheat-free") wheatFree
+  public Recipe(String uri, String label, String image, String source, String url, double yield,
+                double calories, double totalWeight, double totalTime, Ingredient[] ingredients,
+                NutrientInfo[] totalNutrients, NutrientInfo[] totalDaily, String[] dietLabels,
+                String[] healthLabels) {
+    this.uri = uri;
+    this.label = label;
+    this.image = image;
+    this.source = source;
+    this.url = url;
+    this.yield = yield;
+    this.calories = calories;
+    this.totalWeight = totalWeight;
+    this.totalTime = totalTime;
+    this.ingredients = ingredients;
+    this.dietLabels = dietLabels;
+    this.healthLabels = healthLabels;
+    this.totalNutrients = totalNutrients;
+    this.totalDaily = totalDaily;
   }
-
   public Ingredient[] getIngredients() {
     return ingredients;
   }

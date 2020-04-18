@@ -67,38 +67,6 @@ public final class RecipeDatabase {
     Statement stat = conn.createStatement();
     stat.executeUpdate("PRAGMA foreign_keys=ON;");
   }
-
-  /**
-   * Test api function
-   */
-  public static String apiCall() {
-    HttpClient httpClient = HttpClient.newBuilder().build();
-    HttpRequest httpRequest = HttpRequest.newBuilder().GET()
-        .uri(URI.create("https://api.edamam.com/search?r=http%3A%2F%2Fwww.edamam.com%2Fontologies%2" +
-            "Fedamam.owl%23recipe_9b5945e03f05acbf9d69625138385408&app_id=2a676518" //need to parse uris we get from JSON
-            + "&app_key=" +
-            "158f55a83eee58aff1544072b788784f")).build();
-
-    try {
-      HttpResponse<String> response = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
-      System.out.println(response.statusCode());
-      System.out.println(response.body());
-      return response.body();
-    } catch (IOException | InterruptedException ioe) {
-      ioe.printStackTrace();
-      return null;
-    }
-  }
-
-  /**
-   * Test Gson function
-   */
-  public static void parseJSON() {
-    String json = apiCall();
-    Gson gson = new Gson();
-    Recipe[] parsed = gson.fromJson(json, Recipe[].class);
-    System.out.println(parsed[0].getUri());
-  }
   
   /**
    * Gets a list of Ingredients from recipe id from the database.
