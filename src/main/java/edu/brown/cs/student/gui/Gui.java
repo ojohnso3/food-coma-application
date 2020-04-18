@@ -1,5 +1,6 @@
 package edu.brown.cs.student.gui;
 
+import com.google.gson.Gson;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -17,6 +18,7 @@ import spark.ModelAndView;
 import spark.QueryParamsMap;
 import spark.Request;
 import spark.Response;
+import spark.Route;
 import spark.Spark;
 import spark.TemplateViewRoute;
 import spark.template.freemarker.FreeMarkerEngine;
@@ -27,6 +29,8 @@ import spark.template.freemarker.FreeMarkerEngine;
  *
  */
 public class Gui {
+  
+  private static final Gson GSON = new Gson();
   
   public Gui() {
   }
@@ -56,7 +60,8 @@ public class Gui {
 
     // Setup Spark Routes
     Spark.get("/foodCOMA", new FrontHandler(), freeMarker);
-    Spark.get("/login", new LoginHandler(), freeMarker);
+    Spark.get("/setup", new SetupHandler(), freeMarker);
+    Spark.post("/login", new LoginHandler());
     // more routes (post too!)
     Spark.get("/recipe", new SubmitHandler(), freeMarker);
 
@@ -107,24 +112,43 @@ public class Gui {
   }
   
   /**
+   * Handle requests to the front page of our Stars website.
+   *
+   */
+  private static class SetupHandler implements TemplateViewRoute {
+    @Override
+    public ModelAndView handle(Request req, Response res) {
+      Map<String, Object> variables = ImmutableMap.of("title",
+          "Login", "output", "Login Validity:");
+      return new ModelAndView(variables, "login.ftl");
+    }
+  }
+  
+  /**
    * Handles the functionality of printing out the result of the Stars algorithms.
    *
    */
-  private static class LoginHandler implements TemplateViewRoute {
+  private static class LoginHandler implements Route {
 
     LoginHandler() {
     }
 
     @Override
-    public ModelAndView handle(Request req, Response res) {
-      QueryParamsMap qm = req.queryMap();
-      String textFromTextField = qm.value("text");
+    public String handle(Request req, Response res) {
+      QueryParamsMap map = req.queryMap();
+      String input = map.value("text");
       
-      String text = "hi";
+      System.out.println("NULL CHECK " + input==null);
+      System.out.println(input);
+      
+        //TODO: create an immutable map using the suggestions
+      Map<String, Object> variables = ImmutableMap.of("title",
+          "Login", "output", input);
 
-      // replace default with new String output
-      Map<String, Object> variables = ImmutableMap.of("title", "foodCOMA Query", "recipeList", text);
-      return new ModelAndView(variables, "login.ftl");
+        //TODO: return a Json of the suggestions (HINT: use the GSON instance)
+      System.out.println("HREEHEHRHEHEH" + GSON.toJson(variables));
+      return GSON.toJson(variables);
+      
     }
   }
 
