@@ -1,11 +1,11 @@
 package edu.brown.cs.student.general;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-
-import java.util.Map;
+//import java.io.File;
+//import java.io.IOException;
+//import java.io.PrintWriter;
+//import java.io.StringWriter;
+//
+//import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -35,7 +35,6 @@ public final class Main {
    * The initial method called when execution begins.
    *
    * @param args An array of command line arguments
-   * @throws IOException throws exception if necessary
    */
   public static void main(String[] args) {
     new Main(args).run();
@@ -43,8 +42,8 @@ public final class Main {
 
   private String[] args;
 
-  private Main(String[] args) {
-    this.args = args;
+  private Main(String[] inputArgs) {
+    args = inputArgs;
   }
 
   private void run() {

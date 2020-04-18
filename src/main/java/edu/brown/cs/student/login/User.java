@@ -3,6 +3,8 @@ package edu.brown.cs.student.login;
 import edu.brown.cs.student.food.*;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,17 +18,26 @@ public class User {
   private List<Recipe> previousRecipes;
   private List<Ingredient> dietaryRestrictions;
   
-  public User(String user, String pass, File users) {
+  public User(String user, String pass) throws LoginException {
     username = user;
-    previousRecipes = new ArrayList<Recipe>();
-    dietaryRestrictions = new ArrayList<Ingredient>();
+    previousRecipes = new ArrayList<>();
+    dietaryRestrictions = new ArrayList<>();
 
-    if(users.canWrite()) {
-      ;
+    PrintWriter writer;
+    try {
+      writer = new PrintWriter(Accounts.getLoginInfoFile());
+    } catch (FileNotFoundException e) {
+      throw new LoginException("login info file corrupted");
     }
+    //
+    String salt = "";
+    // Hash a password for the first time
+//    String hashed = BCrypt.hashpw(password, BCrypt.gensalt());
+    writer.write(user + "," + pass + "," + salt);
   }
   
   // TODO: figure out how to encode/store passwords
+
   
   /**
    * Comment.

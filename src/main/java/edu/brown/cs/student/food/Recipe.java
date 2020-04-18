@@ -52,33 +52,8 @@ public class Recipe {
     return uri;
   }
 
-
   public Recipe(String uri) {
     this.uri = uri;
   }
-  
-//  /**
-//   * Loads in attributes of a Recipe.
-//   * @param name
-//   * @param num
-//   * @param diet
-//   * @param health
-//   * @param cuisine
-//   * @param meal
-//   * @param dish
-//   * @param cals
-//   * @param time
-//   */
-//  public void loadRecipe(String name, int num, String diet, String health, String cuisine, String meal, String dish, double cals, double time) {
-//    recipeName = name;
-//    numIngredients = num;
-//    dietLabel = diet;
-//    healthLabel = health;
-//    cuisineType = cuisine;
-//    mealType = meal;
-//    dishType = dish;
-//    calories = cals;
-//    timeRange = time;
-//  }
 
 }
