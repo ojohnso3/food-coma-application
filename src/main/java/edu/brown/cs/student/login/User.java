@@ -23,7 +23,7 @@ public class User {
     previousRecipes = new ArrayList<>();
     dietaryRestrictions = new ArrayList<>();
 
-    PrintWriter writer = null;
+    PrintWriter writer;
     try {
       writer = new PrintWriter(Accounts.getLoginInfoFile());
     } catch (FileNotFoundException e) {
