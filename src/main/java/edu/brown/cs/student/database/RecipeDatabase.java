@@ -24,30 +24,33 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
 import com.google.common.io.Files;
+import edu.brown.cs.student.recommendation.RecipeNode;
 
 /**
  * 
  * Class comment.
  *
  */
+
 public final class RecipeDatabase {
   
   private static Connection conn;
-  
+
   public RecipeDatabase() {
-    
+
   }
-  
-  
+
+
   /**
    * Loads in database.
-   * @throws FileNotFoundException 
-   * @throws ClassNotFoundException 
-   * @throws SQLException 
+   *
+   * @throws FileNotFoundException
+   * @throws ClassNotFoundException
+   * @throws SQLException
    */
   public void loadDatabase(String fileName) throws FileNotFoundException,
-    ClassNotFoundException, SQLException {
-    
+          ClassNotFoundException, SQLException {
+
     String ext = Files.getFileExtension(fileName);
     if (!ext.equals("sqlite3")) {
       throw new FileNotFoundException("ERROR: File must be .sqlite3!");
@@ -94,36 +97,8 @@ public final class RecipeDatabase {
     String json = apiCall();
     Gson gson = new Gson();
     Recipe[] parsed = gson.fromJson(json, Recipe[].class);
-
     System.out.println(parsed[0].getUri());
   }
-
-  /**
-   * Gets a Recipe from id from the database.
-   * @param recipeID string id that corresponds to a recipe
-   * @return Recipe object
-   */
-//  public Recipe getRecipeByID(String recipeID) {
-//    Recipe recipe = new Recipe(recipeID);
-//    try {
-//      PreparedStatement prep = conn.prepareStatement(
-//          "SELECT * FROM recipes WHERE recipes.id = ?;");
-//      // recipe cols: name, num, diet, health, cuisine, meal, dish, cals, time
-//      prep.setString(1, recipeID);
-//      ResultSet results = prep.executeQuery();
-//
-//      while (results.next()) {
-//        recipe.loadRecipe(results.getString(1), results.getInt(2),
-//            results.getString(3), results.getString(4), results.getString(5),
-//            results.getString(6), results.getString(7), results.getDouble(8),
-//            results.getDouble(9));
-//      }
-//      results.close();
-//    } catch (SQLException e) {
-//      System.err.println("ERROR: Database unable to perform given SQL call.");
-//    }
-//    return recipe;
-//  }
   
   /**
    * Gets a list of Ingredients from recipe id from the database.
@@ -133,29 +108,28 @@ public final class RecipeDatabase {
   public List<Ingredient> getIngredientsByRecipeID(String recipeID) {
     return null;
   }
-  
-  
-  /**
-   * 
-   * @param ingredients
-   * @return
-   */
-  public Recipe getRecipeByIngriedentList(List<Ingredient> ingredients) {
+
+
+    /**
+     *
+     * @param ingredients
+     * @return
+     */
+//  public Recipe getRecipeByIngriedentList(List<Ingredient> ingredients) {
+//    return null;
+//  }
+
+  public static List<RecipeNode> getRecipeSubset(){
     return null;
   }
-  
-  
-  /**
-   * 
-   * @param ingredients
-   * @return
-   */
+    /**
+     *
+     * @param ingredients
+     * @return
+     */
   public List<Recipe> getRecipeListByIngriedent(Ingredient ingredients) {
     return null;
   }
-  
-  
-  
-  
-  
-}
+
+
+  }
