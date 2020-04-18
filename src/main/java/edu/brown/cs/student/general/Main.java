@@ -57,11 +57,12 @@ public final class Main {
     if (options.has("gui")) {
       Gui gui = new Gui();
       gui.runSparkServer((int) options.valueOf("port"));
+    } else {
+      FieldParser.parseJSON();
     }
 
-    
     // TODO: add functionality here
-    FieldParser.parseJSON();
 
   }
+  
 }
