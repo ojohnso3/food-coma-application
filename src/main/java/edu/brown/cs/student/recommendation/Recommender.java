@@ -9,6 +9,7 @@ import com.google.common.collect.MinMaxPriorityQueue;
 import edu.brown.cs.student.database.RecipeDatabase;
 import edu.brown.cs.student.food.Recipe;
 import edu.brown.cs.student.kdtree.KDTree;
+import edu.brown.cs.student.kdtree.KDTreeException;
 
 /**
  * 
@@ -31,10 +32,15 @@ public class Recommender {
    * @param input Search input of user
    * @return List of recommended recipes
    */
-  public List<Recipe> makeRecommendation(String userID, String input) {
+  public List<Recipe> makeRecommendation(String userID, String input) throws RecommendationException {
     KDTree<RecipeNode> kdtree = this.getKDTree(userID);
-    List<Recipe> recs = this.getRecommendedRecipes(kdtree);
-    
+    List<Recipe> recs;
+    try {
+      recs = this.getRecommendedRecipes(kdtree);
+    } catch (RecommendationException e) {
+      throw new RecommendationException(e.getMessage());
+    }
+
     if (!userRecs.containsKey(userID)) {
       userRecs.put(userID, new ArrayList<Recipe>());
     }
@@ -52,10 +58,10 @@ public class Recommender {
       Recipe rootRecipe = new Recipe("ROOT"); // fake node
       RecipeNode rootNode = new RecipeNode(rootRecipe);
       int dims = 6; // make dims based on user or universal?
-      kdtree = new KDTree<RecipeNode>(dims, rootNode);
-      List<RecipeNode> nodes = null; //RecipeDatabase.getRecipeSubset(); // TODO: make method in RecipeDatabase class
+      kdtree = new KDTree<>(dims);
+      List<RecipeNode> nodes = RecipeDatabase.getRecipeSubset(); // TODO: make method in RecipeDatabase class
       nodes.addAll(this.convertRecipesToRecipeNodes(userRecs.get(userID))); // adds user history to nodes list
-      kdtree.buildTree(0, nodes);
+      kdtree.initializeTree(nodes);
       userTrees.put(userID, kdtree);
     }
     return kdtree;
@@ -69,19 +75,27 @@ public class Recommender {
     return nodes;
   }
 
-  private List<Recipe> getRecommendedRecipes(KDTree<RecipeNode> kdtree) {
-    List<Recipe> recs = new ArrayList<Recipe>();
+  private List<Recipe> getRecommendedRecipes(KDTree<RecipeNode> kdtree) throws RecommendationException {
+    List<Recipe> recs = new ArrayList<>();
 
     // bulk of algorithm
     Recipe targetRecipe = new Recipe("TARGET"); // MAKE TARGET ACCURRATE TO SEARCH REQUIREMENTS
     RecipeNode targetNode = new RecipeNode(targetRecipe);
     int quantity = 10;
-    MinMaxPriorityQueue<RecipeNode> recipeOutput = kdtree.findKNearest(quantity, targetNode, false);
 
-    while (!recipeOutput.isEmpty()) {
-      RecipeNode node = recipeOutput.pollFirst();
+    // search for the nearest/most relevant recipes
+    List<RecipeNode> recipeNodes;
+    try {
+      recipeNodes = kdtree.nearestSearch(targetNode, quantity);
+    } catch (KDTreeException e) {
+      throw new RecommendationException(e.getMessage());
+    }
+
+    // get the actual recipes from the nodes to compile the recs list
+    for (RecipeNode node : recipeNodes) {
       recs.add(node.getRecipe());
     }
+
     return recs;
   }
 
