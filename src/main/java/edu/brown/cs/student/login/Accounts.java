@@ -2,6 +2,8 @@ package edu.brown.cs.student.login;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.security.SecureRandom;
+import java.util.Random;
 import java.util.Scanner;
 
 /**
@@ -10,34 +12,49 @@ import java.util.Scanner;
  *
  */
 public final class Accounts {
-  private static final String loginInfoFile = "data/account-login-info.csv";
+  private static final Random RANDOM = new SecureRandom();
+  private static final int ITERATIONS = 10000;
+  private static final int KEY_LENGTH = 256;
+
+  private static final String loginInfoPath = "src/main/resources/login/account-login-info.csv";
+  private static final File loginInfoFile =
+          new File(Accounts.class.getClassLoader().getResource(loginInfoPath).getFile());
   private static Scanner loginInfo;
 
   static {
     try {
-      loginInfo = new Scanner(new File(loginInfoFile));
-    } catch (FileNotFoundException e) { //TODO: is this okay?
-      System.err.println(e.getCause());
-      System.exit(1);
+      loginInfo = new Scanner(loginInfoFile);
+    } catch (FileNotFoundException e) {
+      System.err.println("login info file was not found");
     }
   }
+  // Accounts.class.getClassLoader().getResource(loginInfoPath).getFile()
+  // Accounts.class.getResourceAsStream(loginInfoPath)
+  // new File(loginInfoFile) //TODO: is this okay?
 
   /**
-   * constructor.
-   * @param loginInfo - File with login information
-   * @throws LoginException - if the file doesn't exist
+   * static utility class.
    */
-  private Accounts(File loginInfo) throws LoginException {
-    try {
-      this.loginInfo = new Scanner(loginInfo);
-    } catch (FileNotFoundException e) {
-      throw new LoginException("ERROR: checkLogin: account user/pass file not found", e);
-    }
+  private Accounts() { }
+
+  protected static File getLoginInfoFile() {
+    return loginInfoFile;
   }
 
-  public void initializeAccounts() {
-
+  // handles salt-hashing for storing password when creating users
+  // https://stackoverflow.com/questions/18142745/how-do-i-generate-a-salt-in-java-for-salted-hash
+  /**
+   * Returns a random salt to be used to hash a password.
+   *
+   * @return a 16 bytes random salt
+   */
+  public static byte[] getNextSalt() {
+    byte[] salt = new byte[16];
+    RANDOM.nextBytes(salt);
+    return salt;
   }
+
+
   // Store w/cookies, database, or hashmap
   
   // Validate method, which affirms that the given password and username are valid and match.
