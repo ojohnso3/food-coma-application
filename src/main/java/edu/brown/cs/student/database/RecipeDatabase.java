@@ -1,27 +1,14 @@
 package edu.brown.cs.student.database;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import edu.brown.cs.student.food.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.lang.reflect.Type;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
 import java.sql.Connection;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 
 import com.google.common.io.Files;
 import edu.brown.cs.student.recommendation.RecipeNode;
@@ -67,6 +54,16 @@ public final class RecipeDatabase {
     Statement stat = conn.createStatement();
     stat.executeUpdate("PRAGMA foreign_keys=ON;");
   }
+
+  /**
+   * Function to insert a recipe into the sqlite database.
+   * @param recipe - the Recipe object to be inserted.
+   * @return - a boolean representing whether insertion was successful.
+   */
+  public static boolean insertRecipe(Recipe recipe) {
+    return false;
+  }
+
   
   /**
    * Gets a list of Ingredients from recipe id from the database.
@@ -83,19 +80,20 @@ public final class RecipeDatabase {
      * @param ingredients
      * @return
      */
-//  public Recipe getRecipeByIngriedentList(List<Ingredient> ingredients) {
-//    return null;
-//  }
+  public Recipe getRecipeByIngriedentList(List<Ingredient> ingredients) {
+    return null;
+  }
 
   public static List<RecipeNode> getRecipeSubset(){
     return null;
   }
+
     /**
      *
      * @param ingredients
      * @return
      */
-  public List<Recipe> getRecipeListByIngriedent(Ingredient ingredients) {
+  public List<Recipe> getRecipeListByIngredient(Ingredient ingredients) {
     return null;
   }
 

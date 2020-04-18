@@ -19,9 +19,67 @@ import java.net.http.HttpResponse;
  *
  */
 public final class FieldParser {
+
+  /**
+   * APP_ID - The application id for api authentication.
+   * APP_KEY - The key for api authentication.
+   */
+  private static final String APP_ID = "2a676518";
+  private static final String APP_KEY = "158f55a83eee58aff1544072b788784f";
   
   public FieldParser() {
     
+  }
+
+  /**
+   * This function formats an input uri so that it can be used in a get request.
+   * @param uri - The uri that must be formatted
+   * @return - The uri with all / and : replaced.
+   */
+  private static String formatURI(String uri) {
+    String temp;
+    temp = uri.replace(":", "%3A");
+    temp = temp.replace("/", "%2F");
+    temp = temp.replace("#", "%23");
+    return temp;
+  }
+
+  /**
+   * This function takes the json for each Recipe in an array and returns the information in
+   * object form.
+   * @param json - the JSON text of the recipe.
+   * @return - the array of Recipe objects containing information from the JSON.
+   */
+  private static Recipe[] parseRecipeJSON(String json) {
+    GsonBuilder gsonBuilder = new GsonBuilder();
+    JsonDeserializer<Recipe> recipeDeserializer = new RecipeDeserializer();
+    gsonBuilder.registerTypeAdapter(Recipe.class, recipeDeserializer);
+    Gson gson = gsonBuilder.create();
+    return gson.fromJson(json, Recipe[].class);
+  }
+
+  /**
+   * This function retrieves a recipe from the api that corresponds to the given uri.
+   * @param uri - the uri of the desired recipe.
+   * @return - the recipe object corresponding to the given uri.
+   * @throws IOException - when httpClient.send fails.
+   * @throws InterruptedException - when httpClient.send fails.
+   */
+  public static Recipe getRecipeFromURI(String uri) throws IOException, InterruptedException {
+    String reformattedUri = formatURI(uri);
+
+    HttpClient httpClient = HttpClient.newBuilder().build();
+    HttpRequest httpRequest = HttpRequest.newBuilder().GET()
+        .uri(URI.create("https://api.edamam.com/search?r=" + reformattedUri +
+            "&app_id=" + APP_ID + "&app_key=" + APP_KEY)).build();
+
+    HttpResponse<String> response = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+
+    if (response.statusCode() != 200) {
+      //error
+    }
+    Recipe[] recipeArray = parseRecipeJSON(response.body());
+    return recipeArray[0];
   }
 
   /**
