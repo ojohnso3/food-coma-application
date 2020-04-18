@@ -136,21 +136,42 @@ public class Gui {
     @Override
     public String handle(Request req, Response res) {
       QueryParamsMap map = req.queryMap();
-      String input = map.value("text");
+      String input1 = map.value("text1");
+      String input2 = map.value("text2");
+      System.out.println(input1);
+      System.out.println(input2);
       
-      System.out.println("NULL CHECK " + input==null);
-      System.out.println(input);
+      boolean valid = checkUser(input1, input2);
+      String output = checkValid(valid);
       
         //TODO: create an immutable map using the suggestions
       Map<String, Object> variables = ImmutableMap.of("title",
-          "Login", "output", input);
+          "Login", "output", output);
 
         //TODO: return a Json of the suggestions (HINT: use the GSON instance)
       System.out.println("HREEHEHRHEHEH" + GSON.toJson(variables));
       return GSON.toJson(variables);
       
     }
+    
+    public boolean checkUser(String username, String password) {
+      if (username.equals(password)) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+    
+    private String checkValid(boolean check) {
+      if (check) {
+        return "Valid username!";
+      } else {
+        return "Invalid username. Try again.";
+      }
+    }
+    
   }
+
 
   /**
    * Display an error page when an exception occurs in the server.
