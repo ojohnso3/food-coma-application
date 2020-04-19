@@ -20,6 +20,7 @@
 </div>
   <p class="output">
 
+  <h3>List of recipes:</h3>
   <#list recipeList as r>
     <h6><a href="/recipe/${r.getUri()}">${r.getUri()}</a></h6>
   </#list>

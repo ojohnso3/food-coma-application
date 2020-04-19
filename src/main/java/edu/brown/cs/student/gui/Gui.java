@@ -66,7 +66,7 @@ public class Gui {
     Spark.post("/login", new LoginHandler());
     // more routes (post too!)
     Spark.get("/results", new SubmitHandler(), freeMarker);
-    Spark.get("/recipe/:recipeuri", new RecipeHandler(), freeMarker);
+    Spark.get("/recipe/:recipeuri", new RecipeHandler());
 
   }
   
@@ -123,13 +123,21 @@ public class Gui {
     }
   }
 
-  private static class RecipeHandler implements TemplateViewRoute{
+  private static class RecipeHandler implements Route{
     RecipeHandler(){
     }
     @Override
-    public ModelAndView handle(Request req, Response res){
-      Map<String, Object> variables = ImmutableMap.of("title","Recipe", "recipeList", new ArrayList<Recipe>());
-      return new ModelAndView(variables, "recipe.ftl");
+    public String handle(Request req, Response res){
+
+      Recipe recpOne = new Recipe("0002");
+      Recipe recpTwo = new Recipe("0003");
+      Recipe recpThree = new Recipe("0004");
+      List<Recipe> recipeList = new ArrayList<Recipe>();
+      recipeList.add(recpOne);
+      recipeList.add(recpTwo);
+      recipeList.add(recpThree);
+      Map<String, Object> variables = ImmutableMap.of("title","Recipe", "recipeList", recipeList);
+      return GSON.toJson(variables);
     }
   }
 
