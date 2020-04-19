@@ -63,8 +63,10 @@ public class Gui {
     Spark.get("/home", new SetupHandler("home.ftl"), freeMarker);
     Spark.get("/about", new SetupHandler("about.ftl"), freeMarker);
     Spark.get("/setup", new SetupHandler("login.ftl"), freeMarker);
+
     Spark.post("/login", new LoginHandler());
     // more routes (post too!)
+
     Spark.get("/results", new SubmitHandler(), freeMarker);
     Spark.get("/recipe/:recipeuri", new RecipeHandler());
 
@@ -80,14 +82,6 @@ public class Gui {
     @Override
     public ModelAndView handle(Request req, Response res) {
       List<Recipe> recipeList = new ArrayList<Recipe>();
-      Recipe tempRecp = new Recipe("0000");
-      Recipe tempRecpO = new Recipe("0001");
-      Recipe tempRecpT = new Recipe("0002");
-
-      recipeList.add(tempRecp);
-      recipeList.add(tempRecpO);
-      recipeList.add(tempRecpT);
-
       Map<String, Object> variables = ImmutableMap.of("title",
           "foodCOMA Query", "recipeList", recipeList);
       return new ModelAndView(variables, "query.ftl");
