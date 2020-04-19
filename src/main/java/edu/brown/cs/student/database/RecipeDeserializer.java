@@ -18,6 +18,15 @@ import java.lang.reflect.Type;
  * JsonDeserializer interface, which takes in an object of type Ingredient.
  */
 public class RecipeDeserializer implements JsonDeserializer<Recipe> {
+
+  /**
+   * Helper function for deserialize to parse NutrientInfo objects.
+   * @return - the parsed NutrientInfo object.
+   */
+  private NutrientInfo parseNutrientInfo() {
+    return null;
+  }
+
   @Override
   public Recipe deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext)
       throws JsonParseException {
@@ -50,11 +59,11 @@ public class RecipeDeserializer implements JsonDeserializer<Recipe> {
     JsonElement ingredientsArray = jsonObject.get("ingredients"); //get the json for the array of ingredients
     JsonArray jsonIngredients = ingredientsArray.getAsJsonArray(); //get the array from the json
     Ingredient[] ingredients = new Ingredient[jsonIngredients.size()];
-    for (int k = 0; k < jsonIngredients.size(); k++) {
+    for (int k = 0; k < jsonIngredients.size(); k++) { //each element of the array should be an ingredient
       JsonDeserializer<Ingredient> ingredientDeserializer = new IngredientDeserializer();
       gsonBuilder.registerTypeAdapter(Ingredient.class, ingredientDeserializer);
       Gson customGson = gsonBuilder.create();
-      Ingredient currIngredient = customGson.fromJson(jsonIngredients, Ingredient.class);
+      Ingredient currIngredient = customGson.fromJson(jsonIngredients.get(k), Ingredient.class); //parse ingredients
       ingredients[k] = currIngredient;
     }
 
@@ -63,7 +72,7 @@ public class RecipeDeserializer implements JsonDeserializer<Recipe> {
     double totalTime = jsonObject.get("totalTime").getAsDouble();
 
     JsonElement nutrientsArray = jsonObject.get("totalNutrients");
-    JsonArray jsonNutrients = nutrientsArray.getAsJsonArray();
+    JsonArray jsonNutrients = nutrientsArray.getAsJsonArray(); //these aren't stored as arrays why did they do this????????????
     NutrientInfo[] totalNutrients = new NutrientInfo[jsonNutrients.size()];
     for (int l = 0; l < jsonNutrients.size(); l++) {
       JsonElement nutrient = jsonNutrients.get(l);
