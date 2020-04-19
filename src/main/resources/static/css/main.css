@@ -13,3 +13,32 @@ h1 {
     color: #5e6ac7;
     /* text-shadow: 0 0 3px red, 0 0 5px orange; */
 }
+
+
+.navigation_bar {
+    background-color: #8aa1e6;
+    color: #fee6c2;
+    padding: 30px;
+    margin: 10px;
+    text-decoration: none;
+}
+
+a {
+    text-decoration: none;
+}
+
+a:link, a:visited {
+    color: #fee6c2;
+}
+
+a:hover {
+    background-color: rgb(150, 64, 93);
+}
+
+.home_slides {
+    height: 30%;
+    width: 60%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}

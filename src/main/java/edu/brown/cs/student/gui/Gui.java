@@ -60,7 +60,9 @@ public class Gui {
 
     // Setup Spark Routes
     Spark.get("/foodCOMA", new FrontHandler(), freeMarker);
-    Spark.get("/setup", new SetupHandler(), freeMarker);
+    Spark.get("/home", new SetupHandler("home.ftl"), freeMarker);
+    Spark.get("/about", new SetupHandler("about.ftl"), freeMarker);
+    Spark.get("/setup", new SetupHandler("login.ftl"), freeMarker);
     Spark.post("/login", new LoginHandler());
     // more routes (post too!)
     Spark.get("/results", new SubmitHandler(), freeMarker);
@@ -136,11 +138,18 @@ public class Gui {
    *
    */
   private static class SetupHandler implements TemplateViewRoute {
+    private String page;
+    
+    public SetupHandler(String p) {
+      page = p;
+    }
+    
     @Override
     public ModelAndView handle(Request req, Response res) {
+      
       Map<String, Object> variables = ImmutableMap.of("title",
-          "Login", "output", "Login Validity:");
-      return new ModelAndView(variables, "login.ftl");
+          "THIS IS " + page, "output", "");
+      return new ModelAndView(variables, page);
     }
   }
   
@@ -158,18 +167,15 @@ public class Gui {
       QueryParamsMap map = req.queryMap();
       String input1 = map.value("text1");
       String input2 = map.value("text2");
-      System.out.println(input1);
-      System.out.println(input2);
       
       boolean valid = checkUser(input1, input2);
       String output = checkValid(valid);
       
-        //TODO: create an immutable map using the suggestions
+      //TODO: create an immutable map using the suggestions
       Map<String, Object> variables = ImmutableMap.of("title",
           "Login", "output", output);
 
-        //TODO: return a Json of the suggestions (HINT: use the GSON instance)
-      System.out.println("HREEHEHRHEHEH" + GSON.toJson(variables));
+      //TODO: return a Json of the suggestions (HINT: use the GSON instance)
       return GSON.toJson(variables);
       
     }
