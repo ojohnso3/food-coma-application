@@ -60,10 +60,13 @@ public class Gui {
 
     // Setup Spark Routes
     Spark.get("/foodCOMA", new FrontHandler(), freeMarker);
-    Spark.get("/setup", new SetupHandler(), freeMarker);
+    Spark.get("/home", new SetupHandler("home.ftl"), freeMarker);
+    Spark.get("/about", new SetupHandler("about.ftl"), freeMarker);
+    Spark.get("/setup", new SetupHandler("login.ftl"), freeMarker);
     Spark.post("/login", new LoginHandler());
     // more routes (post too!)
-    Spark.get("/recipe", new SubmitHandler(), freeMarker);
+    Spark.get("/results", new SubmitHandler(), freeMarker);
+    Spark.get("/recipe/:recipeuri", new RecipeHandler());
 
   }
   
@@ -76,8 +79,17 @@ public class Gui {
   private static class FrontHandler implements TemplateViewRoute {
     @Override
     public ModelAndView handle(Request req, Response res) {
+      List<Recipe> recipeList = new ArrayList<Recipe>();
+      Recipe tempRecp = new Recipe("0000");
+      Recipe tempRecpO = new Recipe("0001");
+      Recipe tempRecpT = new Recipe("0002");
+
+      recipeList.add(tempRecp);
+      recipeList.add(tempRecpO);
+      recipeList.add(tempRecpT);
+
       Map<String, Object> variables = ImmutableMap.of("title",
-          "foodCOMA Query", "recipeList", new ArrayList<Recipe>());
+          "foodCOMA Query", "recipeList", recipeList);
       return new ModelAndView(variables, "query.ftl");
     }
   }
@@ -97,9 +109,9 @@ public class Gui {
       String textFromTextField = qm.value("text");
       List<Recipe> recipeList = new ArrayList<Recipe>();
 
-      Recipe tempRecp = new Recipe("0000");
-      Recipe tempRecpO = new Recipe("0001");
-      Recipe tempRecpT = new Recipe("0002");
+      Recipe tempRecp = new Recipe("9999");
+      Recipe tempRecpO = new Recipe("9999");
+      Recipe tempRecpT = new Recipe("9990");
 
       recipeList.add(tempRecp);
       recipeList.add(tempRecpO);
@@ -110,17 +122,42 @@ public class Gui {
       return new ModelAndView(variables, "query.ftl");
     }
   }
-  
+
+  private static class RecipeHandler implements Route{
+    RecipeHandler(){
+    }
+    @Override
+    public String handle(Request req, Response res){
+
+      Recipe recpOne = new Recipe("da 1");
+      Recipe recpTwo = new Recipe("da 2");
+      Recipe recpThree = new Recipe("da 3");
+      List<Recipe> recipeList = new ArrayList<Recipe>();
+      recipeList.add(recpOne);
+      recipeList.add(recpTwo);
+      recipeList.add(recpThree);
+      Map<String, Object> variables = ImmutableMap.of("title", "Recipe", "recipeList", recipeList);
+      return GSON.toJson(variables);
+    }
+  }
+
   /**
    * Handle requests to the front page of our Stars website.
    *
    */
   private static class SetupHandler implements TemplateViewRoute {
+    private String page;
+    
+    public SetupHandler(String p) {
+      page = p;
+    }
+    
     @Override
     public ModelAndView handle(Request req, Response res) {
+      
       Map<String, Object> variables = ImmutableMap.of("title",
-          "Login", "output", "Login Validity:");
-      return new ModelAndView(variables, "login.ftl");
+          "THIS IS " + page, "output", "");
+      return new ModelAndView(variables, page);
     }
   }
   
@@ -138,18 +175,15 @@ public class Gui {
       QueryParamsMap map = req.queryMap();
       String input1 = map.value("text1");
       String input2 = map.value("text2");
-      System.out.println(input1);
-      System.out.println(input2);
       
       boolean valid = checkUser(input1, input2);
       String output = checkValid(valid);
       
-        //TODO: create an immutable map using the suggestions
+      //TODO: create an immutable map using the suggestions
       Map<String, Object> variables = ImmutableMap.of("title",
           "Login", "output", output);
 
-        //TODO: return a Json of the suggestions (HINT: use the GSON instance)
-      System.out.println("HREEHEHRHEHEH" + GSON.toJson(variables));
+      //TODO: return a Json of the suggestions (HINT: use the GSON instance)
       return GSON.toJson(variables);
       
     }

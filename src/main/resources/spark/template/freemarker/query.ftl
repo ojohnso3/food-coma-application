@@ -12,17 +12,17 @@
 
 <br>
 <p> Recipe!
-<form method="GET" action="/recipe">
+<form method="GET" action="/results">
   <label for="text">Put in preferences for Recipe Search</label><br>
   <textarea name="text" id="text"></textarea><br>
   <input type="submit">
 </form>
-</p>
+</div>
   <p class="output">
 
+  <h3>List of recipes:</h3>
   <#list recipeList as r>
-    <h6><a href="http://localhost:4567/recipe/${r.getURI()}" ${r.getURI()}</a></h6>
-
+    <h6 id="recipes"><a href="/recipe/${r.getUri()}">${r.getUri()}</a></h6>
   </#list>
 
   </p>
