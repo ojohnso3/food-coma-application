@@ -109,9 +109,9 @@ public class Gui {
       String textFromTextField = qm.value("text");
       List<Recipe> recipeList = new ArrayList<Recipe>();
 
-      Recipe tempRecp = new Recipe("0000");
-      Recipe tempRecpO = new Recipe("0001");
-      Recipe tempRecpT = new Recipe("0002");
+      Recipe tempRecp = new Recipe("9999");
+      Recipe tempRecpO = new Recipe("9999");
+      Recipe tempRecpT = new Recipe("9990");
 
       recipeList.add(tempRecp);
       recipeList.add(tempRecpO);
@@ -129,14 +129,14 @@ public class Gui {
     @Override
     public String handle(Request req, Response res){
 
-      Recipe recpOne = new Recipe("0002");
-      Recipe recpTwo = new Recipe("0003");
-      Recipe recpThree = new Recipe("0004");
+      Recipe recpOne = new Recipe("da 1");
+      Recipe recpTwo = new Recipe("da 2");
+      Recipe recpThree = new Recipe("da 3");
       List<Recipe> recipeList = new ArrayList<Recipe>();
       recipeList.add(recpOne);
       recipeList.add(recpTwo);
       recipeList.add(recpThree);
-      Map<String, Object> variables = ImmutableMap.of("title","Recipe", "recipeList", recipeList);
+      Map<String, Object> variables = ImmutableMap.of("title", "Recipe", "recipeList", recipeList);
       return GSON.toJson(variables);
     }
   }
