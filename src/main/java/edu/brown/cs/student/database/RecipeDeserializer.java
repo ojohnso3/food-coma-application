@@ -102,7 +102,7 @@ public class RecipeDeserializer implements JsonDeserializer<Recipe> {
     JsonObject totalDailyObject = totalDaily.getAsJsonObject();
 
     JsonElement totalNutrients = jsonObject.get("totalNutrients");
-    JsonObject totalNutrientsObject = totalDaily.getAsJsonObject();
+    JsonObject totalNutrientsObject = totalNutrients.getAsJsonObject();
 
     Map<String, double[]> nutrients = this.makeNutrientMap(totalDailyObject, totalNutrientsObject);
 

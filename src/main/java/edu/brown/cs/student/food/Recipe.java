@@ -1,14 +1,11 @@
 package edu.brown.cs.student.food;
 
-
-import com.google.gson.annotations.SerializedName;
-
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * 
- * Class comment.
+ * This class stores the data for a recipe, received from the Edamam api.
  *
  */
 public class Recipe {
@@ -60,6 +57,11 @@ public class Recipe {
 
   public double[] getNutrientVals(String nutrientCode) {
     return this.nutrients.get(nutrientCode);
+  }
+
+  public String prepareForInsert() {
+    return uri + "," + label + "," + image + "," + source + "," + url + "," + yield + "," + calories + "," + totalWeight
+        + "," + totalTime;
   }
 
 }

@@ -26,6 +26,8 @@ public class Ingredient {
     this.weight = weight;
   }
 
-
+  public String getText() {
+    return text;
+  }
   
 }
