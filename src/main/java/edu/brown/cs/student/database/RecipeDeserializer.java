@@ -12,6 +12,8 @@ import edu.brown.cs.student.food.Recipe;
 import com.google.gson.JsonDeserializer;
 
 import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This class is used to provide a deserializer to parse the Edamam Api JSON. It implements the
@@ -20,11 +22,36 @@ import java.lang.reflect.Type;
 public class RecipeDeserializer implements JsonDeserializer<Recipe> {
 
   /**
-   * Helper function for deserialize to parse NutrientInfo objects.
-   * @return - the parsed NutrientInfo object.
+   * @param totalDailyObject - the JSON object for the totalDaily list.
+   * @param totalNutrientsObject - the JSOn object ofr the totalNutrients list.
+   * Helper function for deserialize to store all of the totalDaily and totalNutrient info in the
+   * JSON.
+   * @return - A Map with keys as the nutrient code and an array of the daily quantity and the
+   * total quantity, as doubles.
    */
-  private NutrientInfo parseNutrientInfo() {
-    return null;
+  private Map<String, double[]> makeNutrientMap(JsonObject totalDailyObject, JsonObject totalNutrientsObject) {
+
+    Map<String, double[]> nutrients = new HashMap<>();
+
+    for (String code : NutrientInfo.nutrients.keySet()) {
+      if (totalNutrientsObject.has(code)) {
+        JsonElement currDailyNutrient = totalDailyObject.get(code);
+        JsonObject currDailyNutrientObject = currDailyNutrient.getAsJsonObject();
+        double totalDailyQuantity = currDailyNutrientObject.get("quantity").getAsDouble();
+
+        JsonElement currNutrientJson = totalDailyObject.get(code);
+        JsonObject currNutrientObject = currNutrientJson.getAsJsonObject();
+        double totalNutrientQuantity = currNutrientObject.get("quantity").getAsDouble();
+
+        double[] nutrientArray = new double[2];
+        nutrientArray[0] = totalDailyQuantity;
+        nutrientArray[1] = totalNutrientQuantity;
+
+        nutrients.put(code, nutrientArray);
+      }
+    }
+
+    return nutrients;
   }
 
   @Override
@@ -71,31 +98,15 @@ public class RecipeDeserializer implements JsonDeserializer<Recipe> {
     double totalWeight = jsonObject.get("totalWeight").getAsDouble();
     double totalTime = jsonObject.get("totalTime").getAsDouble();
 
-    JsonElement nutrientsArray = jsonObject.get("totalNutrients");
-    JsonArray jsonNutrients = nutrientsArray.getAsJsonArray(); //these aren't stored as arrays why did they do this????????????
-    NutrientInfo[] totalNutrients = new NutrientInfo[jsonNutrients.size()];
-    for (int l = 0; l < jsonNutrients.size(); l++) {
-      JsonElement nutrient = jsonNutrients.get(l);
-      JsonObject nutrientObject = nutrient.getAsJsonObject();
-      String nutrientLabel = nutrientObject.get("label").getAsString();
-      double quantity = nutrientObject.get("quantity").getAsDouble();
-      String unit = nutrientObject.get("unit").getAsString();
-      totalNutrients[l] = new NutrientInfo(nutrientLabel, quantity, unit);
-    }
+    JsonElement totalDaily = jsonObject.get("totalDaily");
+    JsonObject totalDailyObject = totalDaily.getAsJsonObject();
 
-    JsonElement dailyArray = jsonObject.get("totalDaily");
-    JsonArray jsonDaily = dailyArray.getAsJsonArray();
-    NutrientInfo[] totalDaily = new NutrientInfo[jsonNutrients.size()];
-    for (int l = 0; l < jsonDaily.size(); l++) {
-      JsonElement nutrient = jsonDaily.get(l);
-      JsonObject nutrientObject = nutrient.getAsJsonObject();
-      String nutrientLabel = nutrientObject.get("label").getAsString();
-      double quantity = nutrientObject.get("quantity").getAsDouble();
-      String unit = nutrientObject.get("unit").getAsString();
-      totalDaily[l] = new NutrientInfo(nutrientLabel, quantity, unit);
-    }
+    JsonElement totalNutrients = jsonObject.get("totalNutrients");
+    JsonObject totalNutrientsObject = totalDaily.getAsJsonObject();
+
+    Map<String, double[]> nutrients = this.makeNutrientMap(totalDailyObject, totalNutrientsObject);
 
     return new Recipe(uri, label, image, source, url, yield, calories, totalWeight, totalTime,
-        ingredients, totalNutrients, totalDaily, dietLabels, healthLabels);
+    ingredients, nutrients, dietLabels, healthLabels);
   }
 }

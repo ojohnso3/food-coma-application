@@ -115,5 +115,6 @@ public final class FieldParser {
     Gson gson = gsonBuilder.create();
     Recipe[] parsed = gson.fromJson(json, Recipe[].class);
     System.out.println(parsed[0].getUri());
+    System.out.println(parsed[0].getNutrientVals("FE")[0]);
   }
 }
