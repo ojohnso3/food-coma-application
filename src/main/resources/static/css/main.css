@@ -27,7 +27,7 @@ a {
     text-decoration: none;
 }
 
-a:link, a:visited {
+.bar_item a:link, .bar_item a:visited {
     color: #fee6c2;
 }
 
@@ -41,4 +41,8 @@ a:hover {
     display: block;
     margin-left: auto;
     margin-right: auto;
+}
+
+#recipes {
+    color: black;
 }
