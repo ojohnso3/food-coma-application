@@ -58,7 +58,8 @@ public class Gui {
     Spark.get("/foodCOMA", new FrontHandler(), freeMarker);
     Spark.get("/login", new LoginHandler(), freeMarker);
     // more routes (post too!)
-    Spark.get("/recipe", new SubmitHandler(), freeMarker);
+    Spark.get("/results", new SubmitHandler(), freeMarker);
+    Spark.get("/recipe/:recipeuri", new RecipeHandler(), freeMarker);
 
   }
   
@@ -71,8 +72,17 @@ public class Gui {
   private static class FrontHandler implements TemplateViewRoute {
     @Override
     public ModelAndView handle(Request req, Response res) {
+      List<Recipe> recipeList = new ArrayList<Recipe>();
+      Recipe tempRecp = new Recipe("0000");
+      Recipe tempRecpO = new Recipe("0001");
+      Recipe tempRecpT = new Recipe("0002");
+
+      recipeList.add(tempRecp);
+      recipeList.add(tempRecpO);
+      recipeList.add(tempRecpT);
+
       Map<String, Object> variables = ImmutableMap.of("title",
-          "foodCOMA Query", "recipeList", new ArrayList<Recipe>());
+          "foodCOMA Query", "recipeList", recipeList);
       return new ModelAndView(variables, "query.ftl");
     }
   }
@@ -105,7 +115,17 @@ public class Gui {
       return new ModelAndView(variables, "query.ftl");
     }
   }
-  
+
+  private static class RecipeHandler implements TemplateViewRoute{
+    RecipeHandler(){
+    }
+    @Override
+    public ModelAndView handle(Request req, Response res){
+      Map<String, Object> variables = ImmutableMap.of("title","Recipe", "recipeList", new ArrayList<Recipe>());
+      return new ModelAndView(variables, "recipe.ftl");
+    }
+  }
+
   /**
    * Handles the functionality of printing out the result of the Stars algorithms.
    *
