@@ -12,6 +12,7 @@ h1 {
     /* text-shadow: 0 0 3px #FF0000; */
     color: #5e6ac7;
     /* text-shadow: 0 0 3px red, 0 0 5px orange; */
+    text-decoration: underline;
 }
 
 
@@ -36,8 +37,9 @@ a:hover {
 }
 
 .home_slides {
-    height: 30%;
-    width: 60%;
+    border: dotted;
+    height: 500px;
+    width: 1000px;
     display: block;
     margin-left: auto;
     margin-right: auto;
@@ -46,3 +48,32 @@ a:hover {
 #recipes {
     color: black;
 }
+
+.details {
+    width: 600px;
+    background-color: #5e6ac7;
+    color: #fee6c2;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 5px;
+    margin-bottom: 20px;
+}
+
+.container {
+    display: flex;
+    width: 100%;
+}
+
+.art {
+    /* display: flex; */
+    width: 33.33%;
+    background-color: yellow;
+    border: 3px solid black;
+}
+
+.footer {
+    margin-top: 20px;
+    background-color: #f09393;
+    border: 2px solid #f8c75d;
+}
+
