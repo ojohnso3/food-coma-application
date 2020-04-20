@@ -6,22 +6,34 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 
- * Class comment.
- *
+ * Class for a User, storing username, hashed password, and salt used for hashing to raw password
+ * in csv upon construction and holding in its fields the user's username, saved recipes, and
+ * dietary restrictions.
  */
 public class User {
   private String username;
   private List<Recipe> previousRecipes;
   private List<Ingredient> dietaryRestrictions;
-  
+
+  /**
+   * constructors adds login info to db.
+   * @param user name
+   * @param pass password
+   * @throws AccountException on write failure, just propagate message to handle.
+   */
   public User(String user, String pass) throws AccountException {
     username = user;
     previousRecipes = new ArrayList<>();
     dietaryRestrictions = new ArrayList<>();
     Accounts.writeLoginInfo(user, pass); // write the login info to our csv
   }
-  
+
+  public User(String user, String pass, String path) throws AccountException {
+    username = user;
+    previousRecipes = new ArrayList<>();
+    dietaryRestrictions = new ArrayList<>();
+    Accounts.writeLoginInfo(user, pass, path); // write the login info to our csv
+  }
 
   /**
    * Comment.
@@ -30,23 +42,7 @@ public class User {
   public String getUsername() {
     return username;
   }
-  
-  /**
-   * Comment.
-   * @param unencoded
-   */
-  public void setPassword(String unencoded) {
-    // encode
-  }
-  
-  /**
-   * Comment.
-   * @return
-   */
-  public String getPassword() {
-    return null;
-  }
-  
+
   /**
    * Comment.
    * @param recipe
@@ -71,7 +67,4 @@ public class User {
   public void addToRestrictions(Ingredient ingredient) {
     dietaryRestrictions.add(ingredient);
   }
-  
-  
-
 }
