@@ -2,8 +2,6 @@ package edu.brown.cs.student.login;
 
 import edu.brown.cs.student.food.*;
 
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,17 +19,7 @@ public class User {
     username = user;
     previousRecipes = new ArrayList<>();
     dietaryRestrictions = new ArrayList<>();
-
-    PrintWriter writer;
-    try {
-      writer = new PrintWriter(Accounts.getLoginInfoFile());
-    } catch (FileNotFoundException e) {
-      throw new AccountException("login info file corrupted");
-    }
-    //
-    byte[] salt = Accounts.generateSalt();
-    byte[] hash = Accounts.hashPasswordPBKDF2(pass, salt);
-    writer.write(user + "," + hash + "," + salt);
+    Accounts.writeLoginInfo(user, pass); // write the login info to our csv
   }
   
 
