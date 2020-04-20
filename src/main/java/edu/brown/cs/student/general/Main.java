@@ -11,6 +11,7 @@ import com.google.common.collect.ImmutableMap;
 
 import edu.brown.cs.student.database.FieldParser;
 import edu.brown.cs.student.database.RecipeDatabase;
+import edu.brown.cs.student.food.NutrientInfo;
 import edu.brown.cs.student.food.Recipe;
 import edu.brown.cs.student.gui.Gui;
 import freemarker.template.Configuration;
@@ -23,6 +24,8 @@ import spark.Response;
 import spark.Spark;
 import spark.TemplateViewRoute;
 import spark.template.freemarker.FreeMarkerEngine;
+
+import java.lang.reflect.Field;
 
 /**
  * The Main class of our project. This is where execution begins.
@@ -58,6 +61,7 @@ public final class Main {
       Gui gui = new Gui();
       gui.runSparkServer((int) options.valueOf("port"));
     } else {
+      NutrientInfo.createNutrientsList();
       FieldParser.parseJSON();
     }
 

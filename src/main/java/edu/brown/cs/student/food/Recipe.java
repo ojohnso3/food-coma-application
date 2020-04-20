@@ -1,11 +1,11 @@
 package edu.brown.cs.student.food;
 
-
-import com.google.gson.annotations.SerializedName;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 
- * Class comment.
+ * This class stores the data for a recipe, received from the Edamam api.
  *
  */
 public class Recipe {
@@ -19,15 +19,14 @@ public class Recipe {
   private double totalWeight;
   private double totalTime;
   private Ingredient[] ingredients;
-  private NutrientInfo[] totalNutrients;
-  private NutrientInfo[] totalDaily;
   private String[] dietLabels;
   private String[] healthLabels;
+  private Map<String, double[]> nutrients = new HashMap<>();
 
 
   public Recipe(String uri, String label, String image, String source, String url, double yield,
                 double calories, double totalWeight, double totalTime, Ingredient[] ingredients,
-                NutrientInfo[] totalNutrients, NutrientInfo[] totalDaily, String[] dietLabels,
+                Map<String, double[]> nutrients, String[] dietLabels,
                 String[] healthLabels) {
     this.uri = uri;
     this.label = label;
@@ -41,9 +40,13 @@ public class Recipe {
     this.ingredients = ingredients;
     this.dietLabels = dietLabels;
     this.healthLabels = healthLabels;
-    this.totalNutrients = totalNutrients;
-    this.totalDaily = totalDaily;
+    this.nutrients = nutrients;
   }
+
+  public Recipe(String uri) {
+    this.uri = uri;
+  }
+
   public Ingredient[] getIngredients() {
     return ingredients;
   }
@@ -52,8 +55,13 @@ public class Recipe {
     return uri;
   }
 
-  public Recipe(String uri) {
-    this.uri = uri;
+  public double[] getNutrientVals(String nutrientCode) {
+    return this.nutrients.get(nutrientCode);
+  }
+
+  public String prepareForInsert() {
+    return uri + "," + label + "," + image + "," + source + "," + url + "," + yield + "," + calories + "," + totalWeight
+        + "," + totalTime;
   }
 
 }
