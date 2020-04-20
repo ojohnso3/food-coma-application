@@ -5,9 +5,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -60,15 +60,16 @@ public class Gui {
 
     // Setup Spark Routes
     Spark.get("/foodCOMA", new FrontHandler(), freeMarker);
-    Spark.get("/home", new SetupHandler("home.ftl"), freeMarker);
-    Spark.get("/about", new SetupHandler("about.ftl"), freeMarker);
-    Spark.get("/setup", new SetupHandler("login.ftl"), freeMarker);
-    Spark.get("/recipe/:recipeuri", new SetupHandler("recipe.ftl"), freeMarker);
+    Spark.get("/home", new SetupHandler("home.ftl", "foodCOMA Home"), freeMarker);
+    Spark.get("/about", new SetupHandler("about.ftl", "About"), freeMarker);
+    Spark.get("/setup", new SetupHandler("login.ftl", "Login"), freeMarker);
+    Spark.get("/recipe/:recipeuri", new SetupHandler("recipe.ftl", "Recipe Detail"), freeMarker);
     Spark.post("/login", new LoginHandler());
     // more routes (post too!)
 
     Spark.get("/results", new SubmitHandler(), freeMarker);
-    Spark.get("/recipe/:recipeuri", new RecipeHandler());
+    Spark.post("/recipe/:recipeuri", new RecipeHandler(this));
+//    Spark.get("/recipe/:recipeuri", new RecipeHandler());
 
   }
   
@@ -102,7 +103,7 @@ public class Gui {
       QueryParamsMap qm = req.queryMap();
       String textFromTextField = qm.value("text");
       List<Recipe> recipeList = new ArrayList<Recipe>();
-
+      String valFromMap = qm.value("x1");
       Recipe tempRecp = new Recipe("9999");
       Recipe tempRecpO = new Recipe("9999");
       Recipe tempRecpT = new Recipe("9990");
@@ -118,20 +119,39 @@ public class Gui {
   }
 
   private static class RecipeHandler implements Route{
-    RecipeHandler(){
+    Gui gui;
+    RecipeHandler(Gui g){
+      gui = g;
     }
     @Override
     public String handle(Request req, Response res){
+      QueryParamsMap qm = req.queryMap();
+      String url = qm.value("url");
+      System.out.println("The URL is " + url);
+      Pattern load = Pattern.compile("http:\\/\\/localhost:.+\\/recipe\\/(.+)");
+      String recipeURI = null;
+      if(url != null){
+        Matcher matchURL = load.matcher(url);
+        if(matchURL.find()){
+          recipeURI = matchURL.group(1);
+          System.out.println("The Recipe URI is " + recipeURI);
+        }
+      }
 
-      Recipe recpOne = new Recipe("da 1");
-      Recipe recpTwo = new Recipe("da 2");
-      Recipe recpThree = new Recipe("da 3");
-      List<Recipe> recipeList = new ArrayList<Recipe>();
-      recipeList.add(recpOne);
-      recipeList.add(recpTwo);
-      recipeList.add(recpThree);
-      Map<String, Object> variables = ImmutableMap.of("title", "Recipe", "recipeList", recipeList);
+      Recipe recpOne = new Recipe("0100");
+      Recipe recpTwo = new Recipe("0200");
+      Recipe recpThree = new Recipe("0300");
+//      List<Recipe> recipeList = new ArrayList<Recipe>();
+//      recipeList.add(recpOne);
+//      recipeList.add(recpTwo);
+//      recipeList.add(recpThree);
+      Map<String,String> recipes = new HashMap<String, String>();
+      recipes.put(recpOne.getUri(), "Tofu");
+      recipes.put(recpTwo.getUri(), "Other Tofu");
+      recipes.put(recpThree.getUri(), "We Only Eat Tofu");
+      Map<String, Object> variables = ImmutableMap.of("recipeList", recipes, "title", " " + gui.getRecipeTitle(recipeURI));
       return GSON.toJson(variables);
+
     }
   }
 
@@ -141,16 +161,18 @@ public class Gui {
    */
   private static class SetupHandler implements TemplateViewRoute {
     private String page;
+    private String title;
     
-    public SetupHandler(String p) {
+    public SetupHandler(String p, String t) {
       page = p;
+      title = t;
     }
     
     @Override
     public ModelAndView handle(Request req, Response res) {
       
       Map<String, Object> variables = ImmutableMap.of("title",
-          "THIS IS " + page, "output", "");
+          title, "output", "");
       return new ModelAndView(variables, page);
     }
   }
@@ -218,6 +240,17 @@ public class Gui {
       res.body(stacktrace.toString());
     }
   }
-  
+
+  public static String getRecipeTitle(String uri){
+    System.out.println("URI inputted to getTitle is " + uri);
+    HashMap<String, String> map = new HashMap<String, String>();
+    map.put(null, "null name :)");
+    map.put("0100", "Tofu");
+    map.put("0200", "Other Tofu");
+    map.put("0300", "We Only Eat Tofu");
+    System.out.println("Name output is " + map.get(uri));
+
+    return map.get(uri);
+  }
 
 }
