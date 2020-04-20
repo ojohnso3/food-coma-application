@@ -30,7 +30,7 @@
       <a href="https://www.youtube.com/watch?v=astISOttCQ0" target="_blank">Press me</a>
       <br><br>
       <a href="#"><i class="fa fa-facebook-official"></i></a>
-      <a href="#"><i class="fa-instagram"></i></a>
+      <a href="#"><i class="fa fa-instagram"></i></a>
       <a href="#"><i class="fa fa-twitter"></i></a>   
       <a href="#"><i class="fa fa-linkedin"></i></a>
       <a href="#"><i class="fa fa-pinterest-p"></i></a>   
