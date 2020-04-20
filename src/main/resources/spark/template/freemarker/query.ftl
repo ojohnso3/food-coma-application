@@ -28,10 +28,5 @@
   </p>
 
 
-<br><br>
-<a href="/setup"><h1>Go to Login by pressing here!</h1></a>
-
-<br><br>
-
 </#assign>
 <#include "main.ftl">

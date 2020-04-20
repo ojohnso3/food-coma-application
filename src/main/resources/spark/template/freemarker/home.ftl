@@ -1,17 +1,40 @@
 <#assign content>
 
-<div class="navigation_bar">   
-    <a href="/setup" class="bar_item">Login</a>   
-    <a href="/foodCOMA" class="bar_item">Search</a>  
-    <a href="/about" class="bar_item">About</a>   
-</div>
+<h1>Home Page</h1>
 
 <div class="images">
-  <img class="home_slides" src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSb73kLRA3I7yEr6VYKeg9JFO9sPIWpz7lz-Kd3OnnVMnP0wX5P&usqp=CAU">
-  <img class="home_slides" src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcS5_yFCdVuUOuEtEE_Y54MApOgGH_70SA8zYaa-8X3y3u0nbSMN&usqp=CAU">
+  <img class="home_slides" src="https://tinyurl.com/ya7urluw">
+  <img class="home_slides" src="https://tinyurl.com/y86lsznl">
 </div>
 
-<h1>dis is the home page</h1>
+
+<div>
+  <h2>THE FOOD</h2>
+  <p><i>We love cooking</i></p>
+</div> 
+
+<div class="details">
+  <p>
+  We have created a recipe website. 
+  Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
+  sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+  </p>
+</div> 
+
+<div class="container">
+  <div class="art">
+    <p>Cameron</p>
+    <img src="https://tinyurl.com/ya7urluw" style="width:100%">
+  </div>
+  <div class="art">
+    <p>Annabeth</p>
+    <img src="https://tinyurl.com/ya7urluw" style="width:100%">
+  </div>
+  <div class="art">
+    <p>Morgann</p>
+    <img src="https://tinyurl.com/ya7urluw" style="width:100%">
+  </div>
+</div> 
 
 <script src="js/home.js"></script>
 

@@ -14,17 +14,21 @@ public class RecipeNode implements KDNode<RecipeNode> {
   private Recipe recipe;
   private double[] coordinates;
   private RecipeNode leftNode;
-  private RecipeNode rightNode; 
+  private RecipeNode rightNode;
+  private int dim;
+  private String id;
   
   
-  public RecipeNode(Recipe r) {
-    recipe = r;
+  public RecipeNode(Recipe r, int dim) {
+    this.recipe = r;
+    this.dim = dim;
+    this.id = r.getUri();
     this.generateCoordsFromRecipe();
     
   }
   
   private void generateCoordsFromRecipe() {
-    coordinates = new double[6];
+    coordinates = new double[dim];
     // TODO: set values based on recipe !!
   }
   
@@ -39,7 +43,7 @@ public class RecipeNode implements KDNode<RecipeNode> {
 
   @Override
   public String getId() {
-    return null;
+    return id;
   }
 
   @Override
@@ -49,21 +53,21 @@ public class RecipeNode implements KDNode<RecipeNode> {
 
   @Override
   public RecipeNode getLeftChild() {
-    return null;
+    return this.leftNode;
   }
 
   @Override
   public void setLeftChild(RecipeNode lc) {
-
+    this.leftNode = lc;
   }
 
   @Override
   public RecipeNode getRightChild() {
-    return null;
+    return this.rightNode;
   }
 
   @Override
   public void setRightChild(RecipeNode rc) {
-
+    this.rightNode = rc;
   }
 }
