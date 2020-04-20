@@ -25,9 +25,7 @@
     ${content}
 
     <footer class="footer">
-      <p>FOOOTER BABY</p>
-      <a href="#"><i>Up</i></a>
-      <a href="https://www.youtube.com/watch?v=astISOttCQ0" target="_blank">Press me</a>
+      <a href="https://www.youtube.com/watch?v=astISOttCQ0" target="_blank">Press me!</a>
       <br><br>
       <a href="#"><i class="fa fa-facebook-official"></i></a>
       <a href="#"><i class="fa fa-instagram"></i></a>
