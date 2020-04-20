@@ -63,7 +63,7 @@ public class Gui {
     Spark.get("/home", new SetupHandler("home.ftl"), freeMarker);
     Spark.get("/about", new SetupHandler("about.ftl"), freeMarker);
     Spark.get("/setup", new SetupHandler("login.ftl"), freeMarker);
-
+    Spark.get("/recipe/:recipeuri", new SetupHandler("recipe.ftl"), freeMarker);
     Spark.post("/login", new LoginHandler());
     // more routes (post too!)
 
