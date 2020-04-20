@@ -1,3 +1,4 @@
+
 package edu.brown.cs.student.recommendation;
 
 import java.util.ArrayList;
@@ -8,27 +9,29 @@ import edu.brown.cs.student.database.RecipeDatabase;
 import edu.brown.cs.student.food.Recipe;
 import edu.brown.cs.student.kdtree.KDTree;
 import edu.brown.cs.student.kdtree.KDTreeException;
+import edu.brown.cs.student.login.User;
 
 /**
  * This class contains the code to compile recipe recommendations based on user input and history.
  */
 public class Recommender {
   private KDTree<RecipeNode> recipeTree;
-  private HashMap<String, List<Recipe>> userRecs;
-  private int dim;
   private static final int TREE_INIT_SIZE = 50;
+  private static final int REC_QUANTITY = 10;
+  private static final int DIM = 6;
 
-  
-  public Recommender(int dim) {
-    this.dim = dim;
-    this.recipeTree = new KDTree<>(dim);
-    this.userRecs = new HashMap<>();
+  //TODO: figure out which version of the algorithm we want to use!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  //Need to change findTargetNode and initRecipeTree based on this.
+
+  public Recommender() {
+    this.recipeTree = new KDTree<>(DIM);
+    this.initRecipeTree();
   }
 
   /**
    * Function to initialize the KDTree to be used when recommending recipes to users. (maybe change this!!!!!!!!!!!!!!!!!!!!)
    */
-  public void initRecipeTree() {
+  private void initRecipeTree() {
     List<Recipe> recipesList = RecipeDatabase.getRecipeSubset(TREE_INIT_SIZE);
     //check for errors here!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     List<RecipeNode> nodesList = this.convertRecipesToRecipeNodes(recipesList);
@@ -37,24 +40,21 @@ public class Recommender {
   
   /**
    * Comment.
-   * @param userID Id of current user
+   * @param user Id of current user
    * @param input Search input of user
    * @return List of recommended recipes
    */
-  public List<Recipe> makeRecommendation(String userID, String input) throws RecommendationException {
+  public List<Recipe> makeRecommendation(User user, String input) throws RecommendationException {
     List<Recipe> recs;
-    List<Recipe> userHistory = this.userRecs.get(userID);
+    List<Recipe> userHistory = user.getPreviousRecipes();
     try {
       recs = this.getRecommendedRecipes(input, userHistory);
     } catch (RecommendationException e) {
       throw new RecommendationException(e.getMessage());
     }
 
-    if (!userRecs.containsKey(userID)) {
-      userRecs.put(userID, new ArrayList<>());
-    }
     for (Recipe r : recs) { //maybe only want to save recent history?????????????????????????????????
-      userRecs.get(userID).add(r); // figure out order and backwards?
+      user.addToPreviousRecipes(r); // figure out order and backwards?
     }
     return recs;
   }
@@ -77,14 +77,14 @@ public class Recommender {
 //  }
 
   /**
-   * Function to find coordinates for Recipes and convert them to nodes.
+   * Function to find convert Recipes into RecipeNodes.
    * @param recipes - a list of Recipes to convert to nodes.
    * @return - a list of the converted RecipeNodes.
    */
-  private List<RecipeNode> convertRecipesToRecipeNodes(List<Recipe> recipes) { //need to add functionality to create coordinates for each node
+  private List<RecipeNode> convertRecipesToRecipeNodes(List<Recipe> recipes) {
     List<RecipeNode> nodes = new ArrayList<RecipeNode>();
     for (Recipe recipe: recipes) {
-      nodes.add(new RecipeNode(recipe));
+      nodes.add(new RecipeNode(recipe, DIM));
     }
     return nodes;
   }
@@ -101,13 +101,13 @@ public class Recommender {
 
   private List<Recipe> getRecommendedRecipes(String input, List<Recipe> userHistory) throws RecommendationException {
     List<Recipe> recs = new ArrayList<>();
+
     RecipeNode target = this.getTargetNode(input, userHistory);
-    int quantity = 10;
 
     // search for the nearest/most relevant recipes
     List<RecipeNode> recipeNodes;
     try {
-      recipeNodes = recipeTree.nearestSearch(target, quantity);
+      recipeNodes = recipeTree.nearestSearch(target, REC_QUANTITY);
     } catch (KDTreeException e) {
       throw new RecommendationException(e.getMessage());
     }

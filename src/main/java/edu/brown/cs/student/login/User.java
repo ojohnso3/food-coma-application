@@ -58,6 +58,14 @@ public class User {
   public String getPassword() {
     return null;
   }
+
+  /**
+   * Function to return the previousRecipes field.
+   * @return - previousRecipes.
+   */
+  public List<Recipe> getPreviousRecipes() {
+    return previousRecipes;
+  }
   
   /**
    * Comment.
