@@ -19,8 +19,6 @@ import java.sql.Connection;
 import java.util.Map;
 
 import com.google.common.io.Files;
-import edu.brown.cs.student.recommendation.RecipeNode;
-import org.eclipse.jetty.util.IO;
 
 /**
  * This class contains all interactions with the sqlite database.
