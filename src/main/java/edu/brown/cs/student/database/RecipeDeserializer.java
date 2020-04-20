@@ -12,7 +12,9 @@ import edu.brown.cs.student.food.Recipe;
 import com.google.gson.JsonDeserializer;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -85,13 +87,13 @@ public class RecipeDeserializer implements JsonDeserializer<Recipe> {
 
     JsonElement ingredientsArray = jsonObject.get("ingredients"); //get the json for the array of ingredients
     JsonArray jsonIngredients = ingredientsArray.getAsJsonArray(); //get the array from the json
-    Ingredient[] ingredients = new Ingredient[jsonIngredients.size()];
+    List<Ingredient> ingredients = new ArrayList<>();
     for (int k = 0; k < jsonIngredients.size(); k++) { //each element of the array should be an ingredient
       JsonDeserializer<Ingredient> ingredientDeserializer = new IngredientDeserializer();
       gsonBuilder.registerTypeAdapter(Ingredient.class, ingredientDeserializer);
       Gson customGson = gsonBuilder.create();
       Ingredient currIngredient = customGson.fromJson(jsonIngredients.get(k), Ingredient.class); //parse ingredients
-      ingredients[k] = currIngredient;
+      ingredients.add(currIngredient);
     }
 
     double calories = jsonObject.get("calories").getAsDouble();

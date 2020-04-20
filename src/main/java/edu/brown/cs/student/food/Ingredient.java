@@ -29,5 +29,9 @@ public class Ingredient {
   public String getText() {
     return text;
   }
+
+  public double getWeight() {
+    return weight;
+  }
   
 }

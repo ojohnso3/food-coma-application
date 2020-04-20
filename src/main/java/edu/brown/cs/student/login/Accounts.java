@@ -4,11 +4,8 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 //import org.springframework.security.crypto.password;
 //import org.springframework.security.crypto.bcrypt.BCrypt;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
+import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
@@ -21,7 +18,7 @@ import java.util.Scanner;
 /**
  * Static utility class that deals with login generation, storing, and attempts for all Accounts.
  */
-public final class Accounts {
+public class Accounts {
   private static final Random RANDOM = new SecureRandom();
   private static final int ITERATIONS = 10000;
   private static final int KEY_LENGTH = 256;
@@ -61,7 +58,7 @@ public final class Accounts {
   /**
    * static utility class.
    */
-  private Accounts() { }
+  protected Accounts() { }
 
 //  protected static File getLoginInfoFile() {
 //    return loginInfoFile;
@@ -94,8 +91,8 @@ public final class Accounts {
     return salt;
   }
 
-  public static byte[] hashPassword(String rawPassword, byte[] salt) {
-    return simpleHash(rawPassword, salt);
+  public static byte[] hashPassword(String pass, byte[] salt) {
+    return simpleHash(pass, salt);
   }
 
   /**
@@ -106,9 +103,10 @@ public final class Accounts {
    */
   public static byte[] simpleHash(String rawPassword, byte[] salt) {
     int res = 0;
-    res = res * 31 + rawPassword.hashCode();
-    res = res * 31 + salt.hashCode();
-    return null;
+    final int num = 31;
+    res = res * num + rawPassword.hashCode();
+    res = res * num + Arrays.hashCode(salt);
+    return BigInteger.valueOf(res).toByteArray();
   }
 
   /**
@@ -146,55 +144,103 @@ public final class Accounts {
   }
 
 
-  // Store w/cookies, database, or hashmap
-
-  protected static void writeLoginInfo(String user, String pass) throws AccountException {
-    try (PrintWriter writer = new PrintWriter(new FileWriter(LOGIN_INFO_PATH))) {
-      byte[] salt = generateSalt();
-      byte[] hash = hashPassword(pass, salt);
+  /**
+   * Stores a user's login info securely by encoding the password using salt hashing. Writes user,
+   * password hash, salt to a csv.
+   * @param user
+   * @param pass
+   * @param path
+   * @throws AccountException
+   */
+  protected static void writeLoginInfo(String user, String pass, String salt, String path) throws AccountException {
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter(path))) {
+      String hash = BCrypt.hashpw(pass, salt);
       writer.write(user + "," + hash + "," + salt);
     } catch (IOException e) {
       throw new AccountException(e.getMessage(), e);
     }
   }
+
+  protected static void writeLoginInfo(String user, String pass, String path) throws AccountException {
+    try {
+      writeLoginInfo(user, pass, BCrypt.gensalt(), path);
+    } catch (AccountException e) {
+      throw new AccountException(e.getMessage(), e);
+    }
+  }
+
+  // NON BCRYPT //
+
+  protected static void writeLoginInfo(String user, String pass, byte[] salt, String path) throws AccountException {
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter(path))) {
+      byte[] hash = hashPassword(pass, salt);
+      writer.write(user + "," + new String(hash) + "," + new String(salt));
+    } catch (IOException e) {
+      throw new AccountException(e.getMessage(), e);
+    }
+  }
+  //
+  protected static void writeLoginInfo(String user, String pass) throws AccountException {
+    try {
+      writeLoginInfo(user, pass, generateSalt(), LOGIN_INFO_PATH);
+    } catch (AccountException e) {
+      throw new AccountException(e.getMessage(), e);
+    }
+  }
+  //
+  protected static void writeLoginInfo(String user, String pass, byte[] salt) throws AccountException {
+    try {
+      writeLoginInfo(user, pass, salt, LOGIN_INFO_PATH);
+    } catch (AccountException e) {
+      throw new AccountException(e.getMessage(), e);
+    }
+  }
+
+
   
   // Validate method, which affirms that the given password and username are valid and match.
   // https://stackoverflow.com/questions/16627910/how-to-code-a-very-simple-login-system-with-java
   public static String checkLogin() throws AccountException {
-    try (Scanner keyboard = new Scanner(System.in);
-         Scanner loginInfo = new Scanner(new FileReader(LOGIN_INFO_PATH))) {
+    try (Scanner keyboard = new Scanner(System.in)) {
       // get input from user
       System.out.println("Username: ");
       String inpUser = keyboard.nextLine();
       System.out.println("Password: ");
       String inpPass = keyboard.nextLine();
+      return checkLogin(inpUser, inpPass, LOGIN_INFO_PATH);
+    } //catch (AccountException e) {
+//      throw new AccountException(e.getMessage(), e);
+//    }
+  }
 
+  public static String checkLogin(String inpUser, String inpPass, String path) throws AccountException {
+    try (Scanner loginInfo = new Scanner(new FileReader(path))) {
       String[] login;
       String user;
       String passHash;
-      byte[] salt;
+      String salt;
 
       while (loginInfo.hasNext()) {
         login = loginInfo.nextLine().split(",");
         user = login[0];
         passHash = login[1];
-        salt = login[2].getBytes();
+        salt = login[2];
 
-        if (user.equals(inpUser) && passHash.equals(hashPasswordPBKDF2(inpPass, salt))) {
-          return login(user, passHash);
+        if (user.equals(inpUser) && BCrypt.checkpw(inpPass, passHash)) {
+          return login(user);
         } else {
-          return "login failed; please try again";
+          return "login failed";
         }
       }
     } catch (FileNotFoundException e) {
-      e.printStackTrace();
+      throw new AccountException(e.getMessage(), e);
     }
 
     throw new AccountException("ERROR: reached end of checkLogin");
   }
 
-  public static String login(String user, String pass) {
+  public static String login(String user) {
     // give access to data of user for future commands
-    return "";
+    return "logged in!";
   }
 }

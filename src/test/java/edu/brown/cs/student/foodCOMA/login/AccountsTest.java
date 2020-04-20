@@ -2,6 +2,7 @@ package edu.brown.cs.student.foodCOMA.login;
 
 import edu.brown.cs.student.login.AccountException;
 import edu.brown.cs.student.login.Accounts;
+import edu.brown.cs.student.login.BCrypt;
 import org.junit.*;
 
 import java.io.*;
@@ -10,6 +11,7 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Scanner;
+import java.util.Base64;
 
 import static org.junit.Assert.*;
 
@@ -45,6 +47,7 @@ public class AccountsTest {
       System.out.println("file encode bytes: " + (new FileReader("test.txt")).getEncoding().getBytes());
       String salt1Read = b64.readLine();
       System.out.println("br readline: " + salt1Read);
+      assertEquals(new String(salt1), salt1Read);
       System.out.println("br readline getbytes: " + salt1Read.getBytes());
 //      assertEquals(salt1, salt1Read.getBytes());
 //      test.write(salt1.toString() + "\n");
@@ -89,4 +92,94 @@ public class AccountsTest {
 //    assertNotEquals(hash, Accounts.hashPasswordPBKDF2("Password", salt));
 //    assertNotEquals(hash, Accounts.hashPasswordPBKDF2("wordpass", salt));
 //  }
+
+  @Test
+  public void writeLoginInfoTest() throws AccountException {
+    String user = "user";
+    String pass = "pass";
+    byte[] salt = Accounts.generateSalt();
+    byte[] hash = Accounts.hashPassword(pass, salt);
+    String path = "test.txt";
+
+    assertEquals(user, new String(user.getBytes()));
+    assertNotEquals(user.getBytes(), new String(user.getBytes()).getBytes());
+    assertNotEquals(salt, new String(salt).getBytes());
+
+    assertEquals(user, Base64.getEncoder().encodeToString(Base64.getDecoder().decode(user)));
+    assertNotEquals(user, Base64.getEncoder().encodeToString(user.getBytes()));
+    assertNotEquals(salt, Base64.getDecoder().decode(Base64.getEncoder().encodeToString(salt)));
+
+    Accounts accounts = new Accounts() {
+      public Accounts callProtectedMethod(String user, String pass, byte[] salt, String path) throws AccountException {
+        writeLoginInfo(user, pass, salt, path);
+        return this;
+      }
+    }.callProtectedMethod(user, pass, salt, path);
+
+    try (BufferedReader br = new BufferedReader(new FileReader(path));
+         FileInputStream is = new FileInputStream(path)) {
+      String[] info = br.readLine().split(",");
+      assertEquals(info[0], user);
+      assertNotEquals(info[2].getBytes(), salt);
+//      assertNotEquals(Base64.getDecoder().decode(info[2]), salt);
+      assertNotEquals(info[1].getBytes(), hash);
+      is.read();
+
+      assertNotEquals(info[1].getBytes(), Accounts.hashPassword(pass, info[2].getBytes()));
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  @Test
+  public void writeLoginInfoBCryptTest() throws AccountException {
+    String path = "test.txt";
+    String user = "user";
+    String pass = "pass";
+    String salt = BCrypt.gensalt();
+    String hash = BCrypt.hashpw(pass, salt);
+    assertTrue(BCrypt.checkpw(pass, hash));
+
+    Accounts accounts = new Accounts() {
+      public Accounts callProtectedMethod(String user, String pass, String salt, String path) throws AccountException {
+        writeLoginInfo(user, pass, salt, path);
+        return this;
+      }
+    }.callProtectedMethod(user, pass, salt, path);
+
+    try (BufferedReader br = new BufferedReader(new FileReader(path))) {
+      String[] info = br.readLine().split(",");
+      assertEquals(user, info[0]);
+      assertEquals(salt, info[2]);
+      assertEquals(BCrypt.hashpw(pass, info[2]), info[1]);
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  @Test
+  public void checkLoginTest() throws AccountException {
+    String path = "test.csv";
+    String user = "user";
+    String pass = "pass";
+    String salt = BCrypt.gensalt();
+    String hash = BCrypt.hashpw(pass, salt);
+    assertTrue(BCrypt.checkpw(pass, hash));
+
+    Accounts accounts = new Accounts() {
+      public Accounts callProtectedMethod(String user, String pass, String salt, String path) throws AccountException {
+        writeLoginInfo(user, pass, salt, path);
+        return this;
+      }
+    }.callProtectedMethod(user, pass, salt, path);
+
+    assertEquals("logged in!", Accounts.checkLogin(user, pass, path));
+    assertEquals("login failed", Accounts.checkLogin("fake user", pass, path));
+    assertEquals("login failed", Accounts.checkLogin(user, "fake pass", path));
+    assertEquals("login failed", Accounts.checkLogin("fake user", "fake pass", path));
+  }
 }

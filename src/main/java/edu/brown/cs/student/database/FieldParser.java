@@ -11,6 +11,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.List;
 
 /**
  * 
@@ -70,8 +71,8 @@ public final class FieldParser {
 
     HttpClient httpClient = HttpClient.newBuilder().build();
     HttpRequest httpRequest = HttpRequest.newBuilder().GET()
-        .uri(URI.create("https://api.edamam.com/search?r=" + reformattedUri +
-            "&app_id=" + APP_ID + "&app_key=" + APP_KEY)).build();
+        .uri(URI.create("https://api.edamam.com/search?r=" + reformattedUri
+            + "&app_id=" + APP_ID + "&app_key=" + APP_KEY)).build();
 
     HttpResponse<String> response = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
 
@@ -81,6 +82,21 @@ public final class FieldParser {
     Recipe[] recipeArray = parseRecipeJSON(response.body());
     return recipeArray[0];
   }
+
+  /**
+   * This function retrieves a given number of recipes from the api.
+   * @param start - the starting index to retrieve recipes from.
+   * @param end - the ending index to retrieve recipes from.
+   * @return - A list of Recipe objects containing data from the api.
+   */
+  public static List<Recipe> getRecipeSubset(int start, int end) {
+    HttpClient httpClinet = HttpClient.newBuilder().build();
+    HttpRequest httpRequest = HttpRequest.newBuilder().GET()
+        .uri(URI.create("https://api.edamam.com/search?q=")).build(); //fix this!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    return null;
+  }
+
+
 
   /**
    * Test api function
