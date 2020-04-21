@@ -60,10 +60,12 @@ public class Gui {
 
     // Setup Spark Routes
     Spark.get("/foodCOMA", new FrontHandler(), freeMarker);
+
     Spark.get("/home", new SetupHandler("home.ftl", "foodCOMA Home"), freeMarker);
     Spark.get("/about", new SetupHandler("about.ftl", "About"), freeMarker);
     Spark.get("/setup", new SetupHandler("login.ftl", "Login"), freeMarker);
     Spark.get("/recipe/:recipeuri", new SetupHandler("recipe.ftl", "Recipe Detail"), freeMarker);
+    Spark.get("/signup", new SetupHandler("signup.ftl", "Signup"), freeMarker);
     Spark.post("/login", new LoginHandler());
     // more routes (post too!)
 
@@ -170,7 +172,6 @@ public class Gui {
     
     @Override
     public ModelAndView handle(Request req, Response res) {
-      
       Map<String, Object> variables = ImmutableMap.of("title",
           title, "output", "");
       return new ModelAndView(variables, page);
