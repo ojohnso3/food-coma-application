@@ -15,6 +15,7 @@ import edu.brown.cs.student.database.FieldParser;
 import edu.brown.cs.student.food.Ingredient;
 import edu.brown.cs.student.food.NutrientInfo;
 import edu.brown.cs.student.food.Recipe;
+import edu.brown.cs.student.login.Accounts;
 import freemarker.template.Configuration;
 import spark.ExceptionHandler;
 import spark.ModelAndView;
@@ -66,11 +67,16 @@ public class Gui {
 
     // Setup Spark Routes
     Spark.get("/foodCOMA", new FrontHandler(), freeMarker);
+
     Spark.get("/home", new SetupHandler("home.ftl", "foodCOMA Home"), freeMarker);
     Spark.get("/about", new SetupHandler("about.ftl", "About"), freeMarker);
-    Spark.get("/setup", new SetupHandler("login.ftl", "Login"), freeMarker);
+    Spark.get("/login", new SetupHandler("login.ftl", "Login"), freeMarker);
     Spark.get("/recipe/:recipeuri", new SetupHandler("recipe.ftl", "Recipe Detail"), freeMarker);
-    Spark.post("/login", new LoginHandler());
+    Spark.get("/signup", new SetupHandler("signup.ftl", "Signup"), freeMarker);
+    Spark.get("/survey", new SetupHandler("survey.ftl", "New User Survey"), freeMarker);
+    
+    Spark.post("/logged", new LoginHandler());
+    Spark.post("/signed", new SignupHandler());
     // more routes (post too!)
 
     Spark.get("/results", new SubmitHandler(), freeMarker);
@@ -199,7 +205,6 @@ public class Gui {
     
     @Override
     public ModelAndView handle(Request req, Response res) {
-      
       Map<String, Object> variables = ImmutableMap.of("title",
           title, "output", "");
       return new ModelAndView(variables, page);
@@ -220,6 +225,8 @@ public class Gui {
       QueryParamsMap map = req.queryMap();
       String input1 = map.value("text1");
       String input2 = map.value("text2");
+      
+      String val = Accounts.checkLogin(input1, input2, input2);
       
       boolean valid = checkUser(input1, input2);
       String output = checkValid(valid);
@@ -250,6 +257,35 @@ public class Gui {
     }
     
   }
+  
+  /**
+   * Handles the functionality of printing out the result of the Stars algorithms.
+   *
+   */
+  private static class SignupHandler implements Route {
+
+    SignupHandler() {
+    }
+
+    @Override
+    public String handle(Request req, Response res) {
+      QueryParamsMap map = req.queryMap();
+      String user = map.value("user");
+      String pass1 = map.value("pass1");
+      String pass2 = map.value("pass2");
+      String birth = map.value("birth");
+      
+      boolean valid = checkUser(input1, input2);
+      String output = checkValid(valid);
+      
+      //TODO: create an immutable map using the suggestions
+      Map<String, Object> variables = ImmutableMap.of("title",
+          "Login", "output", output);
+
+      //TODO: return a Json of the suggestions (HINT: use the GSON instance)
+      return GSON.toJson(variables);
+      
+    }
 
 
   /**

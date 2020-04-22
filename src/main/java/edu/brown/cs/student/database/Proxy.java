@@ -10,7 +10,7 @@ import com.google.common.cache.LoadingCache;
 
 /**
  * 
- * Class comment.
+ * What are we doing with this class if we aren't loading that much into the database? Two levels of caching/
  *
  */
 public class Proxy {

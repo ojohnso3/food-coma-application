@@ -1,6 +1,7 @@
 package edu.brown.cs.student.login;
 
-import edu.brown.cs.student.food.*;
+import edu.brown.cs.student.food.Ingredient;
+import edu.brown.cs.student.food.Recipe;
 
 import java.util.ArrayList;
 import java.util.List;

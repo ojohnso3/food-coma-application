@@ -3,7 +3,11 @@ package edu.brown.cs.student.database;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import edu.brown.cs.student.food.Recipe;
 
 import java.io.IOException;
@@ -56,6 +60,23 @@ public final class FieldParser {
     JsonDeserializer<Recipe> recipeDeserializer = new RecipeDeserializer();
     gsonBuilder.registerTypeAdapter(Recipe.class, recipeDeserializer);
     Gson gson = gsonBuilder.create();
+    JsonElement jsonTree = JsonParser.parseString(json);
+    JsonObject jsonObject = jsonTree.getAsJsonObject();
+
+    if (jsonObject.has("hits")) {
+      System.out.println("IN IF");
+      JsonElement hits = jsonObject.get("hits");
+      JsonArray hitsArray = hits.getAsJsonArray();
+      Recipe[] recipes = new Recipe[hitsArray.size()];
+
+      for (int i = 0; i < hitsArray.size(); i++) {
+        JsonObject currElt = hitsArray.get(i).getAsJsonObject();
+        recipes[i] = gson.fromJson(currElt.get("recipe"), Recipe.class);
+      }
+
+      return recipes;
+    }
+
     return gson.fromJson(json, Recipe[].class);
   }
 
@@ -84,6 +105,26 @@ public final class FieldParser {
   }
 
   /**
+   * This function retrieves recipes that correspond to the given query in the api.
+   * @param query - the desired query to search for in the api.
+   * @return - an array of recipes that correspond to the given query in the api.
+   */
+  public static Recipe[] getRecipesFromQuery(String query) throws IOException, InterruptedException {
+    HttpClient httpClient = HttpClient.newBuilder().build();
+    HttpRequest httpRequest = HttpRequest.newBuilder().GET()
+        .uri(URI.create("https://api.edamam.com/search?q=" + query
+        + "&app_id=" + APP_ID + "&app_key" + APP_KEY)).build();
+
+    HttpResponse<String> response = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+
+    if (response.statusCode() != 200) {
+      //error
+    }
+    return parseRecipeJSON(response.body());
+  }
+
+
+  /**
    * This function retrieves a given number of recipes from the api.
    * @param start - the starting index to retrieve recipes from.
    * @param end - the ending index to retrieve recipes from.
@@ -104,8 +145,7 @@ public final class FieldParser {
   public static String apiCall() {
     HttpClient httpClient = HttpClient.newBuilder().build();
     HttpRequest httpRequest = HttpRequest.newBuilder().GET()
-        .uri(URI.create("https://api.edamam.com/search?r=http%3A%2F%2Fwww.edamam.com%2Fontologies%2" +
-            "Fedamam.owl%23recipe_9b5945e03f05acbf9d69625138385408&app_id=2a676518" //need to parse uris we get from JSON
+        .uri(URI.create("https://api.edamam.com/search?q=chicken&app_id=2a676518" //need to parse uris we get from JSON
             + "&app_key=" +
             "158f55a83eee58aff1544072b788784f")).build();
 
@@ -123,15 +163,13 @@ public final class FieldParser {
   /**
    * Test Gson function
    */
-  public static Recipe[] parseJSON() {
+
+  public static Recipe parseJSON() {
     String json = apiCall();
-    GsonBuilder gsonBuilder = new GsonBuilder();
-    JsonDeserializer<Recipe> recipeDeserializer = new RecipeDeserializer();
-    gsonBuilder.registerTypeAdapter(Recipe.class, recipeDeserializer);
-    Gson gson = gsonBuilder.create();
-    Recipe[] parsed = gson.fromJson(json, Recipe[].class);
-    System.out.println(parsed[0].getUri());
-    System.out.println(parsed[0].getNutrientVals("FE")[0]);
-    return parsed;
+    Recipe[] recipes = parseRecipeJSON(json);
+    for (Recipe r : recipes) {
+      System.out.println(r.getUri());
+    }
+    return recipes[0];
   }
 }

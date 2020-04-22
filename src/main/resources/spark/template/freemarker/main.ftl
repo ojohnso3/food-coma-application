@@ -17,9 +17,10 @@
     
     <div class="navigation_bar">   
       <a href="/home" class="bar_item">Home</a>   
-      <a href="/setup" class="bar_item">Login</a>   
+      <a href="/login" class="bar_item">Login</a>   
       <a href="/foodCOMA" class="bar_item">Search</a>  
       <a href="/about" class="bar_item">About</a>   
+      <a href="/signup" class="bar_item">Sign Up</a>   
     </div>
 
     ${content}
