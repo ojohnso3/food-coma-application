@@ -213,6 +213,10 @@ public class Accounts {
 //    }
   }
 
+  public static String checkLogin(String inpUser, String inpPass) throws AccountException {
+    return checkLogin(inpUser, inpPass, LOGIN_INFO_PATH);
+  }
+
   public static String checkLogin(String inpUser, String inpPass, String path) throws AccountException {
     try (Scanner loginInfo = new Scanner(new FileReader(path))) {
       String[] login;
@@ -239,6 +243,11 @@ public class Accounts {
     throw new AccountException("ERROR: reached end of checkLogin");
   }
 
+  /**
+   * handles logging and getting .
+   * @param user
+   * @return
+   */
   public static String login(String user) {
     // give access to data of user for future commands
     return "logged in!";
