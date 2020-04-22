@@ -36,21 +36,21 @@ public class RecipeDeserializer implements JsonDeserializer<Recipe> {
     Map<String, double[]> nutrients = new HashMap<>();
 
     for (String code : NutrientInfo.nutrients.keySet()) {
-      if (totalNutrientsObject.has(code)) {
+      double[] nutrientArray = new double[2];
+      if (totalDailyObject.has(code)) {
         JsonElement currDailyNutrient = totalDailyObject.get(code);
         JsonObject currDailyNutrientObject = currDailyNutrient.getAsJsonObject();
         double totalDailyQuantity = currDailyNutrientObject.get("quantity").getAsDouble();
-
-        JsonElement currNutrientJson = totalDailyObject.get(code);
+        nutrientArray[0] = totalDailyQuantity;
+      }
+      if (totalNutrientsObject.has(code)) {
+        JsonElement currNutrientJson = totalNutrientsObject.get(code);
         JsonObject currNutrientObject = currNutrientJson.getAsJsonObject();
         double totalNutrientQuantity = currNutrientObject.get("quantity").getAsDouble();
 
-        double[] nutrientArray = new double[2];
-        nutrientArray[0] = totalDailyQuantity;
         nutrientArray[1] = totalNutrientQuantity;
-
-        nutrients.put(code, nutrientArray);
       }
+      nutrients.put(code, nutrientArray);
     }
 
     return nutrients;
