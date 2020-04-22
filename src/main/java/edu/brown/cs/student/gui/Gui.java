@@ -11,6 +11,9 @@ import java.util.regex.Pattern;
 
 import com.google.common.collect.ImmutableMap;
 
+import edu.brown.cs.student.database.FieldParser;
+import edu.brown.cs.student.food.Ingredient;
+import edu.brown.cs.student.food.NutrientInfo;
 import edu.brown.cs.student.food.Recipe;
 import freemarker.template.Configuration;
 import spark.ExceptionHandler;
@@ -29,10 +32,13 @@ import spark.template.freemarker.FreeMarkerEngine;
  *
  */
 public class Gui {
-  
+//  private static FieldParser fieldParser;
+//  private static NutrientInfo nutrientInfo;
   private static final Gson GSON = new Gson();
   
   public Gui() {
+//    fieldParser = fp;
+//    nutrientInfo = nut;
   }
   
   private static FreeMarkerEngine createEngine() {
@@ -138,17 +144,40 @@ public class Gui {
         }
       }
 
-      Recipe recpOne = new Recipe("0100");
-      Recipe recpTwo = new Recipe("0200");
-      Recipe recpThree = new Recipe("0300");
-//      List<Recipe> recipeList = new ArrayList<Recipe>();
-//      recipeList.add(recpOne);
-//      recipeList.add(recpTwo);
-//      recipeList.add(recpThree);
+      List<Ingredient> sampleIngredients = new ArrayList<Ingredient>();
+      Ingredient tofu = new Ingredient("Tofu",200);
+      Ingredient sauce = new Ingredient("Sauce",100);
+      sampleIngredients.add(tofu);
+      sampleIngredients.add(sauce);
+      Map<String, double[]> nutrientList = new HashMap<String, double[]>();
+      nutrientList.put("Sugar", new double[2]);
+      nutrientList.put("Salt", new double[2]);
+      String[] dietLabelList = new String[2];
+      dietLabelList[0] = "Diet Label 1";
+      dietLabelList[1] = "Diet Label 2";
+      String[] healthLabelList = new String[2];
+      healthLabelList[0] = "Health label 0";
+      healthLabelList[1] = "Health label 1";
+
+      Recipe recpOne = new Recipe("0100", "Tofu 1", "image","source", "url", 0.0,9.9,55.55,10.00,sampleIngredients, nutrientList,
+              dietLabelList, healthLabelList);
+
+      Recipe recpTwo = new Recipe("0200", "Tofu 2", "image","source", "url", 0.0,9.9,55.55,10.00,sampleIngredients, nutrientList,
+              dietLabelList, healthLabelList);
+      Recipe recpThree = new Recipe("0300", "Tofu 3", "image","source", "url", 0.0,9.9,55.55,10.00,sampleIngredients, nutrientList,
+              dietLabelList, healthLabelList);
+
+//      Recipe[] recpFour = FieldParser.parseJSON();
+//      System.out.println(recpFour);
       Map<String,String> recipes = new HashMap<String, String>();
-      recipes.put(recpOne.getUri(), "Tofu");
-      recipes.put(recpTwo.getUri(), "Other Tofu");
-      recipes.put(recpThree.getUri(), "We Only Eat Tofu");
+      recipes.put(recpOne.getUri(), recpOne.getLabel());
+      recipes.put(recpTwo.getUri(), recpTwo.getLabel());
+      recipes.put(recpThree.getUri(), recpThree.getLabel());
+//      recipes.put(recpFour.getUri(), recpFour.getLabel());
+
+      HashMap<String, String> map = new HashMap<String, String>();
+      Set<String> keys = recipes.keySet();
+
       Map<String, Object> variables = ImmutableMap.of("recipeList", recipes, "title", " " + gui.getRecipeTitle(recipeURI));
       return GSON.toJson(variables);
 

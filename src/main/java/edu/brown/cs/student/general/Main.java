@@ -58,6 +58,7 @@ public final class Main {
     OptionSet options = parser.parse(args);
 
     if (options.has("gui")) {
+//      NutrientInfo nutrient = new NutrientInfo();
       Gui gui = new Gui();
       gui.runSparkServer((int) options.valueOf("port"));
     } else {

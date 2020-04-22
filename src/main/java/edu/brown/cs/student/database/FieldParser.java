@@ -123,7 +123,7 @@ public final class FieldParser {
   /**
    * Test Gson function
    */
-  public static void parseJSON() {
+  public static Recipe[] parseJSON() {
     String json = apiCall();
     GsonBuilder gsonBuilder = new GsonBuilder();
     JsonDeserializer<Recipe> recipeDeserializer = new RecipeDeserializer();
@@ -132,5 +132,6 @@ public final class FieldParser {
     Recipe[] parsed = gson.fromJson(json, Recipe[].class);
     System.out.println(parsed[0].getUri());
     System.out.println(parsed[0].getNutrientVals("FE")[0]);
+    return parsed;
   }
 }
