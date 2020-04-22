@@ -12,7 +12,9 @@
     <p id="recipes" aria-live=polite></p>
 
     <script src="../js/recipe.js"></script>
+    <div id="container" class="container">
 
+    </div>
 
 
 </#assign>

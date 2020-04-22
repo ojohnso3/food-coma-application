@@ -59,6 +59,7 @@ public class RecipeDeserializer implements JsonDeserializer<Recipe> {
   @Override
   public Recipe deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext)
       throws JsonParseException {
+    System.out.println("HERE");
     GsonBuilder gsonBuilder = new GsonBuilder();
     JsonObject jsonObject = jsonElement.getAsJsonObject();
 

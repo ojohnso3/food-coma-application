@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
 /**
  * 
  * This class stores the data for a recipe, received from the Edamam api.
@@ -83,6 +84,10 @@ public class Recipe {
   public String prepareForInsert() {
     return uri + "," + label + "," + image + "," + source + "," + url + "," + yield + "," + calories + "," + totalWeight
         + "," + totalTime;
+  }
+
+  public String getLabel(){
+    return label;
   }
 
 }
