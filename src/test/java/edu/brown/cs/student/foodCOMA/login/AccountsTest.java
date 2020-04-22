@@ -3,14 +3,10 @@ package edu.brown.cs.student.foodCOMA.login;
 import edu.brown.cs.student.login.AccountException;
 import edu.brown.cs.student.login.Accounts;
 import edu.brown.cs.student.login.BCrypt;
-import org.junit.*;
+import org.junit.Test;
 
 import java.io.*;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.Objects;
-import java.util.Scanner;
 import java.util.Base64;
 
 import static org.junit.Assert.*;
@@ -28,14 +24,13 @@ public class AccountsTest {
     byte[] salt2 = Accounts.generateSalt();
     byte[] salt3 = Accounts.generateSalt();
     System.out.println("str(s): " + new String(salt1));
-    System.out.println("salt: " + salt1);
+    System.out.println("salt: " + Arrays.toString(salt1));
     System.out.println("salt tostr: " + salt1.toString());
     System.out.println("salt arr tostr: " + Arrays.toString(salt1));
     //Convert it to hexadecimal format
     StringBuilder sb = new StringBuilder();
-    for(int i=0; i< salt1.length ;i++)
-    {
-      sb.append(Integer.toString((salt1[i] & 0xff) + 0x100, 16).substring(1));
+    for (byte b : salt1) {
+      sb.append(Integer.toString((b & 0xff) + 0x100, 16).substring(1));
     }
     System.out.println("hex salt: " + sb.toString());
     try (FileOutputStream sout = new FileOutputStream("test.txt");
@@ -44,11 +39,11 @@ public class AccountsTest {
       sout.write(salt1);
 //      String salt1s = new BASE64Encoder().encode(salt); //DatatypeConverter.printBase64Binary(salt1);
 //      String s1s =
-      System.out.println("file encode bytes: " + (new FileReader("test.txt")).getEncoding().getBytes());
+      System.out.println("file encode bytes: " + Arrays.toString((new FileReader("test.txt")).getEncoding().getBytes()));
       String salt1Read = b64.readLine();
       System.out.println("br readline: " + salt1Read);
       assertEquals(new String(salt1), salt1Read);
-      System.out.println("br readline getbytes: " + salt1Read.getBytes());
+      System.out.println("br readline getbytes: " + Arrays.toString(salt1Read.getBytes()));
 //      assertEquals(salt1, salt1Read.getBytes());
 //      test.write(salt1.toString() + "\n");
 //      test.write(Arrays.toString(salt1) + "\n");
@@ -109,10 +104,9 @@ public class AccountsTest {
     assertNotEquals(user, Base64.getEncoder().encodeToString(user.getBytes()));
     assertNotEquals(salt, Base64.getDecoder().decode(Base64.getEncoder().encodeToString(salt)));
 
-    Accounts accounts = new Accounts() {
-      public Accounts callProtectedMethod(String user, String pass, byte[] salt, String path) throws AccountException {
+    new Accounts() {
+      public void callProtectedMethod(String user, String pass, byte[] salt, String path) throws AccountException {
         writeLoginInfo(user, pass, salt, path);
-        return this;
       }
     }.callProtectedMethod(user, pass, salt, path);
 
@@ -126,8 +120,6 @@ public class AccountsTest {
       is.read();
 
       assertNotEquals(info[1].getBytes(), Accounts.hashPassword(pass, info[2].getBytes()));
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -142,10 +134,9 @@ public class AccountsTest {
     String hash = BCrypt.hashpw(pass, salt);
     assertTrue(BCrypt.checkpw(pass, hash));
 
-    Accounts accounts = new Accounts() {
-      public Accounts callProtectedMethod(String user, String pass, String salt, String path) throws AccountException {
+    new Accounts() {
+      public void callProtectedMethod(String user, String pass, String salt, String path) throws AccountException {
         writeLoginInfo(user, pass, salt, path);
-        return this;
       }
     }.callProtectedMethod(user, pass, salt, path);
 
@@ -154,8 +145,6 @@ public class AccountsTest {
       assertEquals(user, info[0]);
       assertEquals(salt, info[2]);
       assertEquals(BCrypt.hashpw(pass, info[2]), info[1]);
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
     } catch (IOException e) {
       e.printStackTrace();
     }
