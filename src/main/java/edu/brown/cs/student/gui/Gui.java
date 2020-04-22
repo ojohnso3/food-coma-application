@@ -12,7 +12,9 @@ import java.util.regex.Pattern;
 import com.google.common.collect.ImmutableMap;
 
 import edu.brown.cs.student.food.Recipe;
+import edu.brown.cs.student.login.AccountException;
 import edu.brown.cs.student.login.Accounts;
+import edu.brown.cs.student.login.User;
 import freemarker.template.Configuration;
 import spark.ExceptionHandler;
 import spark.ModelAndView;
@@ -60,8 +62,7 @@ public class Gui {
     FreeMarkerEngine freeMarker = createEngine();
 
     // Setup Spark Routes
-    Spark.get("/foodCOMA", new FrontHandler(), freeMarker);
-
+    Spark.get("/search", new SearchHandler(), freeMarker);
     Spark.get("/home", new SetupHandler("home.ftl", "foodCOMA Home"), freeMarker);
     Spark.get("/about", new SetupHandler("about.ftl", "About"), freeMarker);
     Spark.get("/login", new SetupHandler("login.ftl", "Login"), freeMarker);
@@ -85,13 +86,13 @@ public class Gui {
    * Handle requests to the front page of our Stars website.
    *
    */
-  private static class FrontHandler implements TemplateViewRoute {
+  private static class SearchHandler implements TemplateViewRoute {
     @Override
     public ModelAndView handle(Request req, Response res) {
       List<Recipe> recipeList = new ArrayList<Recipe>();
       Map<String, Object> variables = ImmutableMap.of("title",
-          "foodCOMA Query", "recipeList", recipeList);
-      return new ModelAndView(variables, "query.ftl");
+          "Recipe Search", "recipeList", recipeList);
+      return new ModelAndView(variables, "search.ftl");
     }
   }
 
@@ -155,7 +156,7 @@ public class Gui {
       recipes.put(recpOne.getUri(), "Tofu");
       recipes.put(recpTwo.getUri(), "Other Tofu");
       recipes.put(recpThree.getUri(), "We Only Eat Tofu");
-      Map<String, Object> variables = ImmutableMap.of("recipeList", recipes, "title", " " + gui.getRecipeTitle(recipeURI));
+      Map<String, Object> variables = ImmutableMap.of("title", " " + gui.getRecipeTitle(recipeURI), "output", recipes);
       return GSON.toJson(variables);
 
     }
@@ -194,37 +195,21 @@ public class Gui {
     @Override
     public String handle(Request req, Response res) {
       QueryParamsMap map = req.queryMap();
-      String input1 = map.value("text1");
-      String input2 = map.value("text2");
+      String username = map.value("text1");
+      String password = map.value("text2");
       
-      String val = Accounts.checkLogin(input1, input2, input2);
-      
-      boolean valid = checkUser(input1, input2);
-      String output = checkValid(valid);
-      
-      //TODO: create an immutable map using the suggestions
+      String output = "Failed Login: Please try again.";
+      try {
+        output = Accounts.checkLogin(username, password);
+      } catch (AccountException e) {
+        e.printStackTrace();
+      }
+            
       Map<String, Object> variables = ImmutableMap.of("title",
           "Login", "output", output);
 
-      //TODO: return a Json of the suggestions (HINT: use the GSON instance)
       return GSON.toJson(variables);
       
-    }
-    
-    public boolean checkUser(String username, String password) {
-      if (username.equals(password)) {
-        return true;
-      } else {
-        return false;
-      }
-    }
-    
-    private String checkValid(boolean check) {
-      if (check) {
-        return "Valid username!";
-      } else {
-        return "Invalid username. Try again.";
-      }
     }
     
   }
@@ -246,17 +231,51 @@ public class Gui {
       String pass2 = map.value("pass2");
       String birth = map.value("birth");
       
-      boolean valid = checkUser(input1, input2);
-      String output = checkValid(valid);
+      String output = "Failed Sign-up: Please try again.";
+      if(checkSignUpValidity(user, pass1, pass2)) {
+        try {
+          new User(user, pass1); // other info too?
+          output = "Successful Sign-up!";
+        } catch (AccountException e) {
+          e.printStackTrace(); // error
+        }
+      }
       
-      //TODO: create an immutable map using the suggestions
       Map<String, Object> variables = ImmutableMap.of("title",
           "Login", "output", output);
 
-      //TODO: return a Json of the suggestions (HINT: use the GSON instance)
       return GSON.toJson(variables);
       
     }
+    
+    private boolean checkSignUpValidity(String user, String pass1, String pass2) {
+      // check if user already exists
+      // check if passwords are same
+      if(!userExists(user) && comparePasswords(pass1, pass2)) {
+        return true;
+      } else {
+        return false;
+      }
+      // informative error messages ??
+    }
+    
+    private boolean userExists(String user) {
+      if (!user.equals(user)) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+    
+    private boolean comparePasswords(String pass1, String pass2) {
+      if (pass1.equals(pass2)) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+    
+  }
 
 
   /**

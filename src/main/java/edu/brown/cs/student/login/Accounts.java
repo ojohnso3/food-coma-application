@@ -233,7 +233,7 @@ public class Accounts {
         if (user.equals(inpUser) && BCrypt.checkpw(inpPass, passHash)) {
           return login(user);
         } else {
-          return "login failed";
+          return "Failed Login: Please try again.";
         }
       }
     } catch (FileNotFoundException e) {
@@ -250,6 +250,6 @@ public class Accounts {
    */
   public static String login(String user) {
     // give access to data of user for future commands
-    return "logged in!";
+    return "Successful Login!";
   }
 }

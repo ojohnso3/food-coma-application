@@ -3,8 +3,13 @@ $(document).ready(() => {
     // document.getElementById("validity").innerHTML = "START";
 });
 
-const skip = $("#survey_sub");
+const skip = $("#survey_skip");
+const submit = $("#survey_submit");
 
 skip.click(event => {
-    window.location.href = "/query";
+    window.location.href = "/search";
+});
+
+submit.click(event => {
+    window.location.href = "/search";
 });

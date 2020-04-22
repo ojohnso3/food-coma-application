@@ -35,7 +35,7 @@ button.click(event => {
 
     //TODO: make a post request to the url to handle this request you set in your Main.java
 
-    $.post("/login", postParameters, response => {
+    $.post("/logged", postParameters, response => {
       console.log("We made a post request!");
 
       const output = JSON.parse(response);
@@ -43,7 +43,7 @@ button.click(event => {
       document.getElementById("validity").innerHTML = output.output;
 
       if (output.output == "Valid username!") {
-        window.location.href = "/foodCOMA";
+        window.location.href = "/search";
       }
     });
 

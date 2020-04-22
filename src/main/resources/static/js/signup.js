@@ -5,7 +5,7 @@ $(document).ready(() => {
 
 const user = $("#user");
 const pass1 = $("#pass");
-const pass2 = $("#pass");
+const pass2 = $("#pass2");
 const birth = $("#bday");
 
 const button = $("#sub");
@@ -24,14 +24,13 @@ button.click(event => {
 
     //TODO: make a post request to the url to handle this request you set in your Main.java
 
-    $.post("/login", postParameters, response => {
-      console.log("We made a post request!");
+    $.post("/signed", postParameters, response => {
 
       const output = JSON.parse(response);
 
       document.getElementById("validity").innerHTML = output.output;
 
-      if (output.output == "Valid signup!") {
+      if (output.output == "Successful Sign-up!") {
         window.location.href = "/survey";
       }
     });

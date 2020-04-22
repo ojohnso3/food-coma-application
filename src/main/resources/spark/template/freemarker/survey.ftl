@@ -11,14 +11,18 @@
     <button id="survey_skip">Skip the Survey Here</button> 
     <br>
 </div>
-
+<br>
+<br>
 <div class="survey">
+    <p>If you have any feedback or questions for the creators of foodCOMA,
+    please write them below.</p>
     <input id="last_q" class="u-full-width"
         type="text"
         placeholder="Type here."
         value=""></input>
 </div>
-
+<br>
+<br>
 <div class="submit">
     <button id="survey_submit">Submit Survey Here!</button> 
     <br>
