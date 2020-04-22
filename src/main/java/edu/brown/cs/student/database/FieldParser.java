@@ -61,23 +61,29 @@ public final class FieldParser {
     gsonBuilder.registerTypeAdapter(Recipe.class, recipeDeserializer);
     Gson gson = gsonBuilder.create();
     JsonElement jsonTree = JsonParser.parseString(json);
-    JsonObject jsonObject = jsonTree.getAsJsonObject();
 
-    if (jsonObject.has("hits")) {
-      System.out.println("IN IF");
-      JsonElement hits = jsonObject.get("hits");
-      JsonArray hitsArray = hits.getAsJsonArray();
-      Recipe[] recipes = new Recipe[hitsArray.size()];
+    try {
+      JsonObject jsonObject = jsonTree.getAsJsonObject();
+      if (jsonObject.has("hits")) {
+        System.out.println("IN IF");
+        JsonElement hits = jsonObject.get("hits");
+        JsonArray hitsArray = hits.getAsJsonArray();
+        Recipe[] recipes = new Recipe[hitsArray.size()];
 
-      for (int i = 0; i < hitsArray.size(); i++) {
-        JsonObject currElt = hitsArray.get(i).getAsJsonObject();
-        recipes[i] = gson.fromJson(currElt.get("recipe"), Recipe.class);
+        for (int i = 0; i < hitsArray.size(); i++) {
+          JsonObject currElt = hitsArray.get(i).getAsJsonObject();
+          recipes[i] = gson.fromJson(currElt.get("recipe"), Recipe.class);
+        }
+
+        return recipes;
       }
+    } catch (IllegalStateException ise) {
 
-      return recipes;
+      if ()
+
     }
 
-    return gson.fromJson(json, Recipe[].class);
+
   }
 
   /**
@@ -145,7 +151,9 @@ public final class FieldParser {
   public static String apiCall() {
     HttpClient httpClient = HttpClient.newBuilder().build();
     HttpRequest httpRequest = HttpRequest.newBuilder().GET()
-        .uri(URI.create("https://api.edamam.com/search?q=chicken&app_id=2a676518" //need to parse uris we get from JSON
+        .uri(URI.create("https://api.edamam.com/search?" +
+            "r=http%3A%2F%2Fwww.edamam.com%2Fontologies%2Fedamam.owl%23recipe_9b5945e03f05acbf9d69625138385408" +
+            "&app_id=2a676518" //need to parse uris we get from JSON
             + "&app_key=" +
             "158f55a83eee58aff1544072b788784f")).build();
 
@@ -163,13 +171,11 @@ public final class FieldParser {
   /**
    * Test Gson function
    */
-
   public static Recipe parseJSON() {
     String json = apiCall();
     Recipe[] recipes = parseRecipeJSON(json);
-    for (Recipe r : recipes) {
-      System.out.println(r.getUri());
-    }
+    System.out.println(recipes[0].getUri());
+    System.out.println(recipes[0].getNutrientVals("FE")[0]);
     return recipes[0];
   }
 }
