@@ -117,6 +117,8 @@ public class Gui {
       String textFromTextField = qm.value("text");
       List<Recipe> recipeList = new ArrayList<Recipe>();
       String valFromMap = qm.value("x1");
+
+
       Recipe tempRecp = new Recipe("9999");
       Recipe tempRecpO = new Recipe("9999");
       Recipe tempRecpT = new Recipe("9990");
