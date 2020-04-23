@@ -9,6 +9,7 @@ package edu.brown.cs.student.general;
 
 import com.google.common.collect.ImmutableMap;
 
+import edu.brown.cs.student.database.APIException;
 import edu.brown.cs.student.database.FieldParser;
 import edu.brown.cs.student.database.RecipeDatabase;
 import edu.brown.cs.student.food.NutrientInfo;
@@ -64,8 +65,11 @@ public final class Main {
     } else {
       NutrientInfo.createNutrientsList();
       try {
-        FieldParser.getRecipesFromQuery("chicken");
-      } catch (IOException | InterruptedException ie) {
+        Recipe[] recipes = FieldParser.getRecipesFromQuery("chicken");
+        for (int i = 0; i < recipes.length; i++) {
+          System.out.println(recipes[i].getUri());
+        }
+      } catch (IOException | InterruptedException | APIException ie) {
         ie.printStackTrace();
       }
 
