@@ -32,7 +32,7 @@ public class Accounts {
   public static String readHeader() throws AccountException {
     return readHeader(LOGIN_INFO_PATH);
   }
-
+  // implementation
   public static String readHeader(String path) throws AccountException {
     try (Scanner loginInfo = new Scanner(new FileReader(path))) {
       if (loginInfo.hasNext()) {
@@ -60,9 +60,9 @@ public class Accounts {
   }
   // actual computation
   protected static void writeLoginInfo(String user, String pass, String salt, String path) throws AccountException {
-    try (BufferedWriter writer = new BufferedWriter(new FileWriter(path))) {
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter(path, true))) {
       String hash = BCrypt.hashpw(pass, salt);
-      writer.write(user + "," + hash + "," + salt);
+      writer.write("\n" + user + "," + hash + "," + salt);
     } catch (IOException e) {
       throw new AccountException(e.getMessage(), e);
     }
@@ -71,9 +71,6 @@ public class Accounts {
   protected static void writeLoginInfo(String user, String pass, String path) throws AccountException {
     writeLoginInfo(user, pass, BCrypt.gensalt(), path);
   }
-
-  // Validate method, which affirms that the given password and username are valid and match.
-  // https://stackoverflow.com/questions/16627910/how-to-code-a-very-simple-login-system-with-java
 
   /**
    * checks if a username and login pair are stored in the csv (user exists).
@@ -110,17 +107,15 @@ public class Accounts {
         passHash = login[1];
         salt = login[2];
         // check if user and pass match
-        if (user.equals(inpUser) && BCrypt.checkpw(inpPass, passHash)) {
+        if (user.equals(inpUser) && passHash.equals(BCrypt.hashpw(inpPass, salt))) {//BCrypt.checkpw(inpPass, passHash)
           return login(user);
-        } else {
-          return "Failed Login: Please try again.";
         }
       }
     } catch (FileNotFoundException e) {
       throw new AccountException(e.getMessage(), e);
     }
-    // should not be reached.
-    throw new AccountException("ERROR: reached end of checkLogin");
+    // none of the lines fit
+    return "Failed Login: Please try again.";
   }
 
   /**
@@ -130,6 +125,6 @@ public class Accounts {
    */
   public static String login(String user) {
     // give access to data of user for future commands
-    return "Successful Login!";
+    return user + " successfully Logged in!";
   }
 }

@@ -12,20 +12,35 @@
 
 <br>
 <p> Recipe!
-<form method="GET" action="/results">
-  <label for="text">Put in preferences for Recipe Search</label><br>
-  <textarea name="text" id="text"></textarea><br>
-  <input type="submit">
-</form>
+  <br>
+<#--<form method="GET" action="/search">-->
+<#--  <label for="text">Put in preferences for Recipe Search</label><br>-->
+<#--  <textarea name="preferences" id="preferences"></textarea><br>-->
+<#--  <input type="submit">-->
+<#--</form>-->
+
 </div>
+
+  <div class="buttonBox">
+    <input id="preferences" class="u-full-width"
+           type="text"
+           placeholder="username"
+           value=""></input>
+    <br>
+
+    <br>
+    <button id="submit">Submit</button>
+    <br>
+  </div>
+
   <p class="output">
 
   <h3>List of recipes:</h3>
-  <#list recipeList as r>
-    <h6 id="recipes"><a href="/recipe/${r.getUri()}">${r.getUri()}</a></h6>
-  </#list>
 
   </p>
+  <div id="container" class="container">
+  </div>
+  <script src="../js/search.js"></script>
 
 
 </#assign>
