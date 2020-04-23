@@ -117,6 +117,8 @@ public class Gui {
       String textFromTextField = qm.value("text");
       List<Recipe> recipeList = new ArrayList<Recipe>();
       String valFromMap = qm.value("x1");
+
+
       Recipe tempRecp = new Recipe("9999");
       Recipe tempRecpO = new Recipe("9999");
       Recipe tempRecpT = new Recipe("9990");
@@ -127,7 +129,7 @@ public class Gui {
 
       // replace default with new String output
       Map<String, Object> variables = ImmutableMap.of("title", "foodCOMA Query", "recipeList", recipeList);
-      return new ModelAndView(variables, "query.ftl");
+      return new ModelAndView(variables, "search.ftl");
     }
   }
 

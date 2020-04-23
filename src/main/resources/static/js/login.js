@@ -32,6 +32,7 @@ button.click(event => {
       text1: user.val(), 
       text2: pass.val()
     };
+    console.log("user:" + postParameters.text1);
 
     //TODO: make a post request to the url to handle this request you set in your Main.java
 

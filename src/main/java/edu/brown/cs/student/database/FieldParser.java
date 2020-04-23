@@ -163,7 +163,6 @@ public final class FieldParser {
   /**
    * Test Gson function
    */
-
   public static Recipe parseJSON() {
     String json = apiCall();
     Recipe[] recipes = parseRecipeJSON(json);
