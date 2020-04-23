@@ -1,6 +1,8 @@
 package edu.brown.cs.student.foodCOMA.database;
 
+import edu.brown.cs.student.database.APIException;
 import edu.brown.cs.student.database.FieldParser;
+import edu.brown.cs.student.food.NutrientInfo;
 import edu.brown.cs.student.food.Recipe;
 import org.junit.Test;
 
@@ -13,8 +15,9 @@ import static org.junit.Assert.assertNotNull;
  */
 public class FieldParserTest {
 
-  /*@Test
+  @Test
   public void testGetRecipesFromQuery() {
+    NutrientInfo.createNutrientsList();
     try {
       Recipe[] recipes = FieldParser.getRecipesFromQuery("chicken");
       assertNotNull(recipes);
@@ -24,8 +27,8 @@ public class FieldParserTest {
       }
     } catch (IOException e) {
       e.printStackTrace();
-    } catch (InterruptedException e) {
+    } catch (InterruptedException | APIException e) {
       e.printStackTrace();
     }
-  }*/
+  }
 }

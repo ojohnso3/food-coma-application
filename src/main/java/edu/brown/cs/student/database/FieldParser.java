@@ -18,7 +18,7 @@ import java.net.http.HttpResponse;
 import java.util.List;
 
 /**
- * 
+ *
  * This class is used to handle interactions with the Edamam api, and parse the resulting JSON
  * into Java objects.
  *
@@ -31,10 +31,8 @@ public final class FieldParser {
    */
   private static final String APP_ID = "2a676518";
   private static final String APP_KEY = "158f55a83eee58aff1544072b788784f";
-  
-  public FieldParser() {
-    
-  }
+
+  private FieldParser() { }
 
   /**
    * This function formats an input uri so that it can be used in a get request.
@@ -56,28 +54,30 @@ public final class FieldParser {
    * @return - the array of Recipe objects containing information from the JSON.
    */
   private static Recipe[] parseRecipeJSON(String json) {
+    System.out.println("got here");
     GsonBuilder gsonBuilder = new GsonBuilder();
     JsonDeserializer<Recipe> recipeDeserializer = new RecipeDeserializer();
     gsonBuilder.registerTypeAdapter(Recipe.class, recipeDeserializer);
     Gson gson = gsonBuilder.create();
     JsonElement jsonTree = JsonParser.parseString(json);
-    JsonObject jsonObject = jsonTree.getAsJsonObject();
 
-    if (jsonObject.has("hits")) {
-      System.out.println("IN IF");
-      JsonElement hits = jsonObject.get("hits");
-      JsonArray hitsArray = hits.getAsJsonArray();
-      Recipe[] recipes = new Recipe[hitsArray.size()];
+    try {
+      JsonObject jsonObject = jsonTree.getAsJsonObject();
+      if (jsonObject.has("hits")) {
+        JsonElement hits = jsonObject.get("hits");
+        JsonArray hitsArray = hits.getAsJsonArray();
+        Recipe[] recipes = new Recipe[hitsArray.size()];
 
-      for (int i = 0; i < hitsArray.size(); i++) {
-        JsonObject currElt = hitsArray.get(i).getAsJsonObject();
-        recipes[i] = gson.fromJson(currElt.get("recipe"), Recipe.class);
+        for (int i = 0; i < hitsArray.size(); i++) {
+          JsonObject currElt = hitsArray.get(i).getAsJsonObject();
+          recipes[i] = gson.fromJson(currElt.get("recipe"), Recipe.class);
+        }
+        return recipes;
       }
-
-      return recipes;
+    } catch (IllegalStateException ise) {
+      return gson.fromJson(json, Recipe[].class);
     }
-
-    return gson.fromJson(json, Recipe[].class);
+    return null; //should never be reached.
   }
 
   /**
@@ -87,7 +87,8 @@ public final class FieldParser {
    * @throws IOException - when httpClient.send fails.
    * @throws InterruptedException - when httpClient.send fails.
    */
-  public static Recipe getRecipeFromURI(String uri) throws IOException, InterruptedException {
+  public static Recipe getRecipeFromURI(String uri) throws IOException, InterruptedException,
+      APIException {
     String reformattedUri = formatURI(uri);
 
     HttpClient httpClient = HttpClient.newBuilder().build();
@@ -95,12 +96,16 @@ public final class FieldParser {
         .uri(URI.create("https://api.edamam.com/search?r=" + reformattedUri
             + "&app_id=" + APP_ID + "&app_key=" + APP_KEY)).build();
 
-    HttpResponse<String> response = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+    HttpResponse<String> response = httpClient.send(httpRequest,
+        HttpResponse.BodyHandlers.ofString());
 
     if (response.statusCode() != 200) {
-      //error
+      throw new APIException("API returned error " + response.statusCode());
     }
     Recipe[] recipeArray = parseRecipeJSON(response.body());
+    if (recipeArray == null) {
+      throw new APIException("API returned malformed JSON");
+    }
     return recipeArray[0];
   }
 
@@ -109,18 +114,25 @@ public final class FieldParser {
    * @param query - the desired query to search for in the api.
    * @return - an array of recipes that correspond to the given query in the api.
    */
-  public static Recipe[] getRecipesFromQuery(String query) throws IOException, InterruptedException {
+  public static Recipe[] getRecipesFromQuery(String query) throws IOException, InterruptedException,
+      APIException {
     HttpClient httpClient = HttpClient.newBuilder().build();
     HttpRequest httpRequest = HttpRequest.newBuilder().GET()
         .uri(URI.create("https://api.edamam.com/search?q=" + query
-        + "&app_id=" + APP_ID + "&app_key" + APP_KEY)).build();
+        + "&app_id=" + APP_ID + "&app_key=" + APP_KEY)).build();
 
-    HttpResponse<String> response = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+    HttpResponse<String> response = httpClient.send(httpRequest,
+        HttpResponse.BodyHandlers.ofString());
 
     if (response.statusCode() != 200) {
-      //error
+      throw new APIException("API returned error " + response.statusCode());
     }
-    return parseRecipeJSON(response.body());
+
+    Recipe[] recipes = parseRecipeJSON(response.body());
+    if (recipes == null) {
+      throw new APIException("API returned malformed JSON");
+    }
+    return recipes;
   }
 
 
@@ -131,7 +143,7 @@ public final class FieldParser {
    * @return - A list of Recipe objects containing data from the api.
    */
   public static List<Recipe> getRecipeSubset(int start, int end) {
-    HttpClient httpClinet = HttpClient.newBuilder().build();
+    HttpClient httpClient = HttpClient.newBuilder().build();
     HttpRequest httpRequest = HttpRequest.newBuilder().GET()
         .uri(URI.create("https://api.edamam.com/search?q=")).build(); //fix this!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     return null;
@@ -145,7 +157,9 @@ public final class FieldParser {
   public static String apiCall() {
     HttpClient httpClient = HttpClient.newBuilder().build();
     HttpRequest httpRequest = HttpRequest.newBuilder().GET()
-        .uri(URI.create("https://api.edamam.com/search?q=chicken&app_id=2a676518" //need to parse uris we get from JSON
+        .uri(URI.create("https://api.edamam.com/search?" +
+            "q=chicken" +
+            "&app_id=2a676518" //need to parse uris we get from JSON
             + "&app_key=" +
             "158f55a83eee58aff1544072b788784f")).build();
 
@@ -163,12 +177,12 @@ public final class FieldParser {
   /**
    * Test Gson function
    */
-
   public static Recipe parseJSON() {
     String json = apiCall();
     Recipe[] recipes = parseRecipeJSON(json);
-    for (Recipe r : recipes) {
-      System.out.println(r.getUri());
+    for (int i = 0; i < recipes.length; i++) {
+      System.out.println(recipes[i].getUri());
+      System.out.println(recipes[i].getNutrientVals("FE")[0]);
     }
     return recipes[0];
   }

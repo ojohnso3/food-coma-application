@@ -33,12 +33,12 @@ public class User {
     username = user;
     previousRecipes = new ArrayList<>();
     dietaryRestrictions = new ArrayList<>();
-    Accounts.writeLoginInfo(user, pass, path); // write the login info to our csv
+    Accounts.writeLoginInfo(user, pass, path); // write the login info to any csv (for testing)
   }
 
   /**
-   * Comment.
-   * @return
+   * username getter.
+   * @return username
    */
   public String getUsername() {
     return username;
@@ -54,7 +54,7 @@ public class User {
 
 
   /**
-   * Comment.
+   * Function to add to the previousRecipes field.
    * @param recipe
    */
   public void addToPreviousRecipes(Recipe recipe) {

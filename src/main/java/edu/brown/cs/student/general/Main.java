@@ -9,6 +9,7 @@ package edu.brown.cs.student.general;
 
 import com.google.common.collect.ImmutableMap;
 
+import edu.brown.cs.student.database.APIException;
 import edu.brown.cs.student.database.FieldParser;
 import edu.brown.cs.student.database.RecipeDatabase;
 import edu.brown.cs.student.food.NutrientInfo;
@@ -25,6 +26,7 @@ import spark.Spark;
 import spark.TemplateViewRoute;
 import spark.template.freemarker.FreeMarkerEngine;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 
 /**
@@ -58,12 +60,19 @@ public final class Main {
     OptionSet options = parser.parse(args);
 
     if (options.has("gui")) {
-//      NutrientInfo nutrient = new NutrientInfo();
       Gui gui = new Gui();
       gui.runSparkServer((int) options.valueOf("port"));
     } else {
       NutrientInfo.createNutrientsList();
-      FieldParser.parseJSON();
+      try {
+        Recipe[] recipes = FieldParser.getRecipesFromQuery("chicken");
+        for (int i = 0; i < recipes.length; i++) {
+          System.out.println(recipes[i].getUri());
+        }
+      } catch (IOException | InterruptedException | APIException ie) {
+        ie.printStackTrace();
+      }
+
     }
 
     // TODO: add functionality here
