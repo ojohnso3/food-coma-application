@@ -78,12 +78,9 @@ public final class FieldParser {
         return recipes;
       }
     } catch (IllegalStateException ise) {
-
-      if ()
-
+      return gson.fromJson(json, Recipe[].class);
     }
-
-
+    return null;
   }
 
   /**
