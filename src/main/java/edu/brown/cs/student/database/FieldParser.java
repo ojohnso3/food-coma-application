@@ -116,13 +116,14 @@ public final class FieldParser {
     HttpClient httpClient = HttpClient.newBuilder().build();
     HttpRequest httpRequest = HttpRequest.newBuilder().GET()
         .uri(URI.create("https://api.edamam.com/search?q=" + query
-        + "&app_id=" + APP_ID + "&app_key" + APP_KEY)).build();
+        + "&app_id=" + APP_ID + "&app_key=" + APP_KEY)).build();
 
     HttpResponse<String> response = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
 
     if (response.statusCode() != 200) {
       //error
     }
+    System.out.println(response.body());
     return parseRecipeJSON(response.body());
   }
 
@@ -134,7 +135,7 @@ public final class FieldParser {
    * @return - A list of Recipe objects containing data from the api.
    */
   public static List<Recipe> getRecipeSubset(int start, int end) {
-    HttpClient httpClinet = HttpClient.newBuilder().build();
+    HttpClient httpClient = HttpClient.newBuilder().build();
     HttpRequest httpRequest = HttpRequest.newBuilder().GET()
         .uri(URI.create("https://api.edamam.com/search?q=")).build(); //fix this!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     return null;
@@ -149,7 +150,7 @@ public final class FieldParser {
     HttpClient httpClient = HttpClient.newBuilder().build();
     HttpRequest httpRequest = HttpRequest.newBuilder().GET()
         .uri(URI.create("https://api.edamam.com/search?" +
-            "r=http%3A%2F%2Fwww.edamam.com%2Fontologies%2Fedamam.owl%23recipe_9b5945e03f05acbf9d69625138385408" +
+            "q=chicken" +
             "&app_id=2a676518" //need to parse uris we get from JSON
             + "&app_key=" +
             "158f55a83eee58aff1544072b788784f")).build();
@@ -171,8 +172,10 @@ public final class FieldParser {
   public static Recipe parseJSON() {
     String json = apiCall();
     Recipe[] recipes = parseRecipeJSON(json);
-    System.out.println(recipes[0].getUri());
-    System.out.println(recipes[0].getNutrientVals("FE")[0]);
+    for (int i = 0; i < recipes.length; i++) {
+      System.out.println(recipes[i].getUri());
+      System.out.println(recipes[i].getNutrientVals("FE")[0]);
+    }
     return recipes[0];
   }
 }

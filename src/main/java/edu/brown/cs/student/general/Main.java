@@ -25,6 +25,7 @@ import spark.Spark;
 import spark.TemplateViewRoute;
 import spark.template.freemarker.FreeMarkerEngine;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 
 /**
@@ -58,12 +59,16 @@ public final class Main {
     OptionSet options = parser.parse(args);
 
     if (options.has("gui")) {
-//      NutrientInfo nutrient = new NutrientInfo();
       Gui gui = new Gui();
       gui.runSparkServer((int) options.valueOf("port"));
     } else {
       NutrientInfo.createNutrientsList();
-      FieldParser.parseJSON();
+      try {
+        FieldParser.getRecipesFromQuery("chicken");
+      } catch (IOException | InterruptedException ie) {
+        ie.printStackTrace();
+      }
+
     }
 
     // TODO: add functionality here
