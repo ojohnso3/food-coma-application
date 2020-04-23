@@ -7,9 +7,9 @@ const skip = $("#survey_skip");
 const submit = $("#survey_submit");
 
 skip.click(event => {
-    window.location.href = "/search";
+    window.location.href = "/user";
 });
 
 submit.click(event => {
-    window.location.href = "/search";
+    window.location.href = "/user";
 });

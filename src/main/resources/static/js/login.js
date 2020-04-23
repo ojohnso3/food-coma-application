@@ -44,6 +44,8 @@ button.click(event => {
 
       if (output.output == "Valid username!") {
         window.location.href = "/search";
+        // login_header.innerHTML = "User";
+        // login_header.attr("href", "/user");
       }
     });
 

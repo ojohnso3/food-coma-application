@@ -17,7 +17,8 @@
     
     <div class="navigation_bar">   
       <a href="/home" class="bar_item">Home</a>   
-      <a href="/login" class="bar_item">Login</a>   
+      <a href="/login" id="login_header" class="bar_item">Login</a>   
+      <a href="/user" class="bar_item">User</a>  <#--  eventually remove this and combine with login  -->
       <a href="/search" class="bar_item">Search</a>  
       <a href="/about" class="bar_item">About</a>   
       <a href="/signup" class="bar_item">Sign Up</a>   
@@ -35,6 +36,8 @@
       <a href="#"><i class="fa fa-pinterest-p"></i></a>   
       <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">yo mama</a></p>
     </footer>
+
+    <script src="js/main.js"></script>
 
      <!-- Again, we're serving up the unminified source for clarity. -->
 
