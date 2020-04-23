@@ -282,12 +282,21 @@ public class Gui {
     private boolean checkSignUpValidity(String user, String pass1, String pass2) {
       // check if user already exists
       // check if passwords are same
-      if(!userExists(user) && comparePasswords(pass1, pass2)) {
+      if(!userExists(user) && comparePasswords(pass1, pass2) &&
+          checkInputExists(user, pass1, pass2)) {
         return true;
       } else {
         return false;
       }
       // informative error messages ??
+    }
+    
+    private boolean checkInputExists(String user, String pass1, String pass2) {
+      if((user.length() > 0) && (pass1.length() > 0) && (pass2.length() > 0)) {
+        return true;
+      } else {
+        return false;
+      }
     }
     
     private boolean userExists(String user) {

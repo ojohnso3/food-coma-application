@@ -1,3 +1,4 @@
+
 //package edu.brown.cs.student.foodCOMA.login;
 //
 //import edu.brown.cs.student.login.AccountException;
@@ -15,12 +16,13 @@
 //public class AccountsOldTest {
 //  private static final String PATH_TXT = "src/test/java/edu/brown/cs/student/foodCOMA/login/test.txt";
 //  private static final String PATH_CSV = "src/test/java/edu/brown/cs/student/foodCOMA/login/test.csv";
+
 //
 //  @Test
 //  public void readHeaderTest() throws AccountException {
-//    assertEquals(AccountsOld.readHeader(), "username,encodedPassword,salt");
+////    assertEquals(AccountsOld.readHeader(), "username,encodedPassword,salt");
 //  }
-
+//
 //  @Test
 //  public void generateSaltTest() {
 //    byte[] salt1 = AccountsOld.generateSalt();
@@ -58,37 +60,6 @@
 //    assertNotEquals(salt1, salt2);
 //    assertNotEquals(salt1, salt3);
 //    assertNotEquals(salt2, salt3);
-//  }
-//
-//  @Test
-//  public void simpleHashTest() throws AccountException {
-//    byte[] salt = AccountsOld.generateSalt();
-//    String pass = "password";
-//    int hash = AccountsOld.simpleHash(pass, salt);
-//    System.out.println(hash);
-//    // check that hashing the same password and salt gives the same hash
-//    assertEquals(hash, AccountsOld.simpleHash(pass, salt));
-//    // check that differences in pass, salt => different hash
-//    assertNotEquals(hash, AccountsOld.simpleHash(pass, AccountsOld.generateSalt()));
-//    assertNotEquals(hash, AccountsOld.simpleHash("passw0rd", salt));
-//    assertNotEquals(hash, AccountsOld.simpleHash("Password", salt));
-//    assertNotEquals(hash, AccountsOld.simpleHash("wordpass", salt));
-//  }
-
-//  @Test
-//  public void hashPasswordPBKDF2Test() throws AccountException {
-//    byte[] salt = AccountsOld.generateSalt();
-//    String pass = "password";
-//    byte[] hash = AccountsOld.hashPasswordPBKDF2(pass, salt);
-//    System.out.println(hash);
-//    // check that hashing the same password and salt gives the same hash
-//    assertEquals(hash, AccountsOld.hashPasswordPBKDF2(pass, salt));
-//    // check that differences in pass, salt => different hash
-//    assertNotEquals(hash, AccountsOld.hashPasswordPBKDF2(pass));
-//    assertNotEquals(hash, AccountsOld.hashPasswordPBKDF2(pass, AccountsOld.generateSalt()));
-//    assertNotEquals(hash, AccountsOld.hashPasswordPBKDF2("passw0rd", salt));
-//    assertNotEquals(hash, AccountsOld.hashPasswordPBKDF2("Password", salt));
-//    assertNotEquals(hash, AccountsOld.hashPasswordPBKDF2("wordpass", salt));
 //  }
 
 //  @Test
