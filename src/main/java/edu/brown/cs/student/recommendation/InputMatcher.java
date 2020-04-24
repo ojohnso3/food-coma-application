@@ -1,9 +1,11 @@
 package edu.brown.cs.student.recommendation;
 
 
+import edu.brown.cs.student.database.APIException;
 import edu.brown.cs.student.food.Recipe;
 import edu.brown.cs.student.login.User;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -11,17 +13,18 @@ import java.util.List;
  * which will be able to find specific recipes to return to the user.
  */
 public class InputMatcher {
-  String input;
-  User user;
-  
+  private String input;
+  private User user;
+
   public InputMatcher(String input, User user) {
     this.input = input;
     this.user = user;
   }
-  
-  public List<Recipe> getResults() throws RecommendationException {
-    Recommender recommender = new Recommender();
-    return recommender.makeRecommendation(user, input);
+
+  public List<Recipe> getResults() throws RecommendationException, InterruptedException,
+      APIException, IOException {
+    Recommender recommender = new Recommender(this.user);
+    return recommender.makeRecommendation(input);
   }
   
 
