@@ -135,7 +135,7 @@ public final class RecipeDatabase {
       Recipe recipe = FieldParser.getRecipeFromURI(uri);
       insertRecipe(recipe);
       return recipe;
-    } catch (InterruptedException | IOException e) {
+    } catch (InterruptedException | IOException | APIException e) {
       //An error in the api occurred, the recipe can't be added to the database.
       return null; //not sure about this????????????????????????????????????????????????????????????????
     }
@@ -214,7 +214,8 @@ public final class RecipeDatabase {
    * @param uri - String uri of the desired recipe.
    * @return - A Recipe object corresponding to the given uri.
    */
-  public Recipe getRecipeFromURI(String uri) throws SQLException {
+  public static Recipe getRecipeFromURI(String uri) throws SQLException {
+    System.out.println("Inputted URI is " + uri);
     PreparedStatement prep = conn.prepareStatement("SELECT * FROM recipe WHERE uri = ?");
     prep.setString(1, uri);
     ResultSet recipeSet = prep.executeQuery();
