@@ -80,3 +80,11 @@ a:hover {
     bottom: 0px;
 }
 
+.user_header {
+    background-color: green;
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 20px;
+}
+

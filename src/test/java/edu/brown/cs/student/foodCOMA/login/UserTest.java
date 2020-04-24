@@ -1,38 +1,30 @@
 package edu.brown.cs.student.foodCOMA.login;
 
 import edu.brown.cs.student.login.AccountException;
-import edu.brown.cs.student.login.BCrypt;
+import edu.brown.cs.student.login.Accounts;
 import edu.brown.cs.student.login.User;
 import org.junit.Test;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 /**
  * test User.
  */
 public class UserTest {
+  private static final String PATH_CSV = "src/test/java/edu/brown/cs/student/foodCOMA/login/test.csv";
 
   @Test
   public void constructorTest() throws AccountException {
-    String path = "test.csv";
     String user = "user";
     String pass = "pass";
-    User u = new User(user, pass, path);
+    User u = new User(user, pass, PATH_CSV);
 
     assertEquals(user, u.getUsername());
+    assertEquals(user + " successfully Logged in!", Accounts.checkLogin(u.getUsername(), pass, PATH_CSV));
+    assertEquals("Failed Login: Please try again.", Accounts.checkLogin("fake user", pass, PATH_CSV));
+    assertEquals("Failed Login: Please try again.", Accounts.checkLogin(user, "fake pass", PATH_CSV));
+    assertEquals("Failed Login: Please try again.", Accounts.checkLogin("fake user", "fake pass", PATH_CSV));
 
-    try (BufferedReader br = new BufferedReader(new FileReader(path))) {
-      String[] info = br.readLine().split(",");
-      assertEquals(user, info[0]);
-      assertTrue(BCrypt.checkpw(pass, info[1]));
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
   }
 }
 

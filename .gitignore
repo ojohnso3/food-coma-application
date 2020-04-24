@@ -6,3 +6,7 @@
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
 .mvn-classpath
+
+# test files
+src/test/java/edu/brown/cs/student/foodCOMA/login/test.csv
+src/test/java/edu/brown/cs/student/foodCOMA/login/test.txt

@@ -32,11 +32,11 @@ public class RecipeDeserializer implements JsonDeserializer<Recipe> {
    * total quantity, as doubles.
    */
   private Map<String, double[]> makeNutrientMap(JsonObject totalDailyObject, JsonObject totalNutrientsObject) {
-
     Map<String, double[]> nutrients = new HashMap<>();
 
     for (String code : NutrientInfo.nutrients.keySet()) {
       double[] nutrientArray = new double[2];
+      System.out.println("CODE " + code);
       if (totalDailyObject.has(code)) {
         JsonElement currDailyNutrient = totalDailyObject.get(code);
         JsonObject currDailyNutrientObject = currDailyNutrient.getAsJsonObject();
@@ -59,7 +59,6 @@ public class RecipeDeserializer implements JsonDeserializer<Recipe> {
   @Override
   public Recipe deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext)
       throws JsonParseException {
-    System.out.println("HERE");
     GsonBuilder gsonBuilder = new GsonBuilder();
     JsonObject jsonObject = jsonElement.getAsJsonObject();
 
@@ -70,7 +69,7 @@ public class RecipeDeserializer implements JsonDeserializer<Recipe> {
     String url = jsonObject.get("url").getAsString();
     String shareAs = jsonObject.get("shareAs").getAsString();
     double yield = jsonObject.get("yield").getAsDouble();
-
+    System.out.println("past string fields");
     JsonElement dietArray = jsonObject.get("dietLabels");
     JsonArray jsonDietLabels = dietArray.getAsJsonArray();
     String[] dietLabels = new String[jsonDietLabels.size()];
@@ -85,7 +84,6 @@ public class RecipeDeserializer implements JsonDeserializer<Recipe> {
       healthLabels[j] = jsonHealthLabels.get(j).getAsString();
     }
 
-
     JsonElement ingredientsArray = jsonObject.get("ingredients"); //get the json for the array of ingredients
     JsonArray jsonIngredients = ingredientsArray.getAsJsonArray(); //get the array from the json
     List<Ingredient> ingredients = new ArrayList<>();
@@ -96,7 +94,6 @@ public class RecipeDeserializer implements JsonDeserializer<Recipe> {
       Ingredient currIngredient = customGson.fromJson(jsonIngredients.get(k), Ingredient.class); //parse ingredients
       ingredients.add(currIngredient);
     }
-
     double calories = jsonObject.get("calories").getAsDouble();
     double totalWeight = jsonObject.get("totalWeight").getAsDouble();
     double totalTime = jsonObject.get("totalTime").getAsDouble();

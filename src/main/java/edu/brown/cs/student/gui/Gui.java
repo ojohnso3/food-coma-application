@@ -76,6 +76,7 @@ public class Gui {
     Spark.get("/recipe/:recipeuri", new SetupHandler("recipe.ftl", "Recipe Detail"), freeMarker);
     Spark.get("/signup", new SetupHandler("signup.ftl", "Signup"), freeMarker);
     Spark.get("/survey", new SetupHandler("survey.ftl", "New User Survey"), freeMarker);
+    Spark.get("/user", new SetupHandler("user.ftl", "User Profile"), freeMarker);
     
     Spark.post("/logged", new LoginHandler());
     Spark.post("/signed", new SignupHandler());
