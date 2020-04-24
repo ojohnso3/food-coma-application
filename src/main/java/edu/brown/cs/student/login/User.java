@@ -15,6 +15,7 @@ public class User {
   private String username;
   private List<Recipe> previousRecipes;
   private List<Ingredient> dietaryRestrictions;
+  private List<String> nutrients;
 
   /**
    * constructors adds login info to db.
@@ -76,5 +77,21 @@ public class User {
    */
   public void addToRestrictions(Ingredient ingredient) {
     dietaryRestrictions.add(ingredient);
+  }
+
+  /**
+   * getter.
+   * @return nutrients
+   */
+  public List<String> getNutrients() {
+    return this.nutrients;
+  }
+
+  /**
+   * setter.
+   * @param n - nutrients
+   */
+  public void setNutrients(List<String> n) {
+    this.nutrients = n;
   }
 }
