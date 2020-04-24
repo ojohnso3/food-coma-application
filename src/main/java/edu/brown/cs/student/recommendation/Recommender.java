@@ -22,17 +22,20 @@ public class Recommender {
   private KDTree<RecipeNode> recipeTree;
   private static final int TREE_INIT_SIZE = 50;
   private static final int REC_QUANTITY = 10;
-  private static final int DIM = 6;
+  private int dim;
+  private User user;
 
 
-  public Recommender() {
-
+  public Recommender(User user) {
+    this.user = user;
+    this.dim = user.getNutrients().size();
   }
 
   /**
    * Function to initialize the KDTree to be used when recommending recipes to users.
    */
-  private void initRecipeTree(String input) throws InterruptedException, APIException, IOException {
+  private void initRecipeTree(String input)
+      throws InterruptedException, APIException, IOException {
     List<Recipe> recipesList = Arrays.asList(FieldParser.getRecipesFromQuery(input));
     List<RecipeNode> nodesList = this.convertRecipesToRecipeNodes(recipesList);
     this.recipeTree.initializeTree(nodesList);
@@ -40,16 +43,15 @@ public class Recommender {
 
   /**
    * Comment.
-   * @param user Id of current user
    * @param input Search input of user
    * @return List of recommended recipes
    */
-  public List<Recipe> makeRecommendation(User user, String input) throws
+  public List<Recipe> makeRecommendation(String input) throws
       RecommendationException, InterruptedException, IOException, APIException {
-    this.recipeTree = new KDTree<>(DIM);
+    this.recipeTree = new KDTree<>(dim);
     this.initRecipeTree(input);
     List<Recipe> recs;
-    List<Recipe> userHistory = user.getPreviousRecipes();
+    List<Recipe> userHistory = this.user.getPreviousRecipes();
     try {
       recs = this.getRecommendedRecipes(userHistory);
     } catch (RecommendationException e) {
@@ -57,7 +59,7 @@ public class Recommender {
     }
 
     for (Recipe r : recs) { //maybe only want to save recent history?????????????????????????????????
-      user.addToPreviousRecipes(r); // figure out order and backwards?
+      this.user.addToPreviousRecipes(r); // figure out order and backwards?
     }
     return recs;
   }
@@ -65,10 +67,14 @@ public class Recommender {
   /**
    * Function to find the coordinates of a RecipeNode based on the user's nutritional preferences.
    * @param r - the RecipeNode to find the coordinates of.
-   * @return
    */
-  private List<Double> getRecipeNodeCoords(RecipeNode r) {
-    return null;
+  private void addRecipeNodeCoords(RecipeNode r) {
+    List<String> nutrientPreferences = user.getNutrients();
+    List<Double> coords = new ArrayList<>();
+    for (String code : nutrientPreferences) {
+      coords.add(r.getRecipe().getNutrientVals(code)[0]);
+    }
+    r.setCoords(coords);
   }
 
   /**
@@ -79,7 +85,9 @@ public class Recommender {
   private List<RecipeNode> convertRecipesToRecipeNodes(List<Recipe> recipes) {
     List<RecipeNode> nodes = new ArrayList<RecipeNode>();
     for (Recipe recipe: recipes) {
-      nodes.add(new RecipeNode(recipe, DIM));
+      RecipeNode r = new RecipeNode(recipe);
+      this.addRecipeNodeCoords(r);
+      nodes.add(r);
     }
     return nodes;
   }
@@ -92,7 +100,7 @@ public class Recommender {
   private RecipeNode getTargetNode(List<Recipe> userHistory) {
     List<RecipeNode> prevRecipeNodes = this.convertRecipesToRecipeNodes(userHistory);
     List<Double> coordsSum = new ArrayList<>();
-    for (int i = 0; i < DIM; i++) {
+    for (int i = 0; i < this.dim; i++) {
       coordsSum.add(0.);
     }
 
@@ -108,11 +116,11 @@ public class Recommender {
 
     List<Double> targetCoords = new ArrayList<>();
     for (double sum : coordsSum) {
-      targetCoords.add(sum / DIM);
+      targetCoords.add(sum / this.dim);
     }
 
 
-    return new RecipeNode(targetCoords, DIM);
+    return new RecipeNode(targetCoords);
   }
 
 
