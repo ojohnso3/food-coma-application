@@ -26,8 +26,10 @@ import spark.Spark;
 import spark.TemplateViewRoute;
 import spark.template.freemarker.FreeMarkerEngine;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.sql.SQLException;
 
 /**
  * The Main class of our project. This is where execution begins.
@@ -63,15 +65,15 @@ public final class Main {
       Gui gui = new Gui();
       gui.runSparkServer((int) options.valueOf("port"));
     } else {
-      NutrientInfo.createNutrientsList();
-      try {
-        Recipe[] recipes = FieldParser.getRecipesFromQuery("chicken");
-        for (int i = 0; i < recipes.length; i++) {
-          System.out.println(recipes[i].getUri());
-        }
-      } catch (IOException | InterruptedException | APIException ie) {
-        ie.printStackTrace();
-      }
+//      NutrientInfo.createNutrientsList();
+//      try {
+//        Recipe[] recipes = FieldParser.getRecipesFromQuery("chicken");
+//        for (int i = 0; i < recipes.length; i++) {
+//          System.out.println(recipes[i].getUri());
+//        }
+//      } catch (IOException | InterruptedException | APIException ie) {
+//        ie.printStackTrace();
+//      }
 
     }
 

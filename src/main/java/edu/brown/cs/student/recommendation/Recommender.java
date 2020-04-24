@@ -65,6 +65,26 @@ public class Recommender {
   }
 
   /**
+   * Function to normalize the coordinates of a RecipeNode.
+   * @param coords - the coordinates of a RecipeNode.
+   * @return - the normalized list of coordinates.
+   * //TODO: fix this, can't treat coordinate lists like vectors.
+   */
+  private List<Double> normalize(List<Double> coords) {
+    double magnitude;
+    double temp = 0;
+    for (double coord : coords) {
+      temp += Math.pow(coord, 2);
+    }
+    magnitude = Math.sqrt(temp);
+    for (int i = 0; i < coords.size(); i++) {
+      double currCood = coords.get(i);
+      coords.set(i, currCood / magnitude);
+    }
+    return coords;
+  }
+
+  /**
    * Function to find the coordinates of a RecipeNode based on the user's nutritional preferences.
    * @param r - the RecipeNode to find the coordinates of.
    */
@@ -74,7 +94,8 @@ public class Recommender {
     for (String code : nutrientPreferences) {
       coords.add(r.getRecipe().getNutrientVals(code)[0]);
     }
-    r.setCoords(coords);
+
+    r.setCoords(this.normalize(coords));
   }
 
   /**
@@ -120,7 +141,7 @@ public class Recommender {
     }
 
 
-    return new RecipeNode(targetCoords);
+    return new RecipeNode(this.normalize(targetCoords));
   }
 
 
