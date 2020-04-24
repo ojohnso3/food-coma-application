@@ -2,7 +2,7 @@
 
 <h1>New User Survey!</h1>
 
-<img src="https://tinyurl.com/y86lsznl" id="foodCOMA"> </a>
+<img src="https://tinyurl.com/y86lsznl" id="foodCOMA">
 
 <div class="skip">
     <p>If you don't want to fill out the survey, press the button below. <br>

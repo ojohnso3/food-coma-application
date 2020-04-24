@@ -6,7 +6,7 @@ $(document).ready(() => {
 
 const preferences = $("#preferences");
 const button = $("#submit");
-console.log(preferences.val());
+console.log("HERE " + preferences.val());
 
 
 button.click(event => {
