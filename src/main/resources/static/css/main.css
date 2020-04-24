@@ -1,31 +1,73 @@
 body {
     background-color: #fee6c2;
-    font: 18px monospace;
+    font-size: 18px;
+    font-family: monospace;
     color: #8aa1e6;
     text-align: center;
     /* background-image: url('light-stars.jpg');
     background-size: cover; */
+    margin-top: 120px;
 }
 
 h1 {
-    font: 75px monospace;
+    font-size: 75px;
+    font-family: 'Monserat';    
     /* text-shadow: 0 0 3px #FF0000; */
     color: #5e6ac7;
     /* text-shadow: 0 0 3px red, 0 0 5px orange; */
     text-decoration: underline;
 }
 
+.border {
+	background: #8aa1e6;
+    position: fixed;
+    top: 0; 
+    bottom: 0;
+	width: 20px;
+}
+
+#left {
+    left: 0px;
+}
+
+#right {
+    right: 0px;
+}
+
 
 .navigation_bar {
     background-color: #8aa1e6;
     color: #fee6c2;
+    /* color: #fee6c2; */
     padding: 30px;
-    margin: 10px;
+    /* margin: 10px; */
     text-decoration: none;
+    position: fixed;
+    display: inline-flexbox;
+    flex-direction: row;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 40px;
+    border-bottom: 3px solid black;
+}
+
+.bar_item {
+    margin: 15px;
+    font-size: 28px;
+}
+
+#real_logo {
+    margin-top: 0px;
+    top: 0px;
+    left: 0px;
+    width: 200px;
+    height: 50px;
 }
 
 a {
     text-decoration: none;
+    color: #fee6c2;
 }
 
 .bar_item a:link, .bar_item a:visited {
@@ -33,7 +75,8 @@ a {
 }
 
 a:hover {
-    background-color: rgb(150, 64, 93);
+    background-color: rgb(236, 156, 156);
+    color: #fee6c2;
 }
 
 .home_slides {
@@ -72,19 +115,69 @@ a:hover {
 }
 
 .footer {
+    display: flexbox;
     margin-top: 20px;
     padding: 10px;
     /* width: 100%; */
     background-color: #f09393;
     border: 2px solid #f8c75d;
     bottom: 0px;
+    left: 0px;
+    right: 0px;
 }
 
 .user_header {
-    background-color: green;
+    background-color: #8de0b7;
     width: 50%;
     margin-left: auto;
     margin-right: auto;
     padding: 20px;
 }
 
+/* #fc_logo {
+    background-image: url('foodCOMA.png');
+    background-size: contain;
+    width: 800px;
+    height: 200px;
+} */
+
+
+.queryOption {
+    display: flex;
+    width: 25vw;
+    max-width: 25vw;
+    flex-direction: column;
+    justify-content: center;
+    vertical-align: center;
+    text-align: center;
+    border: 10px solid #8aa1e6;
+    border-radius: 5px;
+    padding: 15px;
+    margin: 20px;
+    background-color: #8de0b7;
+}
+
+.queryBox {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+input {
+    font-family: 'Helvetica Neue';
+    font-weight: bolder;
+    color: #595959;
+}
+
+input[type="submit"] {
+    cursor: pointer;
+    border-radius: 5px;
+    border: 0px;
+    font-size: 18px;
+    width: 80%;
+    text-transform: uppercase;
+    background-color: #FEE58C;
+    padding: 10px;
+    margin: 5px;
+    align-self: center;
+}
