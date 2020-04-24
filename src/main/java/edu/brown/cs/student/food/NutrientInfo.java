@@ -166,7 +166,4 @@ public final class NutrientInfo {
     thiamin[1] = "mg";
     nutrients.put("THIA", thiamin);
   }
-
-
-
 }

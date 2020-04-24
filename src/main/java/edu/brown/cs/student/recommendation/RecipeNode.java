@@ -3,6 +3,7 @@ package edu.brown.cs.student.recommendation;
 import edu.brown.cs.student.food.Recipe;
 import edu.brown.cs.student.kdtree.KDNode;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,24 +13,19 @@ import java.util.List;
  */
 public class RecipeNode implements KDNode<RecipeNode> {
   private Recipe recipe;
-  private double[] coordinates;
+  private List<Double> coordinates;
   private RecipeNode leftNode;
   private RecipeNode rightNode;
-  private int dim;
   private String id;
   
   
-  public RecipeNode(Recipe r, int dim) {
+  public RecipeNode(Recipe r) {
     this.recipe = r;
-    this.dim = dim;
     this.id = r.getUri();
-    this.generateCoordsFromRecipe();
-    
   }
-  
-  private void generateCoordsFromRecipe() {
-    coordinates = new double[dim];
-    // TODO: set values based on recipe !!
+
+  public RecipeNode(List<Double> coordinates) {
+    this.coordinates = coordinates;
   }
   
   /**
@@ -48,7 +44,7 @@ public class RecipeNode implements KDNode<RecipeNode> {
 
   @Override
   public List<Double> getCoords() {
-    return null;
+    return this.coordinates;
   }
 
   @Override
@@ -69,5 +65,9 @@ public class RecipeNode implements KDNode<RecipeNode> {
   @Override
   public void setRightChild(RecipeNode rc) {
     this.rightNode = rc;
+  }
+
+  public void setCoords(List<Double> coords) {
+    this.coordinates = coords;
   }
 }

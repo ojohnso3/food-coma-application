@@ -1,10 +1,14 @@
 
 package edu.brown.cs.student.recommendation;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import edu.brown.cs.student.database.APIException;
+import edu.brown.cs.student.database.FieldParser;
 import edu.brown.cs.student.database.RecipeDatabase;
 import edu.brown.cs.student.food.Recipe;
 import edu.brown.cs.student.kdtree.KDTree;
@@ -18,63 +22,81 @@ public class Recommender {
   private KDTree<RecipeNode> recipeTree;
   private static final int TREE_INIT_SIZE = 50;
   private static final int REC_QUANTITY = 10;
-  private static final int DIM = 6;
+  private int dim;
+  private User user;
 
-  //TODO: figure out which version of the algorithm we want to use!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  //Need to change findTargetNode and initRecipeTree based on this.
 
-  public Recommender() {
-    this.recipeTree = new KDTree<>(DIM);
-    this.initRecipeTree();
+  public Recommender(User user) {
+    this.user = user;
+    this.dim = user.getNutrients().size();
   }
 
   /**
-   * Function to initialize the KDTree to be used when recommending recipes to users. (maybe change this!!!!!!!!!!!!!!!!!!!!)
+   * Function to initialize the KDTree to be used when recommending recipes to users.
    */
-  private void initRecipeTree() {
-    List<Recipe> recipesList = RecipeDatabase.getRecipeSubset(TREE_INIT_SIZE);
-    //check for errors here!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  private void initRecipeTree(String input)
+      throws InterruptedException, APIException, IOException {
+    List<Recipe> recipesList = Arrays.asList(FieldParser.getRecipesFromQuery(input));
     List<RecipeNode> nodesList = this.convertRecipesToRecipeNodes(recipesList);
     this.recipeTree.initializeTree(nodesList);
   }
-  
+
   /**
    * Comment.
-   * @param user Id of current user
    * @param input Search input of user
    * @return List of recommended recipes
    */
-  public List<Recipe> makeRecommendation(User user, String input) throws RecommendationException {
+  public List<Recipe> makeRecommendation(String input) throws
+      RecommendationException, InterruptedException, IOException, APIException {
+    this.recipeTree = new KDTree<>(dim);
+    this.initRecipeTree(input);
     List<Recipe> recs;
-    List<Recipe> userHistory = user.getPreviousRecipes();
+    List<Recipe> userHistory = this.user.getPreviousRecipes();
     try {
-      recs = this.getRecommendedRecipes(input, userHistory);
+      recs = this.getRecommendedRecipes(userHistory);
     } catch (RecommendationException e) {
       throw new RecommendationException(e.getMessage());
     }
 
     for (Recipe r : recs) { //maybe only want to save recent history?????????????????????????????????
-      user.addToPreviousRecipes(r); // figure out order and backwards?
+      this.user.addToPreviousRecipes(r); // figure out order and backwards?
     }
     return recs;
   }
-  
-//  private KDTree<RecipeNode> getKDTree(String userID) {
-//    KDTree<RecipeNode> kdtree;
-//    if (userTrees.containsKey(userID)) { // TODO: deal with the storage of user-specific kdtrees
-//      kdtree = userTrees.get(userID);
-//    } else {
-//      Recipe rootRecipe = new Recipe("ROOT"); // fake node
-//      RecipeNode rootNode = new RecipeNode(rootRecipe);
-//      int dims = 6; // make dims based on user or universal?
-//      kdtree = new KDTree<>(dims);
-//      List<RecipeNode> nodes = RecipeDatabase.getRecipeSubset(); // TODO: make method in RecipeDatabase class
-//      nodes.addAll(this.convertRecipesToRecipeNodes(userRecs.get(userID))); // adds user history to nodes list
-//      kdtree.initializeTree(nodes);
-//      userTrees.put(userID, kdtree);
-//    }
-//    return kdtree;
-//  }
+
+  /**
+   * Function to normalize the coordinates of a RecipeNode.
+   * @param coords - the coordinates of a RecipeNode.
+   * @return - the normalized list of coordinates.
+   * //TODO: fix this, can't treat coordinate lists like vectors.
+   */
+  private List<Double> normalize(List<Double> coords) {
+    double magnitude;
+    double temp = 0;
+    for (double coord : coords) {
+      temp += Math.pow(coord, 2);
+    }
+    magnitude = Math.sqrt(temp);
+    for (int i = 0; i < coords.size(); i++) {
+      double currCood = coords.get(i);
+      coords.set(i, currCood / magnitude);
+    }
+    return coords;
+  }
+
+  /**
+   * Function to find the coordinates of a RecipeNode based on the user's nutritional preferences.
+   * @param r - the RecipeNode to find the coordinates of.
+   */
+  private void addRecipeNodeCoords(RecipeNode r) {
+    List<String> nutrientPreferences = user.getNutrients();
+    List<Double> coords = new ArrayList<>();
+    for (String code : nutrientPreferences) {
+      coords.add(r.getRecipe().getNutrientVals(code)[0]);
+    }
+
+    r.setCoords(this.normalize(coords));
+  }
 
   /**
    * Function to find convert Recipes into RecipeNodes.
@@ -84,25 +106,49 @@ public class Recommender {
   private List<RecipeNode> convertRecipesToRecipeNodes(List<Recipe> recipes) {
     List<RecipeNode> nodes = new ArrayList<RecipeNode>();
     for (Recipe recipe: recipes) {
-      nodes.add(new RecipeNode(recipe, DIM));
+      RecipeNode r = new RecipeNode(recipe);
+      this.addRecipeNodeCoords(r);
+      nodes.add(r);
     }
     return nodes;
   }
 
   /**
    * Function to get the coordinates of the starting RecipeNode for nearest neighbor search.
-   * @param input - the query that was inputted by the user.
+   * @param userHistory - the previous recipes that the user has accessed.
    * @return - a RecipeNode at the coordinates determined by the query and the user's history.
    */
-  private RecipeNode getTargetNode(String input, List<Recipe> userHistory) {
-    return null;
+  private RecipeNode getTargetNode(List<Recipe> userHistory) {
+    List<RecipeNode> prevRecipeNodes = this.convertRecipesToRecipeNodes(userHistory);
+    List<Double> coordsSum = new ArrayList<>();
+    for (int i = 0; i < this.dim; i++) {
+      coordsSum.add(0.);
+    }
+
+    //find the midpoint of all coordinates of prevRecipeNodes
+    for (RecipeNode r: prevRecipeNodes) {
+      List<Double> coords = r.getCoords();
+      for (int i = 0; i < coordsSum.size(); i++) {
+        double currSum = coordsSum.get(i);
+        currSum += coords.get(i);
+        coordsSum.set(i, currSum);
+      }
+    }
+
+    List<Double> targetCoords = new ArrayList<>();
+    for (double sum : coordsSum) {
+      targetCoords.add(sum / this.dim);
+    }
+
+
+    return new RecipeNode(this.normalize(targetCoords));
   }
 
 
-  private List<Recipe> getRecommendedRecipes(String input, List<Recipe> userHistory) throws RecommendationException {
+  private List<Recipe> getRecommendedRecipes(List<Recipe> userHistory) throws RecommendationException {
     List<Recipe> recs = new ArrayList<>();
 
-    RecipeNode target = this.getTargetNode(input, userHistory);
+    RecipeNode target = this.getTargetNode(userHistory);
 
     // search for the nearest/most relevant recipes
     List<RecipeNode> recipeNodes;

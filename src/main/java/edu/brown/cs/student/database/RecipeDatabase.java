@@ -34,11 +34,12 @@ public final class RecipeDatabase {
 
   /**
    * Loads in database.
+   * @param fileName - name of the database file.
    * @throws FileNotFoundException - thrown if the given filepath is not a valid .sqlite3 file.
    * @throws ClassNotFoundException - thrown if there is an error when connecting to the file.
    * @throws SQLException - thrown if there is an error when connecting to the file.
    */
-  public void loadDatabase(String fileName) throws FileNotFoundException,
+  public static void loadDatabase(String fileName) throws FileNotFoundException,
           ClassNotFoundException, SQLException {
 
     String ext = Files.getFileExtension(fileName);
@@ -56,6 +57,7 @@ public final class RecipeDatabase {
     conn = DriverManager.getConnection(urlToDB);
     Statement stat = conn.createStatement();
     stat.executeUpdate("PRAGMA foreign_keys=ON;");
+    createTables();
   }
 
   /**
@@ -130,15 +132,11 @@ public final class RecipeDatabase {
    * @param uri - the uri of the desired recipe.
    * @return - A Recipe object that contains data from the given uri in the api.
    */
-  private static Recipe loadFromApi(String uri) throws SQLException {
-    try {
-      Recipe recipe = FieldParser.getRecipeFromURI(uri);
-      insertRecipe(recipe);
-      return recipe;
-    } catch (InterruptedException | IOException | APIException e) {
-      //An error in the api occurred, the recipe can't be added to the database.
-      return null; //not sure about this????????????????????????????????????????????????????????????????
-    }
+  private static Recipe loadFromApi(String uri) throws SQLException, InterruptedException,
+    APIException, IOException {
+    Recipe recipe = FieldParser.getRecipeFromURI(uri);
+    insertRecipe(recipe);
+    return recipe;
   }
 
 
@@ -183,7 +181,8 @@ public final class RecipeDatabase {
    * @return - a Recipe object containing all of the given data.
    */
   private static Recipe createRecipe(ResultSet recipeSet, ResultSet ingredientSet,
-                                     ResultSet nutrientSet, String uri) throws SQLException {
+                                     ResultSet nutrientSet, String uri) throws
+      SQLException, InterruptedException, IOException, APIException {
     if (recipeSet.next()) {
       String label = recipeSet.getString("label");
       String image = recipeSet.getString("image");
@@ -200,13 +199,7 @@ public final class RecipeDatabase {
           ingredients, nutrients);
     }
 
-    Recipe recipe = loadFromApi(uri);
-    if (recipe == null) {
-      //error??????????????????????????????????????????????????????????????????????????????????????????????
-    } else {
-      return recipe;
-    }
-    return null; //should never reach here.
+    return loadFromApi(uri);
   }
 
   /**
@@ -214,7 +207,10 @@ public final class RecipeDatabase {
    * @param uri - String uri of the desired recipe.
    * @return - A Recipe object corresponding to the given uri.
    */
-  public static Recipe getRecipeFromURI(String uri) throws SQLException {
+
+
+  public Recipe getRecipeFromURI(String uri) throws SQLException, InterruptedException,
+      APIException, IOException {
     System.out.println("Inputted URI is " + uri);
     PreparedStatement prep = conn.prepareStatement("SELECT * FROM recipe WHERE uri = ?");
     prep.setString(1, uri);

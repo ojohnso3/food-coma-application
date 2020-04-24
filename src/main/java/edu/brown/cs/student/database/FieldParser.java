@@ -15,6 +15,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -115,7 +116,7 @@ public final class FieldParser {
    * @return - an array of recipes that correspond to the given query in the api.
    */
   public static Recipe[] getRecipesFromQuery(String query) throws IOException, InterruptedException,
-      APIException {
+      APIException, SQLException {
     HttpClient httpClient = HttpClient.newBuilder().build();
     HttpRequest httpRequest = HttpRequest.newBuilder().GET()
         .uri(URI.create("https://api.edamam.com/search?q=" + query
@@ -132,6 +133,11 @@ public final class FieldParser {
     if (recipes == null) {
       throw new APIException("API returned malformed JSON");
     }
+
+    for (Recipe r : recipes) {
+      RecipeDatabase.insertRecipe(r);
+    }
+
     return recipes;
   }
 
