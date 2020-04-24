@@ -63,6 +63,15 @@ public class Recommender {
   }
 
   /**
+   * Function to find the coordinates of a RecipeNode based on the user's nutritional preferences.
+   * @param r - the RecipeNode to find the coordinates of.
+   * @return
+   */
+  private List<Double> getRecipeNodeCoords(RecipeNode r) {
+    return null;
+  }
+
+  /**
    * Function to find convert Recipes into RecipeNodes.
    * @param recipes - a list of Recipes to convert to nodes.
    * @return - a list of the converted RecipeNodes.
