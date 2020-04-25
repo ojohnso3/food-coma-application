@@ -65,15 +65,24 @@ public final class Main {
       Gui gui = new Gui();
       gui.runSparkServer((int) options.valueOf("port"));
     } else {
-//      NutrientInfo.createNutrientsList();
-//      try {
-//        Recipe[] recipes = FieldParser.getRecipesFromQuery("chicken");
-//        for (int i = 0; i < recipes.length; i++) {
-//          System.out.println(recipes[i].getUri());
-//        }
-//      } catch (IOException | InterruptedException | APIException ie) {
-//        ie.printStackTrace();
-//      }
+      try {
+        RecipeDatabase.loadDatabase("data/recipeDatabase.sqlite3");
+      } catch (FileNotFoundException e) {
+        e.printStackTrace();
+      } catch (ClassNotFoundException e) {
+        e.printStackTrace();
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+      NutrientInfo.createNutrientsList();
+      try {
+        Recipe[] recipes = FieldParser.getRecipesFromQuery("chicken");
+        for (int i = 0; i < recipes.length; i++) {
+          System.out.println(recipes[i].getUri());
+        }
+      } catch (IOException | InterruptedException | APIException | SQLException ie) {
+        ie.printStackTrace();
+      }
 
     }
 

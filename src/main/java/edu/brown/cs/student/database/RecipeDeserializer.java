@@ -36,7 +36,6 @@ public class RecipeDeserializer implements JsonDeserializer<Recipe> {
 
     for (String code : NutrientInfo.nutrients.keySet()) {
       double[] nutrientArray = new double[2];
-      System.out.println("CODE " + code);
       if (totalDailyObject.has(code)) {
         JsonElement currDailyNutrient = totalDailyObject.get(code);
         JsonObject currDailyNutrientObject = currDailyNutrient.getAsJsonObject();
@@ -69,7 +68,7 @@ public class RecipeDeserializer implements JsonDeserializer<Recipe> {
     String url = jsonObject.get("url").getAsString();
     String shareAs = jsonObject.get("shareAs").getAsString();
     double yield = jsonObject.get("yield").getAsDouble();
-    System.out.println("past string fields");
+
     JsonElement dietArray = jsonObject.get("dietLabels");
     JsonArray jsonDietLabels = dietArray.getAsJsonArray();
     String[] dietLabels = new String[jsonDietLabels.size()];

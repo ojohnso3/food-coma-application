@@ -34,7 +34,7 @@ public class Recommender {
    * Function to initialize the KDTree to be used when recommending recipes to users.
    */
   private void initRecipeTree(String input)
-          throws InterruptedException, APIException, IOException, SQLException {
+      throws InterruptedException, APIException, IOException, SQLException {
     List<Recipe> recipesList = Arrays.asList(FieldParser.getRecipesFromQuery(input));
     // normalize the coordinates of every node
     List<RecipeNode> nodes = convertRecipesToRecipeNodes(recipesList);
@@ -93,9 +93,10 @@ public class Recommender {
    * Comment.
    * @param input Search input of user
    * @return List of recommended recipes
+   * //TODO: don't add every recipe to user's history.
    */
   public List<Recipe> makeRecommendation(String input) throws
-          RecommendationException, InterruptedException, IOException, APIException, SQLException {
+      RecommendationException, InterruptedException, IOException, APIException, SQLException {
     this.recipeTree = new KDTree<>(dim);
     this.initRecipeTree(input);
     List<Recipe> recs;
@@ -132,7 +133,7 @@ public class Recommender {
    * @return - a list of the converted RecipeNodes.
    */
   private List<RecipeNode> convertRecipesToRecipeNodes(List<Recipe> recipes) {
-    List<RecipeNode> nodes = new ArrayList<RecipeNode>();
+    List<RecipeNode> nodes = new ArrayList<>();
     for (Recipe recipe: recipes) {
       RecipeNode r = new RecipeNode(recipe);
       this.addRecipeNodeCoords(r);
@@ -172,7 +173,8 @@ public class Recommender {
   }
 
 
-  private List<Recipe> getRecommendedRecipes(List<Recipe> userHistory) throws RecommendationException {
+  private List<Recipe> getRecommendedRecipes(List<Recipe> userHistory)
+      throws RecommendationException {
     List<Recipe> recs = new ArrayList<>();
 
     RecipeNode target = this.getTargetNode(userHistory);
