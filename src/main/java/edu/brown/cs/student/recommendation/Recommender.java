@@ -122,7 +122,7 @@ public class Recommender {
       coords.add(r.getRecipe().getNutrientVals(code)[0]);
     }
 
-//  TODO: no?  r.setCoords(this.normalize(coords));
+    r.setCoords(coords);
   }
 
   /**
@@ -167,8 +167,7 @@ public class Recommender {
       targetCoords.add(sum / this.dim);
     }
 
-    // TODO: don't normalize?
-    return new RecipeNode(this.normalize(targetCoords));
+    return new RecipeNode(targetCoords);
   }
 
 
