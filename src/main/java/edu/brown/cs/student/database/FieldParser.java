@@ -134,9 +134,9 @@ public final class FieldParser {
       throw new APIException("API returned malformed JSON");
     }
 
-    for (Recipe r : recipes) {
-      RecipeDatabase.insertRecipe(r);
-    }
+//    for (Recipe r : recipes) {
+//      RecipeDatabase.insertRecipe(r);
+//    }
 
     return recipes;
   }
