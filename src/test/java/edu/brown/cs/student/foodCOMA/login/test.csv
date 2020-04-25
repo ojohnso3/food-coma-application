@@ -1,10 +1,2 @@
 username,passwordHash,salt
-<<<<<<< HEAD
 user,$2a$10$w3jhQY.efX6uJ4oJNjlBxu8ArlMb7ucxybaNTMTTY2ujl.ih247ce,$2a$10$w3jhQY.efX6uJ4oJNjlBxu
-=======
-<<<<<<< HEAD
-user,$2a$10$vJ8Jd3/.Dm9XaovaFeAXfuIUBg4dQtlhnGUyIxgK4ZaS2BT3wHeoO,$2a$10$vJ8Jd3/.Dm9XaovaFeAXfu
-=======
-user,$2a$10$2ZAQ6Jf23hBmykjbCK4VgOptrl76ZntjSWSYsp3XCuWXmTDyn5pXm,$2a$10$2ZAQ6Jf23hBmykjbCK4VgO
->>>>>>> deaeb89ed873ea6ba5339cab09a70aa5a84af96b
->>>>>>> 9dac6d906873fe83a0ffe1f00ee564571e3eb012

@@ -38,7 +38,8 @@ public class Recommender {
     List<Recipe> recipesList = Arrays.asList(FieldParser.getRecipesFromQuery(input));
     // normalize the coordinates of every node
     List<RecipeNode> nodes = convertRecipesToRecipeNodes(recipesList);
-    normalize((nodes));
+    this.recipeTree.normalize(nodes);
+//    normalize((nodes));
     // also normalize user history?
     this.recipeTree.initializeTree(nodes);
   }
@@ -49,12 +50,12 @@ public class Recommender {
    */
   private void normalize(List<RecipeNode> nodes) {
     // create lists, maxes, mins for each considered nutrient
-    List<List<Double>> nutrientLists = new ArrayList<>();
+    List<List<Double>> nutrientsLists = new ArrayList<>();
     List<Double> maxes = new ArrayList<>();
     List<Double> mins = new ArrayList<>();
 
     for (int i = 0; i < this.dim; i++) {
-      nutrientLists.add(new ArrayList<>());
+      nutrientsLists.add(new ArrayList<>());
       maxes.add(Double.NEGATIVE_INFINITY);
       mins.add(Double.POSITIVE_INFINITY);
     }
@@ -71,14 +72,14 @@ public class Recommender {
           mins.set(i, coord);
         }
         // add the nutrient to its list
-        nutrientLists.get(i).add(coord);
+        nutrientsLists.get(i).add(coord);
       }
     }
 
     // normalize all nutrients for each type
-    int sz = nutrientLists.size();
+    int sz = nutrientsLists.size();
     for (int i = 0; i < sz; i++) {
-      List<Double> nuts = nutrientLists.get(i);
+      List<Double> nuts = nutrientsLists.get(i);
       for (int j = 0; j < this.dim; j++) {
         double n = nuts.get(j);
         double normalized = (n - mins.get(j)) / (maxes.get(j) - mins.get(j));
