@@ -207,8 +207,11 @@ public final class RecipeDatabase {
    * @param uri - String uri of the desired recipe.
    * @return - A Recipe object corresponding to the given uri.
    */
+
+
   public Recipe getRecipeFromURI(String uri) throws SQLException, InterruptedException,
       APIException, IOException {
+    System.out.println("Inputted URI is " + uri);
     PreparedStatement prep = conn.prepareStatement("SELECT * FROM recipe WHERE uri = ?");
     prep.setString(1, uri);
     ResultSet recipeSet = prep.executeQuery();

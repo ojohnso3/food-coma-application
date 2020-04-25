@@ -5,13 +5,16 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.google.common.collect.ImmutableMap;
 
+import edu.brown.cs.student.database.APIException;
 import edu.brown.cs.student.database.FieldParser;
+import edu.brown.cs.student.database.RecipeDatabase;
 import edu.brown.cs.student.food.Ingredient;
 import edu.brown.cs.student.food.NutrientInfo;
 import edu.brown.cs.student.food.Recipe;
@@ -38,8 +41,9 @@ public class Gui {
 //  private static FieldParser fieldParser;
 //  private static NutrientInfo nutrientInfo;
   private static final Gson GSON = new Gson();
-  
+  private Map<String, Recipe> recipesMap;
   public Gui() {
+    recipesMap = new HashMap<String, Recipe>();
 //    fieldParser = fp;
 //    nutrientInfo = nut;
   }
@@ -83,7 +87,7 @@ public class Gui {
     // more routes (post too!)
 
     Spark.get("/results", new SubmitHandler(), freeMarker);
-    Spark.post("/recipe/:recipeuri", new RecipeHandler(this));
+    Spark.post("/recipe/recipeuri", new RecipeHandler(this));
 //    Spark.get("/recipe/:recipeuri", new RecipeHandler());
 
   }
@@ -117,17 +121,28 @@ public class Gui {
         NutrientInfo.createNutrientsList();
         recipes = FieldParser.getRecipesFromQuery(query);
         simpleRecipeList = new HashMap<String, String[]>();
+        Pattern load = Pattern.compile("#recipe_(.+)");
+
         for(int i = 0; i < recipes.length; i++){
           System.out.println(recipes[i].getLabel());
           String[] fields = new String[2];
           fields[0] = recipes[i].getUrl();
           fields[1] = recipes[i].getUri();
+          Matcher matchUri = load.matcher(recipes[i].getUri());
+          if(matchUri.find()){
+            fields[1] = matchUri.group(1);
+            System.out.println("URI Found: " + matchUri.group(1));
+          } else {
+            fields[1] = "";
+          }
           simpleRecipeList.put(recipes[i].getLabel(), fields);
         }
       } catch (IOException e) {
         System.out.println("IOException getting recipes from query");
       } catch (InterruptedException e) {
         System.out.println("InterruptedException getting recipes from query");
+      } catch (APIException e) {
+        System.out.println("API Exception getting recipes from query");
       }
 
       Map<String, Object> variables = ImmutableMap.of("recipes",recipes, "simpleRecipeList", simpleRecipeList);
@@ -175,7 +190,7 @@ public class Gui {
       QueryParamsMap qm = req.queryMap();
       String url = qm.value("url");
       System.out.println("The URL is " + url);
-      Pattern load = Pattern.compile("http:\\/\\/localhost:.+\\/recipe\\/(.+)");
+      Pattern load = Pattern.compile("localhost:.+\\/recipe\\/(.+)");
       String recipeURI = null;
       if(url != null){
         Matcher matchURL = load.matcher(url);
@@ -184,7 +199,26 @@ public class Gui {
           System.out.println("The Recipe URI is " + recipeURI);
         }
       }
-
+      Recipe currRecipe = null;
+      try {
+        System.out.println("ABOUT TO ENTER " + recipeURI);
+        currRecipe = RecipeDatabase.getRecipeFromURI(recipeURI);
+      } catch (SQLException e) {
+        System.out.println("SQLException getting recipe from database");
+      }
+      if(currRecipe == null){
+        try {
+          FieldParser.getRecipeFromURI(recipeURI);
+        } catch (IOException e) {
+          System.out.println("IOException in getting recipe from API");
+        } catch (InterruptedException e) {
+          System.out.println("InterruptedException in getting recipe from API");
+        } catch (APIException e) {
+          System.out.println("APIException in getting recipe from API");
+        }
+      }
+      String actualName = currRecipe.getLabel();
+      System.out.println("ACTUAL NAME: " + actualName);
       List<Ingredient> sampleIngredients = new ArrayList<Ingredient>();
       Ingredient tofu = new Ingredient("Tofu",200);
       Ingredient sauce = new Ingredient("Sauce",100);
@@ -219,7 +253,7 @@ public class Gui {
       HashMap<String, String> map = new HashMap<String, String>();
       Set<String> keys = recipes.keySet();
 
-      Map<String, Object> variables = ImmutableMap.of("recipeList", recipes, "title", " " + gui.getRecipeTitle(recipeURI));
+      Map<String, Object> variables = ImmutableMap.of("recipeList", recipes, "title", " " + actualName);
       return GSON.toJson(variables);
 
     }
