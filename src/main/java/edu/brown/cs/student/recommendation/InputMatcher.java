@@ -23,7 +23,7 @@ public class InputMatcher {
   }
 
   public List<Recipe> getResults() throws RecommendationException, InterruptedException,
-          APIException, IOException, SQLException {
+      APIException, IOException, SQLException {
     Recommender recommender = new Recommender(this.user);
     return recommender.makeRecommendation(input);
   }

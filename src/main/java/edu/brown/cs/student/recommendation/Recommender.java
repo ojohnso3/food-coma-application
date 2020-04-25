@@ -34,11 +34,12 @@ public class Recommender {
    * Function to initialize the KDTree to be used when recommending recipes to users.
    */
   private void initRecipeTree(String input)
-          throws InterruptedException, APIException, IOException, SQLException {
+      throws InterruptedException, APIException, IOException, SQLException {
     List<Recipe> recipesList = Arrays.asList(FieldParser.getRecipesFromQuery(input));
     // normalize the coordinates of every node
     List<RecipeNode> nodes = convertRecipesToRecipeNodes(recipesList);
-    normalize((nodes));
+    this.recipeTree.normalize(nodes);
+//    normalize((nodes));
     // also normalize user history?
     this.recipeTree.initializeTree(nodes);
   }
@@ -49,12 +50,12 @@ public class Recommender {
    */
   private void normalize(List<RecipeNode> nodes) {
     // create lists, maxes, mins for each considered nutrient
-    List<List<Double>> nutrientLists = new ArrayList<>();
+    List<List<Double>> nutrientsLists = new ArrayList<>();
     List<Double> maxes = new ArrayList<>();
     List<Double> mins = new ArrayList<>();
 
     for (int i = 0; i < this.dim; i++) {
-      nutrientLists.add(new ArrayList<>());
+      nutrientsLists.add(new ArrayList<>());
       maxes.add(Double.NEGATIVE_INFINITY);
       mins.add(Double.POSITIVE_INFINITY);
     }
@@ -71,14 +72,14 @@ public class Recommender {
           mins.set(i, coord);
         }
         // add the nutrient to its list
-        nutrientLists.get(i).add(coord);
+        nutrientsLists.get(i).add(coord);
       }
     }
 
     // normalize all nutrients for each type
-    int sz = nutrientLists.size();
+    int sz = nutrientsLists.size();
     for (int i = 0; i < sz; i++) {
-      List<Double> nuts = nutrientLists.get(i);
+      List<Double> nuts = nutrientsLists.get(i);
       for (int j = 0; j < this.dim; j++) {
         double n = nuts.get(j);
         double normalized = (n - mins.get(j)) / (maxes.get(j) - mins.get(j));
@@ -92,9 +93,10 @@ public class Recommender {
    * Comment.
    * @param input Search input of user
    * @return List of recommended recipes
+   * //TODO: don't add every recipe to user's history.
    */
   public List<Recipe> makeRecommendation(String input) throws
-          RecommendationException, InterruptedException, IOException, APIException, SQLException {
+      RecommendationException, InterruptedException, IOException, APIException, SQLException {
     this.recipeTree = new KDTree<>(dim);
     this.initRecipeTree(input);
     List<Recipe> recs;
@@ -131,7 +133,7 @@ public class Recommender {
    * @return - a list of the converted RecipeNodes.
    */
   private List<RecipeNode> convertRecipesToRecipeNodes(List<Recipe> recipes) {
-    List<RecipeNode> nodes = new ArrayList<RecipeNode>();
+    List<RecipeNode> nodes = new ArrayList<>();
     for (Recipe recipe: recipes) {
       RecipeNode r = new RecipeNode(recipe);
       this.addRecipeNodeCoords(r);
@@ -171,7 +173,8 @@ public class Recommender {
   }
 
 
-  private List<Recipe> getRecommendedRecipes(List<Recipe> userHistory) throws RecommendationException {
+  private List<Recipe> getRecommendedRecipes(List<Recipe> userHistory)
+      throws RecommendationException {
     List<Recipe> recs = new ArrayList<>();
 
     RecipeNode target = this.getTargetNode(userHistory);

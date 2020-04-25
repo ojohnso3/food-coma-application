@@ -82,8 +82,8 @@ public class Recipe {
   }
 
   public String prepareForInsert() {
-    return uri + "," + label + "," + image + "," + source + "," + url + "," + yield + "," + calories + "," + totalWeight
-        + "," + totalTime;
+    return "\"" + uri + "\",\"" + label + "\",\"" + image + "\",\"" + source + "\",\"" + url
+        + "\"," + yield + "," + calories + "," + totalWeight + "," + totalTime;
   }
 
   public String getLabel(){
