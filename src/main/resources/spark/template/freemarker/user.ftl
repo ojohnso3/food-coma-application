@@ -11,17 +11,17 @@
 
 <div class="queryBox">
     <div class="queryOption">
-        <h2>input timdb data</h2>
+        <h2>Find New Recipes!</h2>
         <form method="GET" action="/connect">
-            <h4 for="text">Actor One</h4>
-            <textarea name="actorOneText" id="text" placeholder="Search here!"></textarea>
+            <#--  <h4 for="text">Search</h4>
+            <textarea name="actorOneText" id="text" placeholder="Search here!"></textarea>  -->
             <#--  <h4 for="text">Actor Two</h4>
             <textarea name="actorTwoText" id="text"></textarea>  -->
             <input type="submit" value="Search!">
         </form>
     </div>
     <div class="queryOption">
-        <h2>click below to automatically load database</h2>
+        <h2>Time to Go? Sad :(</h2>
         <form method="GET" action="/database">
             <input type="submit" value="Log out">
         </form>
@@ -29,28 +29,15 @@
 </div>
 
 <div class="queryBox">
-    <div class="queryOption">
-        <h2>click below to automatically load database</h2>
-        <form method="GET" action="/database">
-            <input type="submit" value="Log out">
-        </form>
-    </div>
-    <div class="queryOption">
-        <h2>input timdb data</h2>
-        <form method="GET" action="/connect">
-            <h4 for="text">Actor One</h4>
-            <textarea name="actorOneText" id="text" placeholder="Search here!"></textarea>
-            <#--  <h4 for="text">Actor Two</h4>
-            <textarea name="actorTwoText" id="text"></textarea>  -->
-            <input type="submit" value="Search!">
-        </form>
+    <div class="queryOption" id="saved_recipes">
+        <h2>Your Saved Recipes</h2>
+        <ul id="saved_list">
+        </ul>
     </div>
 </div>
 
-<div class="user_header">
-    <p>HI</p> 
-</div>
 
+<script src="js/user.js"></script>
 
 </#assign>
 <#include "main.ftl">
