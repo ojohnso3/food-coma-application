@@ -15,6 +15,8 @@ import edu.brown.cs.student.database.RecipeDatabase;
 import edu.brown.cs.student.food.NutrientInfo;
 import edu.brown.cs.student.food.Recipe;
 import edu.brown.cs.student.gui.Gui;
+import edu.brown.cs.student.login.AccountException;
+import edu.brown.cs.student.login.Accounts;
 import freemarker.template.Configuration;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -55,6 +57,13 @@ public final class Main {
   }
 
   private void run() {
+    // initialize users maps
+    try {
+      Accounts.initializeMap();
+    } catch (AccountException e) {
+      e.printStackTrace();
+    }
+
     // Parse command line arguments
     OptionParser parser = new OptionParser();
     parser.accepts("gui");

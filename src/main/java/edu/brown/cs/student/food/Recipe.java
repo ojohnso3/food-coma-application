@@ -3,6 +3,8 @@ package edu.brown.cs.student.food;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 /**
@@ -91,6 +93,15 @@ public class Recipe {
   }
   public String getUrl(){
     return url;
+  }
+  public String getCompactUri() {
+    Pattern load = Pattern.compile("#recipe_(.+)");
+    Matcher matchUri = load.matcher(this.getUri());
+    if (matchUri.find()) {
+      return matchUri.group(1);
+    } else {
+      return "";
+    }
   }
 
 }
