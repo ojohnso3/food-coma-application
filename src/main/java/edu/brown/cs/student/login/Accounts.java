@@ -28,6 +28,23 @@ public class Accounts {
   protected Accounts() { }
 
   /**
+   * getter.
+   * @return map
+   */
+  public Map<String, User> getNameUserMap() {
+    return this.getNameUserMap();
+  }
+
+  /**
+   * get a specific User.
+   * @param username - name
+   * @return the User
+   */
+  public User getUser(String username) {
+    return this.nameUserMap.get(username);
+  }
+
+  /**
    * adds previously added users to the map; to be called at the start of running application.
    * @throws AccountException on file failure
    */
