@@ -64,7 +64,7 @@ public final class RecipeDatabase {
    * Function to create tables if the given database file is empty.
    * @throws SQLException - thrown if there is an error when creating the tables in the database.
    */
-  public static void createTables(Statement stat) throws SQLException {
+  private static void createTables(Statement stat) throws SQLException {
 
     String sql = "CREATE TABLE IF NOT EXISTS recipe("
         + "uri TEXT,"
