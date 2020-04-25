@@ -128,13 +128,39 @@ public class Gui {
       System.out.println("THE QUERY WAS : " + query);
       Recipe[] recipes = new Recipe[0];
       Map<String, String[]> simpleRecipeList = new HashMap<String, String[]>();
+      try {
+        NutrientInfo.createNutrientsList();
+        recipes = FieldParser.getRecipesFromQuery(query);
+        simpleRecipeList = new HashMap<String, String[]>();
+        Pattern load = Pattern.compile("#recipe_(.+)");
+
+        for(int i = 0; i < recipes.length; i++){
+          System.out.println(recipes[i].getLabel());
+          String[] fields = new String[2];
+          fields[0] = recipes[i].getUrl();
+          fields[1] = recipes[i].getUri();
+          Matcher matchUri = load.matcher(recipes[i].getUri());
+          if(matchUri.find()){
+            fields[1] = matchUri.group(1);
+            System.out.println("URI Found: " + matchUri.group(1));
+          } else {
+            fields[1] = "";
+          }
+          simpleRecipeList.put(recipes[i].getLabel(), fields);
+        }
+      } catch (IOException e) {
+        System.out.println("IOException getting recipes from query");
+      } catch (InterruptedException e) {
+        System.out.println("InterruptedException getting recipes from query");
+      } catch (APIException | SQLException e) {
+        System.out.println("API Exception getting recipes from query");
+      }
 
       Map<String, Object> variables = ImmutableMap.of("recipes",recipes, "simpleRecipeList", simpleRecipeList);
       return GSON.toJson(variables);
     }
   }
-  
-  
+
   
   /**
    * Handles the functionality of printing out the result of the Stars algorithms.
@@ -303,7 +329,7 @@ public class Gui {
       try {
         System.out.println("ABOUT TO ENTER " + recipeURI);
         currRecipe = RecipeDatabase.getRecipeFromURI(recipeURI);
-      } catch (SQLException e) {
+      } catch (SQLException | InterruptedException | APIException | IOException e) {
         System.out.println("SQLException getting recipe from database");
       }
       if(currRecipe == null){
