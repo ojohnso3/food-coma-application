@@ -57,17 +57,16 @@ public final class RecipeDatabase {
     conn = DriverManager.getConnection(urlToDB);
     Statement stat = conn.createStatement();
     stat.executeUpdate("PRAGMA foreign_keys=ON;");
-    createTables();
+    createTables(stat);
   }
 
   /**
    * Function to create tables if the given database file is empty.
    * @throws SQLException - thrown if there is an error when creating the tables in the database.
    */
-  public static void createTables() throws SQLException {
+  public static void createTables(Statement stat) throws SQLException {
 
-    PreparedStatement prep;
-    prep = conn.prepareStatement("CREATE TABLE IF NOT EXISTS recipe("
+    String sql = "CREATE TABLE IF NOT EXISTS recipe("
         + "uri TEXT,"
         + "label TEXT,"
         + "image TEXT,"
@@ -77,23 +76,23 @@ public final class RecipeDatabase {
         + "calories REAL,"
         + "total_weight REAL,"
         + "total_time REAL,"
-        + "PRIMARY KEY (uri));");
-    prep.executeUpdate();
+        + "PRIMARY KEY (uri));";
+    stat.executeUpdate(sql);
 
-    prep = conn.prepareStatement("CREATE TABLE IF NOT EXISTS ingredient("
+    sql = "CREATE TABLE IF NOT EXISTS ingredient("
       + "recipe_uri TEXT,"
       + "ingredient TEXT,"
       + "weight REAL,"
-      + "FOREIGN KEY (recipe_uri) REFERENCES recipe(uri));");
-    prep.executeUpdate();
+      + "FOREIGN KEY (recipe_uri) REFERENCES recipe(uri));";
+    stat.executeUpdate(sql);
 
-    prep = conn.prepareStatement("CREATE TABLE IF NOT EXISTS nutrient_info("
+    sql = "CREATE TABLE IF NOT EXISTS nutrient_info("
       + "code TEXT,"
       + "recipe_uri TEXT,"
       + "total_daily_val REAL,"
       + "total_nutrient_val REAL,"
-      + "FOREIGN KEY (recipe_rui) REFERENCES recipe(uri)");
-    prep.executeUpdate();
+      + "FOREIGN KEY (recipe_uri) REFERENCES recipe(uri));";
+    stat.executeUpdate(sql);
   }
 
 
@@ -103,15 +102,15 @@ public final class RecipeDatabase {
    * @return - a boolean representing whether insertion was successful.
    */
   public static void insertRecipe(Recipe recipe) throws SQLException {
-
     PreparedStatement prep = conn.prepareStatement("INSERT INTO recipe VALUES("
         + recipe.prepareForInsert() + ");");
     prep.executeUpdate();
 
     for (Ingredient ingredient : recipe.getIngredients()) {
-      String line = recipe.getUri() + "," + ingredient.getText() + "," + ingredient.getWeight();
+      String line = "\"" + recipe.getUri() + "\",\"" + ingredient.getText() + "\","
+          + ingredient.getWeight();
 
-      prep = conn.prepareStatement("INSERT INTO ingredients VALUES("
+      prep = conn.prepareStatement("INSERT INTO ingredient VALUES("
           + line + ");");
       prep.executeUpdate();
     }
@@ -119,7 +118,7 @@ public final class RecipeDatabase {
     for (String code : NutrientInfo.nutrients.keySet()) {
       double[] currVals = recipe.getNutrientVals(code);
 
-      String line = code + "," + recipe.getUri() + "," + currVals[0] + "," + currVals[1];
+      String line = "\"" + code + "\",\"" + recipe.getUri() + "\"," + currVals[0] + "," + currVals[1];
 
       prep = conn.prepareStatement("INSERT INTO nutrient_info VALUES("
           + line + ")");

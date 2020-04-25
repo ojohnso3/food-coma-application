@@ -66,9 +66,7 @@ public final class Main {
       gui.runSparkServer((int) options.valueOf("port"));
     } else {
       try {
-        NutrientInfo.createNutrientsList();
-        RecipeDatabase.loadDatabase("data/recipe_database.sqlite3");
-        RecipeDatabase.testDatabaseFile();
+        RecipeDatabase.loadDatabase("data/recipeDatabase.sqlite3");
       } catch (FileNotFoundException e) {
         e.printStackTrace();
       } catch (ClassNotFoundException e) {
@@ -76,15 +74,15 @@ public final class Main {
       } catch (SQLException e) {
         e.printStackTrace();
       }
-//      NutrientInfo.createNutrientsList();
-//      try {
-//        Recipe[] recipes = FieldParser.getRecipesFromQuery("chicken");
-//        for (int i = 0; i < recipes.length; i++) {
-//          System.out.println(recipes[i].getUri());
-//        }
-//      } catch (IOException | InterruptedException | APIException ie) {
-//        ie.printStackTrace();
-//      }
+      NutrientInfo.createNutrientsList();
+      try {
+        Recipe[] recipes = FieldParser.getRecipesFromQuery("chicken");
+        for (int i = 0; i < recipes.length; i++) {
+          System.out.println(recipes[i].getUri());
+        }
+      } catch (IOException | InterruptedException | APIException | SQLException ie) {
+        ie.printStackTrace();
+      }
 
     }
 
