@@ -33,7 +33,7 @@ import spark.TemplateViewRoute;
 import spark.template.freemarker.FreeMarkerEngine;
 
 /**
- * 
+ *
  * Class comment.
  *
  */
@@ -47,7 +47,7 @@ public class Gui {
 //    fieldParser = fp;
 //    nutrientInfo = nut;
   }
-  
+
   private static FreeMarkerEngine createEngine() {
     Configuration config = new Configuration();
     File templates = new File("src/main/resources/spark/template/freemarker");
@@ -59,7 +59,7 @@ public class Gui {
     }
     return new FreeMarkerEngine(config);
   }
-  
+
   /**
    * Add comment.
    * @param port
@@ -81,7 +81,7 @@ public class Gui {
     Spark.get("/signup", new SetupHandler("signup.ftl", "Signup"), freeMarker);
     Spark.get("/survey", new SetupHandler("survey.ftl", "New User Survey"), freeMarker);
     Spark.get("/user", new SetupHandler("user.ftl", "User Profile"), freeMarker);
-    
+
     Spark.post("/logged", new LoginHandler());
     Spark.post("/signed", new SignupHandler());
     // more routes (post too!)
@@ -91,9 +91,9 @@ public class Gui {
 //    Spark.get("/recipe/:recipeuri", new RecipeHandler());
 
   }
-  
+
   // handlers for gui that interact w/html and javascript
-  
+
   /**
    * Handle requests to the front page of our Stars website.
    *
@@ -266,12 +266,12 @@ public class Gui {
   private static class SetupHandler implements TemplateViewRoute {
     private String page;
     private String title;
-    
+
     public SetupHandler(String p, String t) {
       page = p;
       title = t;
     }
-    
+
     @Override
     public ModelAndView handle(Request req, Response res) {
       Map<String, Object> variables = ImmutableMap.of("title",
@@ -279,7 +279,7 @@ public class Gui {
       return new ModelAndView(variables, page);
     }
   }
-  
+
   /**
    * Handles the functionality of printing out the result of the Stars algorithms.
    *
@@ -294,23 +294,23 @@ public class Gui {
       QueryParamsMap map = req.queryMap();
       String username = map.value("text1");
       String password = map.value("text2");
-      
+
       String output = "Failed Login: Please try again.";
       try {
         output = Accounts.checkLogin(username, password);
       } catch (AccountException e) {
         e.printStackTrace();
       }
-            
+
       Map<String, Object> variables = ImmutableMap.of("title",
           "Login", "output", output);
 
       return GSON.toJson(variables);
-      
+
     }
-    
+
   }
-  
+
   /**
    * Handles the functionality of printing out the result of the Stars algorithms.
    *
@@ -327,7 +327,7 @@ public class Gui {
       String pass1 = map.value("pass1");
       String pass2 = map.value("pass2");
       String birth = map.value("birth");
-      
+
       String output = "Failed Sign-up: Please try again.";
       if(checkSignUpValidity(user, pass1, pass2)) {
         try {
@@ -337,14 +337,14 @@ public class Gui {
           e.printStackTrace(); // error
         }
       }
-      
+
       Map<String, Object> variables = ImmutableMap.of("title",
           "Login", "output", output);
 
       return GSON.toJson(variables);
-      
+
     }
-    
+
     private boolean checkSignUpValidity(String user, String pass1, String pass2) {
       // check if user already exists
       // check if passwords are same
@@ -356,7 +356,7 @@ public class Gui {
       }
       // informative error messages ??
     }
-    
+
     private boolean checkInputExists(String user, String pass1, String pass2) {
       if((user.length() > 0) && (pass1.length() > 0) && (pass2.length() > 0)) {
         return true;
@@ -364,7 +364,7 @@ public class Gui {
         return false;
       }
     }
-    
+
     private boolean userExists(String user) {
       if (!user.equals(user)) {
         return true;
@@ -372,7 +372,7 @@ public class Gui {
         return false;
       }
     }
-    
+
     private boolean comparePasswords(String pass1, String pass2) {
       if (pass1.equals(pass2)) {
         return true;

@@ -2,14 +2,13 @@
 package edu.brown.cs.student.recommendation;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 import edu.brown.cs.student.database.APIException;
 import edu.brown.cs.student.database.FieldParser;
-import edu.brown.cs.student.database.RecipeDatabase;
 import edu.brown.cs.student.food.Recipe;
 import edu.brown.cs.student.kdtree.KDTree;
 import edu.brown.cs.student.kdtree.KDTreeException;
@@ -35,7 +34,7 @@ public class Recommender {
    * Function to initialize the KDTree to be used when recommending recipes to users.
    */
   private void initRecipeTree(String input)
-      throws InterruptedException, APIException, IOException {
+      throws InterruptedException, APIException, IOException, SQLException {
     List<Recipe> recipesList = Arrays.asList(FieldParser.getRecipesFromQuery(input));
     List<RecipeNode> nodesList = this.convertRecipesToRecipeNodes(recipesList);
     this.recipeTree.initializeTree(nodesList);
@@ -45,9 +44,10 @@ public class Recommender {
    * Comment.
    * @param input Search input of user
    * @return List of recommended recipes
+   * //TODO: don't add every recipe to user's history.
    */
   public List<Recipe> makeRecommendation(String input) throws
-      RecommendationException, InterruptedException, IOException, APIException {
+      RecommendationException, InterruptedException, IOException, APIException, SQLException {
     this.recipeTree = new KDTree<>(dim);
     this.initRecipeTree(input);
     List<Recipe> recs;
@@ -104,7 +104,7 @@ public class Recommender {
    * @return - a list of the converted RecipeNodes.
    */
   private List<RecipeNode> convertRecipesToRecipeNodes(List<Recipe> recipes) {
-    List<RecipeNode> nodes = new ArrayList<RecipeNode>();
+    List<RecipeNode> nodes = new ArrayList<>();
     for (Recipe recipe: recipes) {
       RecipeNode r = new RecipeNode(recipe);
       this.addRecipeNodeCoords(r);
@@ -145,7 +145,8 @@ public class Recommender {
   }
 
 
-  private List<Recipe> getRecommendedRecipes(List<Recipe> userHistory) throws RecommendationException {
+  private List<Recipe> getRecommendedRecipes(List<Recipe> userHistory)
+      throws RecommendationException {
     List<Recipe> recs = new ArrayList<>();
 
     RecipeNode target = this.getTargetNode(userHistory);

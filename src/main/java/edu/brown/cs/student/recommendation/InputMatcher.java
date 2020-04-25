@@ -6,6 +6,7 @@ import edu.brown.cs.student.food.Recipe;
 import edu.brown.cs.student.login.User;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -22,7 +23,7 @@ public class InputMatcher {
   }
 
   public List<Recipe> getResults() throws RecommendationException, InterruptedException,
-      APIException, IOException {
+      APIException, IOException, SQLException {
     Recommender recommender = new Recommender(this.user);
     return recommender.makeRecommendation(input);
   }

@@ -7,6 +7,7 @@ import edu.brown.cs.student.food.Recipe;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -28,6 +29,8 @@ public class FieldParserTest {
     } catch (IOException e) {
       e.printStackTrace();
     } catch (InterruptedException | APIException e) {
+      e.printStackTrace();
+    } catch (SQLException e) {
       e.printStackTrace();
     }
   }

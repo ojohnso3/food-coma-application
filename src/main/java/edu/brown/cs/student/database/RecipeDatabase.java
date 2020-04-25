@@ -207,11 +207,8 @@ public final class RecipeDatabase {
    * @param uri - String uri of the desired recipe.
    * @return - A Recipe object corresponding to the given uri.
    */
-
-
-  public Recipe getRecipeFromURI(String uri) throws SQLException, InterruptedException,
+  public static Recipe getRecipeFromURI(String uri) throws SQLException, InterruptedException,
       APIException, IOException {
-    System.out.println("Inputted URI is " + uri);
     PreparedStatement prep = conn.prepareStatement("SELECT * FROM recipe WHERE uri = ?");
     prep.setString(1, uri);
     ResultSet recipeSet = prep.executeQuery();
@@ -227,25 +224,20 @@ public final class RecipeDatabase {
     return createRecipe(recipeSet, ingredientSet, nutrientSet, uri);
   }
 
-  
+
   /**
    * Gets a list of Ingredients from recipe id from the database.
-   * @param recipeID string id that corresponds to a recipe
+   * @param uri string id that corresponds to a recipe
    * @return List of Ingredients
    */
-  public List<Ingredient> getIngredientsByRecipeID(String recipeID) {
-    return null;
+  public static List<Ingredient> getIngredientsByRecipeID(String uri) throws SQLException {
+    PreparedStatement prep = conn.prepareStatement(
+        "SELECT * FROM ingredients WHERE recipe_uri = ?");
+    prep.setString(1, uri);
+    ResultSet ingredientSet = prep.executeQuery();
+    return createIngredients(ingredientSet);
   }
 
-
-    /**
-     *
-     * @param ingredients
-     * @return
-     */
-  public Recipe getRecipeByIngriedentList(List<Ingredient> ingredients) {
-    return null;
-  }
 
   /**
    * Function called at the beginning of the application to get a given amount of recipes from
@@ -258,14 +250,32 @@ public final class RecipeDatabase {
     return null;
   }
 
-    /**
-     *
-     * @param ingredients
-     * @return
-     */
+  /**
+   *
+   * @param ingredients
+   * @return
+   */
   public List<Recipe> getRecipeListByIngredient(Ingredient ingredients) {
     return null;
   }
 
 
+  /**
+   * Database test function.
+   */
+  public static void testDatabaseFile() {
+    try {
+      Recipe r = getRecipeFromURI("http%3A%2F%2Fwww.edamam.com%2Fontologies%2Fedamam.owl%23recipe_9b5945e03f05acbf9d69625138385408");
+      System.out.println("URI: " + r.getUri());
+    } catch (SQLException e) {
+      e.printStackTrace();
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    } catch (APIException e) {
+      e.printStackTrace();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
+}
+

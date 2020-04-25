@@ -65,6 +65,17 @@ public final class Main {
       Gui gui = new Gui();
       gui.runSparkServer((int) options.valueOf("port"));
     } else {
+      try {
+        NutrientInfo.createNutrientsList();
+        RecipeDatabase.loadDatabase("data/recipe_database.sqlite3");
+        RecipeDatabase.testDatabaseFile();
+      } catch (FileNotFoundException e) {
+        e.printStackTrace();
+      } catch (ClassNotFoundException e) {
+        e.printStackTrace();
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
 //      NutrientInfo.createNutrientsList();
 //      try {
 //        Recipe[] recipes = FieldParser.getRecipesFromQuery("chicken");
