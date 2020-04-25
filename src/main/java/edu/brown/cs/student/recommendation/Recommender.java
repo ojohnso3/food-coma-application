@@ -36,8 +36,56 @@ public class Recommender {
   private void initRecipeTree(String input)
       throws InterruptedException, APIException, IOException, SQLException {
     List<Recipe> recipesList = Arrays.asList(FieldParser.getRecipesFromQuery(input));
-    List<RecipeNode> nodesList = this.convertRecipesToRecipeNodes(recipesList);
-    this.recipeTree.initializeTree(nodesList);
+    // normalize the coordinates of every node
+    List<RecipeNode> nodes = convertRecipesToRecipeNodes(recipesList);
+    normalize((nodes));
+    // also normalize user history?
+    this.recipeTree.initializeTree(nodes);
+  }
+
+  /**
+   * Function to normalize the coordinates of a list of RecipeNode.
+   * @param nodes - all RecipeNodes in the tree.
+   */
+  private void normalize(List<RecipeNode> nodes) {
+    // create lists, maxes, mins for each considered nutrient
+    List<List<Double>> nutrientLists = new ArrayList<>();
+    List<Double> maxes = new ArrayList<>();
+    List<Double> mins = new ArrayList<>();
+
+    for (int i = 0; i < this.dim; i++) {
+      nutrientLists.add(new ArrayList<>());
+      maxes.add(Double.NEGATIVE_INFINITY);
+      mins.add(Double.POSITIVE_INFINITY);
+    }
+
+    // add the each nodes' nutrients to its list, check for max/min
+    for (RecipeNode node : nodes) {
+      List<Double> coords = node.getCoords();
+      for (int i = 0; i < this.dim; i++) {
+        double coord = coords.get(i);
+        if (coord > maxes.get(i)) {
+          maxes.set(i, coord);
+        } // check min-ness
+        if (coord < mins.get(i)) {
+          mins.set(i, coord);
+        }
+        // add the nutrient to its list
+        nutrientLists.get(i).add(coord);
+      }
+    }
+
+    // normalize all nutrients for each type
+    int sz = nutrientLists.size();
+    for (int i = 0; i < sz; i++) {
+      List<Double> nuts = nutrientLists.get(i);
+      for (int j = 0; j < this.dim; j++) {
+        double n = nuts.get(j);
+        double normalized = (n - mins.get(j)) / (maxes.get(j) - mins.get(j));
+        // replace coords with their new values
+        nodes.get(i).getCoords().set(j, normalized);
+      }
+    }
   }
 
   /**
@@ -65,26 +113,6 @@ public class Recommender {
   }
 
   /**
-   * Function to normalize the coordinates of a RecipeNode.
-   * @param coords - the coordinates of a RecipeNode.
-   * @return - the normalized list of coordinates.
-   * //TODO: fix this, can't treat coordinate lists like vectors.
-   */
-  private List<Double> normalize(List<Double> coords) {
-    double magnitude;
-    double temp = 0;
-    for (double coord : coords) {
-      temp += Math.pow(coord, 2);
-    }
-    magnitude = Math.sqrt(temp);
-    for (int i = 0; i < coords.size(); i++) {
-      double currCood = coords.get(i);
-      coords.set(i, currCood / magnitude);
-    }
-    return coords;
-  }
-
-  /**
    * Function to find the coordinates of a RecipeNode based on the user's nutritional preferences.
    * @param r - the RecipeNode to find the coordinates of.
    */
@@ -95,7 +123,7 @@ public class Recommender {
       coords.add(r.getRecipe().getNutrientVals(code)[0]);
     }
 
-    r.setCoords(this.normalize(coords));
+    r.setCoords(coords);
   }
 
   /**
@@ -140,8 +168,7 @@ public class Recommender {
       targetCoords.add(sum / this.dim);
     }
 
-
-    return new RecipeNode(this.normalize(targetCoords));
+    return new RecipeNode(targetCoords);
   }
 
 

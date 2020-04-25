@@ -72,22 +72,23 @@ public class Gui {
     FreeMarkerEngine freeMarker = createEngine();
 
     // Setup Spark Routes
-    Spark.get("/search", new SearchHandler(), freeMarker);
-    Spark.post("/search", new SearchPostHandler());
-    Spark.get("/home", new SetupHandler("home.ftl", "foodCOMA Home"), freeMarker);
-    Spark.get("/about", new SetupHandler("about.ftl", "About"), freeMarker);
-    Spark.get("/login", new SetupHandler("login.ftl", "Login"), freeMarker);
-    Spark.get("/recipe/:recipeuri", new SetupHandler("recipe.ftl", "Recipe Detail"), freeMarker);
-    Spark.get("/signup", new SetupHandler("signup.ftl", "Signup"), freeMarker);
-    Spark.get("/survey", new SetupHandler("survey.ftl", "New User Survey"), freeMarker);
-    Spark.get("/user", new SetupHandler("user.ftl", "User Profile"), freeMarker);
+    Spark.get("/home", new SetupHandler("home.ftl", "foodCOMA Home", ""), freeMarker);
+    Spark.get("/about", new SetupHandler("about.ftl", "About", ""), freeMarker);
+    Spark.get("/login", new SetupHandler("login.ftl", "Login", ""), freeMarker);
+    Spark.get("/recipe/:recipeuri", new SetupHandler("recipe.ftl", "Recipe Detail", ""), freeMarker);
+    Spark.get("/signup", new SetupHandler("signup.ftl", "Signup", ""), freeMarker);
+    Spark.get("/survey", new SetupHandler("survey.ftl", "New User Survey", ""), freeMarker);
+    Spark.get("/search", new SetupHandler("search.ftl", "Recipe Search", new ArrayList<Recipe>()), freeMarker);
+    Spark.get("/user", new SetupHandler("user.ftl", "User Profile", new ArrayList<Recipe>()), freeMarker);
 
+    Spark.post("/search", new SearchPostHandler());
     Spark.post("/logged", new LoginHandler());
     Spark.post("/signed", new SignupHandler());
-    // more routes (post too!)
-
-    Spark.get("/results", new SubmitHandler(), freeMarker);
+    Spark.post("/saved", new SavedHandler());
     Spark.post("/recipe/recipeuri", new RecipeHandler(this));
+
+    // OLD Routes
+//    Spark.get("/results", new SubmitHandler(), freeMarker);
 //    Spark.get("/recipe/:recipeuri", new RecipeHandler());
 
   }
@@ -95,20 +96,29 @@ public class Gui {
   // handlers for gui that interact w/html and javascript
 
   /**
-   * Handle requests to the front page of our Stars website.
+   * Handle GET requests.
    *
    */
-  private static class SearchHandler implements TemplateViewRoute {
+  private static class SetupHandler implements TemplateViewRoute {
+    private String page;
+    private String title;
+    private Object output;
+    
+    public SetupHandler(String p, String t, Object o) {
+      page = p;
+      title = t;
+      output = o;
+    }
+    
     @Override
     public ModelAndView handle(Request req, Response res) {
-
-      List<Recipe> recipeList = new ArrayList<Recipe>();
       Map<String, Object> variables = ImmutableMap.of("title",
-          "Recipe Search", "recipeList", recipeList);
-      return new ModelAndView(variables, "search.ftl");
+          title, "output", output);
+      return new ModelAndView(variables, page);
     }
   }
-
+  
+  
   private static class SearchPostHandler implements Route{
     @Override
     public String handle(Request req, Response res){
@@ -147,136 +157,6 @@ public class Gui {
 
       Map<String, Object> variables = ImmutableMap.of("recipes",recipes, "simpleRecipeList", simpleRecipeList);
       return GSON.toJson(variables);
-    }
-  }
-  /**
-   * Handles the functionality of printing out the result of the Stars algorithms.
-   *
-   */
-  private static class SubmitHandler implements TemplateViewRoute {
-
-    SubmitHandler() {
-    }
-
-    @Override
-    public ModelAndView handle(Request req, Response res) {
-      QueryParamsMap qm = req.queryMap();
-      String textFromTextField = qm.value("text");
-      List<Recipe> recipeList = new ArrayList<Recipe>();
-      String valFromMap = qm.value("x1");
-
-
-      Recipe tempRecp = new Recipe("9999");
-      Recipe tempRecpO = new Recipe("9999");
-      Recipe tempRecpT = new Recipe("9990");
-
-      recipeList.add(tempRecp);
-      recipeList.add(tempRecpO);
-      recipeList.add(tempRecpT);
-
-      // replace default with new String output
-      Map<String, Object> variables = ImmutableMap.of("title", "foodCOMA Query", "recipeList", recipeList);
-      return new ModelAndView(variables, "search.ftl");
-    }
-  }
-
-  private static class RecipeHandler implements Route{
-    Gui gui;
-    RecipeHandler(Gui g){
-      gui = g;
-    }
-    @Override
-    public String handle(Request req, Response res){
-      QueryParamsMap qm = req.queryMap();
-      String url = qm.value("url");
-      System.out.println("The URL is " + url);
-      Pattern load = Pattern.compile("localhost:.+\\/recipe\\/(.+)");
-      String recipeURI = null;
-      if(url != null){
-        Matcher matchURL = load.matcher(url);
-        if(matchURL.find()){
-          recipeURI = matchURL.group(1);
-          System.out.println("The Recipe URI is " + recipeURI);
-        }
-      }
-      Recipe currRecipe = null;
-      try {
-        System.out.println("ABOUT TO ENTER " + recipeURI);
-        currRecipe = RecipeDatabase.getRecipeFromURI(recipeURI);
-      } catch (SQLException | InterruptedException | APIException | IOException e) {
-        System.out.println("SQLException getting recipe from database");
-      }
-      if(currRecipe == null){
-        try {
-          FieldParser.getRecipeFromURI(recipeURI);
-        } catch (IOException e) {
-          System.out.println("IOException in getting recipe from API");
-        } catch (InterruptedException e) {
-          System.out.println("InterruptedException in getting recipe from API");
-        } catch (APIException e) {
-          System.out.println("APIException in getting recipe from API");
-        }
-      }
-      String actualName = currRecipe.getLabel();
-      System.out.println("ACTUAL NAME: " + actualName);
-      List<Ingredient> sampleIngredients = new ArrayList<Ingredient>();
-      Ingredient tofu = new Ingredient("Tofu",200);
-      Ingredient sauce = new Ingredient("Sauce",100);
-      sampleIngredients.add(tofu);
-      sampleIngredients.add(sauce);
-      Map<String, double[]> nutrientList = new HashMap<String, double[]>();
-      nutrientList.put("Sugar", new double[2]);
-      nutrientList.put("Salt", new double[2]);
-      String[] dietLabelList = new String[2];
-      dietLabelList[0] = "Diet Label 1";
-      dietLabelList[1] = "Diet Label 2";
-      String[] healthLabelList = new String[2];
-      healthLabelList[0] = "Health label 0";
-      healthLabelList[1] = "Health label 1";
-
-      Recipe recpOne = new Recipe("0100", "Tofu 1", "image","source", "url", 0.0,9.9,55.55,10.00,sampleIngredients, nutrientList,
-              dietLabelList, healthLabelList);
-
-      Recipe recpTwo = new Recipe("0200", "Tofu 2", "image","source", "url", 0.0,9.9,55.55,10.00,sampleIngredients, nutrientList,
-              dietLabelList, healthLabelList);
-      Recipe recpThree = new Recipe("0300", "Tofu 3", "image","source", "url", 0.0,9.9,55.55,10.00,sampleIngredients, nutrientList,
-              dietLabelList, healthLabelList);
-
-//      Recipe[] recpFour = FieldParser.parseJSON();
-//      System.out.println(recpFour);
-      Map<String,String> recipes = new HashMap<String, String>();
-      recipes.put(recpOne.getUri(), recpOne.getLabel());
-      recipes.put(recpTwo.getUri(), recpTwo.getLabel());
-      recipes.put(recpThree.getUri(), recpThree.getLabel());
-//      recipes.put(recpFour.getUri(), recpFour.getLabel());
-
-      HashMap<String, String> map = new HashMap<String, String>();
-      Set<String> keys = recipes.keySet();
-
-      Map<String, Object> variables = ImmutableMap.of("recipeList", recipes, "title", " " + actualName);
-      return GSON.toJson(variables);
-
-    }
-  }
-
-  /**
-   * Handle requests to the front page of our Stars website.
-   *
-   */
-  private static class SetupHandler implements TemplateViewRoute {
-    private String page;
-    private String title;
-
-    public SetupHandler(String p, String t) {
-      page = p;
-      title = t;
-    }
-
-    @Override
-    public ModelAndView handle(Request req, Response res) {
-      Map<String, Object> variables = ImmutableMap.of("title",
-          title, "output", "");
-      return new ModelAndView(variables, page);
     }
   }
 
@@ -381,6 +261,209 @@ public class Gui {
       }
     }
   }
+  
+  /**
+   * Handles the functionality of getting saved Recipes.
+   *
+   */
+  private static class SavedHandler implements Route {
+
+    SavedHandler() {
+    }
+
+    @Override
+    public String handle(Request req, Response res) {
+      QueryParamsMap map = req.queryMap();
+      String userID = map.value("user");
+      
+//      List<Recipe> output = new ArrayList<Recipe>(); // get Saved Recipes
+//      Recipe r = new Recipe("ID_HERE");
+//      output.add(r);
+//      Recipe r2 = new Recipe("SECOND_REC");
+//      output.add(r2);
+//            
+//      Map<String, Object> variables = ImmutableMap.of("title",
+//          "User", "output", output);
+//
+//      return GSON.toJson(variables);
+      
+      
+      Map<String,String> output = new HashMap<String, String>();
+      output.put("URI1", "NAME1");
+      output.put("URI2", "NAME2");
+      output.put("URI3", "NAME3");
+
+      Map<String, Object> variables = ImmutableMap.of("title", "User", "output", output);
+  
+      return GSON.toJson(variables);
+
+    }
+    
+  }
+  
+
+  
+  private static class RecipeHandler implements Route{
+    private Gui gui;
+    
+    RecipeHandler(Gui g){
+      gui = g;
+    }
+    @Override
+    public String handle(Request req, Response res){
+      QueryParamsMap qm = req.queryMap();
+      String url = qm.value("url");
+      System.out.println("The URL is " + url);
+      Pattern load = Pattern.compile("localhost:.+\\/recipe\\/(.+)");
+      String recipeURI = null;
+      if(url != null){
+        Matcher matchURL = load.matcher(url);
+        if(matchURL.find()){
+          recipeURI = matchURL.group(1);
+          System.out.println("The Recipe URI is " + recipeURI);
+        }
+      }
+      Recipe currRecipe = null;
+      try {
+        System.out.println("ABOUT TO ENTER " + recipeURI);
+        currRecipe = RecipeDatabase.getRecipeFromURI(recipeURI);
+      } catch (SQLException | InterruptedException | APIException | IOException e) {
+        System.out.println("SQLException getting recipe from database");
+      }
+      if(currRecipe == null){
+        try {
+          FieldParser.getRecipeFromURI(recipeURI);
+        } catch (IOException e) {
+          System.out.println("IOException in getting recipe from API");
+        } catch (InterruptedException e) {
+          System.out.println("InterruptedException in getting recipe from API");
+        } catch (APIException e) {
+          System.out.println("APIException in getting recipe from API");
+        }
+      }
+      String actualName = currRecipe.getLabel();
+      System.out.println("ACTUAL NAME: " + actualName);
+      List<Ingredient> sampleIngredients = new ArrayList<Ingredient>();
+      Ingredient tofu = new Ingredient("Tofu",200);
+      Ingredient sauce = new Ingredient("Sauce",100);
+      sampleIngredients.add(tofu);
+      sampleIngredients.add(sauce);
+      Map<String, double[]> nutrientList = new HashMap<String, double[]>();
+      nutrientList.put("Sugar", new double[2]);
+      nutrientList.put("Salt", new double[2]);
+      String[] dietLabelList = new String[2];
+      dietLabelList[0] = "Diet Label 1";
+      dietLabelList[1] = "Diet Label 2";
+      String[] healthLabelList = new String[2];
+      healthLabelList[0] = "Health label 0";
+      healthLabelList[1] = "Health label 1";
+
+      Recipe recpOne = new Recipe("0100", "Tofu 1", "image","source", "url", 0.0,9.9,55.55,10.00,sampleIngredients, nutrientList,
+              dietLabelList, healthLabelList);
+
+      Recipe recpTwo = new Recipe("0200", "Tofu 2", "image","source", "url", 0.0,9.9,55.55,10.00,sampleIngredients, nutrientList,
+              dietLabelList, healthLabelList);
+      Recipe recpThree = new Recipe("0300", "Tofu 3", "image","source", "url", 0.0,9.9,55.55,10.00,sampleIngredients, nutrientList,
+              dietLabelList, healthLabelList);
+
+//      Recipe[] recpFour = FieldParser.parseJSON();
+//      System.out.println(recpFour);
+      Map<String,String> recipes = new HashMap<String, String>();
+      recipes.put(recpOne.getUri(), recpOne.getLabel());
+      recipes.put(recpTwo.getUri(), recpTwo.getLabel());
+      recipes.put(recpThree.getUri(), recpThree.getLabel());
+//      recipes.put(recpFour.getUri(), recpFour.getLabel());
+
+      HashMap<String, String> map = new HashMap<String, String>();
+      Set<String> keys = recipes.keySet();
+
+      Map<String, Object> variables = ImmutableMap.of("recipeList", recipes, "title", " " + actualName);
+      return GSON.toJson(variables);
+
+    }
+  }
+  
+  
+  
+  
+  
+  
+  
+//  /**
+//   * Handle requests to the front page of our Stars website.
+//   *
+//   */
+//  private static class SearchHandler implements TemplateViewRoute {
+//    @Override
+//    public ModelAndView handle(Request req, Response res) {
+//
+//      List<Recipe> recipeList = new ArrayList<Recipe>();
+//      Map<String, Object> variables = ImmutableMap.of("title",
+//          "Recipe Search", "recipeList", recipeList);
+//      return new ModelAndView(variables, "search.ftl");
+//    }
+//  }
+  
+//try {
+//NutrientInfo.createNutrientsList();
+//recipes = FieldParser.getRecipesFromQuery(query);
+//simpleRecipeList = new HashMap<String, String[]>();
+//Pattern load = Pattern.compile("#recipe_(.+)");
+//
+//for(int i = 0; i < recipes.length; i++){
+//  System.out.println(recipes[i].getLabel());
+//  String[] fields = new String[2];
+//  fields[0] = recipes[i].getUrl();
+//  fields[1] = recipes[i].getUri();
+//  Matcher matchUri = load.matcher(recipes[i].getUri());
+//  if(matchUri.find()){
+//    fields[1] = matchUri.group(1);
+//    System.out.println("URI Found: " + matchUri.group(1));
+//  } else {
+//    fields[1] = "";
+//  }
+//  simpleRecipeList.put(recipes[i].getLabel(), fields);
+//}
+//} catch (IOException e) {
+//System.out.println("IOException getting recipes from query");
+//} catch (InterruptedException e) {
+//System.out.println("InterruptedException getting recipes from query");
+//} catch (APIException e) {
+//System.out.println("API Exception getting recipes from query");
+//}
+
+
+//  /**
+//   * Handles the functionality of printing out the result of the Stars algorithms.
+//   *
+//   */
+//  private static class SubmitHandler implements TemplateViewRoute {
+//
+//    SubmitHandler() {
+//    }
+//
+//    @Override
+//    public ModelAndView handle(Request req, Response res) {
+//      QueryParamsMap qm = req.queryMap();
+//      String textFromTextField = qm.value("text");
+//      List<Recipe> recipeList = new ArrayList<Recipe>();
+//      String valFromMap = qm.value("x1");
+//
+//
+//      Recipe tempRecp = new Recipe("9999");
+//      Recipe tempRecpO = new Recipe("9999");
+//      Recipe tempRecpT = new Recipe("9990");
+//
+//      recipeList.add(tempRecp);
+//      recipeList.add(tempRecpO);
+//      recipeList.add(tempRecpT);
+//
+//      // replace default with new String output
+//      Map<String, Object> variables = ImmutableMap.of("title", "foodCOMA Query", "recipeList", recipeList);
+//      return new ModelAndView(variables, "search.ftl");
+//    }
+//  }
+
 
 
   /**
