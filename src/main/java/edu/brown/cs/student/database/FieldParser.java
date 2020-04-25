@@ -149,6 +149,8 @@ public final class FieldParser {
     String queryUri = handleParamsAndRestrictions(dietaryRestrictions, paramsMap);
 
     System.out.println("PARAMS " + queryUri);
+    System.out.println("URI " + "https://api.edamam.com/search?q=" + query
+        + "&app_id=" + APP_ID + "&app_key=" + APP_KEY + queryUri);
     HttpRequest httpRequest = HttpRequest.newBuilder().GET()
         .uri(URI.create("https://api.edamam.com/search?q=" + query
             + "&app_id=" + APP_ID + "&app_key=" + APP_KEY + queryUri)).build();
@@ -166,7 +168,10 @@ public final class FieldParser {
     }
 
     for (Recipe r : recipes) {
-      RecipeDatabase.insertRecipe(r);
+      //recipe uris in recipe database must be unique.
+      if (!RecipeDatabase.checkRecipeInDatabase(r.getUri())) {
+        RecipeDatabase.insertRecipe(r);
+      }
     }
 
     return recipes;

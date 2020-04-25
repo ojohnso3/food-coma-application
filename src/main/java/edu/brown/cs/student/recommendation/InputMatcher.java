@@ -26,7 +26,7 @@ public class InputMatcher {
   /**
    * Function to get the results of a given query with the given params.
    * @param paramsMap - Map from param name to param option.
-   * Available params: ingr (num ingredients), diet (diet labels - only one allowed), health
+   * Available params: ingr (max num ingredients), diet (diet labels - only one allowed), health
    * (health labels), calories (range of calories), time (range of time),
    * excluded (food name). See here for more specific constraints:
    * https://developer.edamam.com/edamam-docs-recipe-api.
