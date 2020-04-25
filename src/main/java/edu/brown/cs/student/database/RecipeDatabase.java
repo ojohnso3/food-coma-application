@@ -209,7 +209,7 @@ public final class RecipeDatabase {
    */
 
 
-  public Recipe getRecipeFromURI(String uri) throws SQLException, InterruptedException,
+  public static Recipe getRecipeFromURI(String uri) throws SQLException, InterruptedException,
       APIException, IOException {
     System.out.println("Inputted URI is " + uri);
     PreparedStatement prep = conn.prepareStatement("SELECT * FROM recipe WHERE uri = ?");
