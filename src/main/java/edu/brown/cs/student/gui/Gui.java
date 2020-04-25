@@ -208,6 +208,9 @@ public class Gui {
       String pass2 = map.value("pass2");
       String birth = map.value("birth");
 
+      
+      // TODO: fix login integration with back-end
+      
       String output = "Failed Sign-up: Please try again.";
       if(checkSignUpValidity(user, pass1, pass2)) {
         try {
@@ -274,21 +277,19 @@ public class Gui {
     @Override
     public String handle(Request req, Response res) {
       QueryParamsMap map = req.queryMap();
-      String userID = map.value("user");
+      String username = map.value("user");
       
-//      List<Recipe> output = new ArrayList<Recipe>(); // get Saved Recipes
-//      Recipe r = new Recipe("ID_HERE");
-//      output.add(r);
-//      Recipe r2 = new Recipe("SECOND_REC");
-//      output.add(r2);
-//            
-//      Map<String, Object> variables = ImmutableMap.of("title",
-//          "User", "output", output);
-//
-//      return GSON.toJson(variables);
+      System.out.println(username);
       
+      //User currUser = Accounts.getUser(username);
+      
+      List<Recipe> prevRecipes = new ArrayList<Recipe>(); //currUser.getPreviousRecipes();
       
       Map<String,String> output = new HashMap<String, String>();
+      
+      for (Recipe r : prevRecipes) {
+        output.put(r.getUri(), r.getLabel());
+      }
       output.put("URI1", "NAME1");
       output.put("URI2", "NAME2");
       output.put("URI3", "NAME3");
@@ -298,6 +299,17 @@ public class Gui {
       return GSON.toJson(variables);
 
     }
+    
+//  List<Recipe> output = new ArrayList<Recipe>(); // get Saved Recipes
+//  Recipe r = new Recipe("ID_HERE");
+//  output.add(r);
+//  Recipe r2 = new Recipe("SECOND_REC");
+//  output.add(r2);
+//        
+//  Map<String, Object> variables = ImmutableMap.of("title",
+//      "User", "output", output);
+//
+//  return GSON.toJson(variables);
     
   }
   
