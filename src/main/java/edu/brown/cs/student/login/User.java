@@ -12,9 +12,15 @@ import java.util.List;
  * dietary restrictions.
  */
 public class User {
+  /**
+   * username - the unique username of the user.
+   * previousRecipes - a list of Recipe objects the user has previously accessed.
+   * dietaryRestrictions - a list of health labels.
+   * nutrients - a list of nutrient codes that the user has specified.
+   */
   private String username;
   private List<Recipe> previousRecipes;
-  private List<Ingredient> dietaryRestrictions;
+  private List<String> dietaryRestrictions;
   private List<String> nutrients;
 
   /**
@@ -82,10 +88,19 @@ public class User {
   
   /**
    * Comment.
-   * @param ingredient
+   * @param label - the diet or health label to be added to dietaryRestrictions.
    */
-  public void addToRestrictions(Ingredient ingredient) {
-    dietaryRestrictions.add(ingredient);
+  public void addToRestrictions(String label) {
+    dietaryRestrictions.add(label);
+  }
+
+  /**
+   * Function to get the dietary restrictions of a user.
+   * @return - the dietaryRestrictions field.
+   */
+  public List<String> getDietaryRestrictions() {
+    //returning defensive copy.
+    return new ArrayList<>(this.dietaryRestrictions);
   }
 
   /**

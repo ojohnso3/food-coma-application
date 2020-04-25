@@ -5,6 +5,11 @@ package edu.brown.cs.student.foodCOMA.database;
  */
 public class RecipeDatabaseTest {
 
+  /**
+   * Function to test the insertRecipe method in RecipeDatabase.
+   */
+  public void testInsertRecipe() {
 
+  }
 
 }

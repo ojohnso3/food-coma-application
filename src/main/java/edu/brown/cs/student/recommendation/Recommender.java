@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import edu.brown.cs.student.database.APIException;
 import edu.brown.cs.student.database.FieldParser;
@@ -32,10 +33,13 @@ public class Recommender {
 
   /**
    * Function to initialize the KDTree to be used when recommending recipes to users.
+   * @param input - the input given by the user to query.
+   * @param paramsMap - the parameters given by the user to the query.
    */
-  private void initRecipeTree(String input)
+  private void initRecipeTree(String input, Map<String, String> paramsMap)
       throws InterruptedException, APIException, IOException, SQLException {
-    List<Recipe> recipesList = Arrays.asList(FieldParser.getRecipesFromQuery(input));
+    List<Recipe> recipesList = Arrays.asList(FieldParser.getRecipesFromQuery(input,
+        this.user.getDietaryRestrictions(), paramsMap));
     // normalize the coordinates of every node
     List<RecipeNode> nodes = convertRecipesToRecipeNodes(recipesList);
     this.recipeTree.normalize(nodes);
@@ -92,17 +96,18 @@ public class Recommender {
   /**
    * Comment.
    * @param input Search input of user
+   * @param paramsMap - parameters for the query the user has entered.
    * @return List of recommended recipes
    * //TODO: don't add every recipe to user's history.
    */
-  public List<Recipe> makeRecommendation(String input) throws
+  public List<Recipe> makeRecommendation(String input, Map<String, String> paramsMap) throws
       RecommendationException, InterruptedException, IOException, APIException, SQLException {
     try {
       this.recipeTree = new KDTree<>(dim);
     } catch (KDTreeException e) {
       throw new RecommendationException(e.getMessage());
     }
-    this.initRecipeTree(input);
+    this.initRecipeTree(input, paramsMap);
     List<Recipe> recs;
     List<Recipe> userHistory = this.user.getPreviousRecipes();
     try {
