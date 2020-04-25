@@ -1,7 +1,5 @@
 package edu.brown.cs.student.kdtree;
 
-import edu.brown.cs.student.recommendation.RecipeNode;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -19,9 +17,14 @@ public class KDTree<N extends KDNode<N>> {
    * Constructor.
    *
    * @param dim - dimension of nodes
+   * @throws KDTreeException when the dimension is invalid
    */
-  public KDTree(int dim) {
-    this.dim = dim;
+  public KDTree(int dim) throws KDTreeException {
+    if (dim < 1) {
+      throw new KDTreeException("dim must be a positive integer");
+    } else {
+      this.dim = dim;
+    }
   }
 
   /**
@@ -155,34 +158,6 @@ public class KDTree<N extends KDNode<N>> {
     }
   }
 
-  //TODO: requires parent nodes to work fully.
-  public boolean validateTree() {
-    double[] bounds = new double[this.dim];
-
-    return validateTreeRec(bounds, this.root, 0);
-  }
-
-  private boolean validateTreeRec(double[] bounds, N curr, int axis) {
-    if (curr == null) {
-      return true;
-    }
-    // check children relation to curr
-    double bound = bounds[axis];
-    bound = this.root.getCoords().get(axis);
-    boolean valid = true;
-    valid = valid && this.root.getLeftChild().getCoords().get(axis) <= bound;
-    valid = valid && this.root.getRightChild().getCoords().get(axis) >= bound;
-    // check old part bounds
-
-    for (int i = 0; i < this.dim; i++) {
-      double boundi = bounds[i];
-      valid = valid && curr.getCoords().get(i) <= boundi;
-    }
-
-    return valid && validateTreeRec(bounds, curr.getLeftChild(), axis)
-            && validateTreeRec(bounds, curr.getRightChild(), axis);
-  }
-
   /**
    * insert a node at the bottom of tree. Does not rebalance.
    *
@@ -236,8 +211,8 @@ public class KDTree<N extends KDNode<N>> {
     // base cases, if returning 0 stars or have an empty tree, return null
     if (this.root == null) {
       throw new KDTreeException("ERROR: tree must be initialized");
-    } else if (k < 1) {
-      throw new KDTreeException("ERROR: must search for at least one neighbor");
+    } else if (k < 0) {
+      throw new KDTreeException("ERROR: must search for a non-negative amount of neighbors");
     }
     // run recursive nearest neighbors fun
     PriorityQueue<N> nearbyStars = new PriorityQueue<>(new EuclideanComparator<>(target));
@@ -305,12 +280,12 @@ public class KDTree<N extends KDNode<N>> {
     }
   }
 
-  public List<N> radiusSearch(N target, int r) throws KDTreeException {
+  public List<N> radiusSearch(N target, double r) throws KDTreeException {
     // base cases, if negative radius or have an empty tree, return null
     if (this.root == null) {
       throw new KDTreeException("ERROR: tree must be initialized");
     } else if (r < 0) {
-      throw new KDTreeException("ERROR: must search for at least one neighbor");
+      throw new KDTreeException("ERROR: must search within a non-negative radius");
     }
     // run recursive nearest neighbors fun
     PriorityQueue<N> nearbyStars = new PriorityQueue<>(new EuclideanComparator<>(target));
@@ -323,7 +298,7 @@ public class KDTree<N extends KDNode<N>> {
     return ls;
   }
 
-  private void radiusSearchRec(N target, int r, N curr, PriorityQueue<N> nearbyStars, int axis) {
+  private void radiusSearchRec(N target, double r, N curr, PriorityQueue<N> nearbyStars, int axis) {
     // Base: if curr is null after leaf, end.
     if (curr == null) {
       return;
@@ -456,51 +431,6 @@ public class KDTree<N extends KDNode<N>> {
     List<Double> currBound = coordBounds.get(i);
     return currBound.get(0) <= currCoord && currCoord <= currBound.get(1)
             && inBoundsRec(coords, coordBounds, i + 1, dimen);
-  }
-
-  /**
-   * Function to normalize the coordinates of a list of nodes.
-   * @param nodes - all nodes to be normalized.
-   */
-  public static void normalize(List<KDNode> nodes, int dim) {
-    // create lists, maxes, mins for each considered nutrient
-    List<List<Double>> axisCoordsLists = new ArrayList<>();
-    List<Double> maxes = new ArrayList<>();
-    List<Double> mins = new ArrayList<>();
-
-    for (int i = 0; i < dim; i++) {
-      axisCoordsLists.add(new ArrayList<>());
-      maxes.add(Double.NEGATIVE_INFINITY);
-      mins.add(Double.POSITIVE_INFINITY);
-    }
-
-    // add the each nodes' nutrients to its list, check for max/min
-    for (KDNode node : nodes) {
-      List<Double> coords = node.getCoords();
-      for (int i = 0; i < dim; i++) {
-        double coord = coords.get(i);
-        if (coord > maxes.get(i)) {
-          maxes.set(i, coord);
-        } // check min-ness
-        if (coord < mins.get(i)) {
-          mins.set(i, coord);
-        }
-        // add the nutrient to its list
-        axisCoordsLists.get(i).add(coord);
-      }
-    }
-
-    // normalize all nutrients for each type
-    int sz = axisCoordsLists.size();
-    for (int i = 0; i < sz; i++) {
-      List<Double> axisCoords = axisCoordsLists.get(i);
-      for (int j = 0; j < dim; j++) {
-        double n = axisCoords.get(j);
-        double normalized = (n - mins.get(j)) / (maxes.get(j) - mins.get(j));
-        // replace coords with their new values
-        nodes.get(i).getCoords().set(j, normalized);
-      }
-    }
   }
 
   /**

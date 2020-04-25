@@ -2,17 +2,23 @@ package edu.brown.cs.student.kdtree;
 
 import java.util.List;
 
+/**
+ * A generic type for KDNode
+ */
 public class BaseKDNode implements KDNode<BaseKDNode> {
   private String id;
   private List<Double> coords;
   private BaseKDNode leftChild;
   private BaseKDNode rightChild;
 
-  public BaseKDNode(String id, List<Double> coords, BaseKDNode leftChild, BaseKDNode rightChild) {
+  /**
+   * a node constructor
+   * @param id the node id
+   * @param coords the node's coordinates
+   */
+  public BaseKDNode(String id, List<Double> coords) {
     this.id = id;
     this.coords = coords;
-    this.leftChild = leftChild;
-    this.rightChild = rightChild;
   }
 
   /**
@@ -34,36 +40,7 @@ public class BaseKDNode implements KDNode<BaseKDNode> {
     BaseKDNode node = (BaseKDNode) o;
 
     // check fields
-    boolean coordsB = true;
-    for (int i = 0; i < coords.size(); i++) {
-      if (!node.getCoords().get(i).equals(this.getCoords().get(i))) {
-        coordsB = false;
-        break;
-      }
-    }
-    boolean bool = this.id.equals(node.getId()) && coordsB;
-    // left
-    if (this.leftChild != null) {
-      if (node.getLeftChild() == null) {
-        return false;
-      } else {
-        bool = bool && this.leftChild.equals(node.getLeftChild());
-      }
-    } else {
-      bool = bool && (node.getLeftChild() == null);
-    }
-    // right
-    if (this.rightChild != null) {
-      if (node.getRightChild() == null) {
-        return false;
-      } else {
-        bool = bool && this.rightChild.equals(node.getRightChild());
-      }
-    } else {
-      bool = bool && (node.getRightChild() == null);
-    }
-
-    return bool;
+    return this.id.equals(node.getId());
   }
 
   /**
@@ -71,19 +48,7 @@ public class BaseKDNode implements KDNode<BaseKDNode> {
    * @return int hashcode
    */
   @Override public int hashCode() {
-    int result = 0;
-    final int magicNumber = 31; // from the textbook (prime and 2^5 - 1)
-    result = magicNumber * result + this.id.hashCode();
-    if (this.leftChild != null) {
-      result = magicNumber * result + this.leftChild.hashCode();
-    }
-    if (this.rightChild != null) {
-      result = magicNumber * result + this.rightChild.hashCode();
-    }
-    for (Double coord : this.coords) {
-      result = magicNumber * result + Double.hashCode(coord);
-    }
-    return result;
+    return this.id.hashCode();
   }
 
   /**
