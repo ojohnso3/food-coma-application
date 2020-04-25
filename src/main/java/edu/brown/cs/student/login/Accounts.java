@@ -6,6 +6,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.security.SecureRandom;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -18,11 +20,35 @@ public class Accounts {
   private static final int KEY_LENGTH = 256;
   private static final int SALT_LENGTH = 16;
   private static final String LOGIN_INFO_PATH = "src/main/resources/login/account-login-info.csv";
+  private static Map<String, User> nameUserMap;
 
   /**
    * static utility class, don't instantiate except for testing.
    */
   protected Accounts() { }
+
+  /**
+   * adds previously added users to the map; to be called at the start of running application.
+   * @throws AccountException on file failure
+   */
+  public static void initializeMap() throws AccountException {
+    initializeMap(LOGIN_INFO_PATH);
+  }
+  public static void initializeMap(String path) throws AccountException {
+    nameUserMap = new HashMap<>();
+    // create users from info files and databases
+    try (Scanner loginInfo = new Scanner(new FileReader(path))) {
+      // create each user
+      while (loginInfo.hasNext()) {
+        String[] login = loginInfo.nextLine().split(",");
+        String username = login[0];
+        User user = new User(username);
+        nameUserMap.put(username, user);
+      }
+    } catch (FileNotFoundException e) {
+      throw new AccountException(e.getMessage(), e);
+    }
+  }
 
   /**
    * reads the first line of the csv, for testing / checking files for proper format.

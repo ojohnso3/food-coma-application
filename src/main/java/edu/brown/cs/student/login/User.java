@@ -18,23 +18,32 @@ public class User {
   private List<String> nutrients;
 
   /**
-   * constructors adds login info to db.
+   * Constructors for adding a new User.
    * @param user name
-   * @param pass password
+   * @param password password
    * @throws AccountException on write failure, just propagate message to handle.
    */
-  public User(String user, String pass) throws AccountException {
-    username = user;
-    previousRecipes = new ArrayList<>();
-    dietaryRestrictions = new ArrayList<>();
-    Accounts.writeLoginInfo(user, pass); // write the login info to our csv
+  public User(String user, String password) throws AccountException {
+    this.username = user;
+    this.previousRecipes = new ArrayList<>();
+    this.dietaryRestrictions = new ArrayList<>();
+    Accounts.writeLoginInfo(user, password); // write the login info to our csv
+  }
+  // testing constructor
+  public User(String username, String password, String path) throws AccountException {
+    this.username = username;
+    this.previousRecipes = new ArrayList<>();
+    this.dietaryRestrictions = new ArrayList<>();
+    // write the login info to any csv (for testing)
+    Accounts.writeLoginInfo(username, password, path);
   }
 
-  public User(String user, String pass, String path) throws AccountException {
-    username = user;
-    previousRecipes = new ArrayList<>();
-    dietaryRestrictions = new ArrayList<>();
-    Accounts.writeLoginInfo(user, pass, path); // write the login info to any csv (for testing)
+  /**
+   * Constructor for recreating a User from data files.
+   * @param username - name
+   */
+  public User(String username) {
+    this.username = username;
   }
 
   /**
