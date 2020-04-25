@@ -102,7 +102,11 @@ public class Recommender {
    */
   public List<Recipe> makeRecommendation(String input, Map<String, String> paramsMap) throws
       RecommendationException, InterruptedException, IOException, APIException, SQLException {
-    this.recipeTree = new KDTree<>(dim);
+    try {
+      this.recipeTree = new KDTree<>(dim);
+    } catch (KDTreeException e) {
+      throw new RecommendationException(e.getMessage());
+    }
     this.initRecipeTree(input, paramsMap);
     List<Recipe> recs;
     List<Recipe> userHistory = this.user.getPreviousRecipes();
@@ -112,7 +116,7 @@ public class Recommender {
       throw new RecommendationException(e.getMessage());
     }
 
-    for (Recipe r : recs) { //maybe only want to save recent history?????????????????????????????????
+    for (Recipe r : recs) { //maybe only want to save recent history??????????????????????????????
       this.user.addToPreviousRecipes(r); // figure out order and backwards?
     }
     return recs;

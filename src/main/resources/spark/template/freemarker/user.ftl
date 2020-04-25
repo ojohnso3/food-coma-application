@@ -22,15 +22,15 @@
     </div>
     <div class="queryOption">
         <h2>Time to Go? Sad :(</h2>
-        <form method="GET" action="/database">
-            <input type="submit" value="Log out">
-        </form>
+        <#--  <form method="GET" action="/database">  -->
+            <input id="logoutbutton" type="submit" value="Log out">
+        <#--  </form>  -->
     </div>
 </div>
 
 <div class="queryBox">
     <div class="queryOption" id="saved_recipes">
-        <h2>Your Saved Recipes</h2>
+        <h2>Your Previous Recipes</h2>
         <ul id="saved_list">
         </ul>
     </div>

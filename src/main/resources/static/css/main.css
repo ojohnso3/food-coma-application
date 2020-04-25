@@ -105,6 +105,8 @@ a:hover {
 .container {
     display: flex;
     width: 100%;
+    background-color: black;
+    color: white;
 }
 
 .art {
@@ -203,3 +205,6 @@ li {
     text-align: center;
 }
 
+h6 {
+    color: red;
+}

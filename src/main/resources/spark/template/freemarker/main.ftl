@@ -15,6 +15,7 @@
   <body>
     <script src="../js/jquery-2.1.1.js"></script>
     <script src="../js/jquery-3.1.1.js"></script>
+    <script src="js/global.js"></script>
     
     <#--  <div class="border" id="left"></div>
     <div class="border" id="right"></div>  -->
@@ -29,8 +30,6 @@
       <a href="/signup" class="bar_item">Sign Up</a>   
     </div>
 
-
-
     ${content}
 
     <footer class="footer">
@@ -41,7 +40,7 @@
       <a href="#"><i class="fa fa-twitter"></i></a>   
       <a href="#"><i class="fa fa-linkedin"></i></a>
       <a href="#"><i class="fa fa-pinterest-p"></i></a>   
-      <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">yo mama</a></p>
+      <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">edamame FIX</a></p>
     </footer>
 
     <script src="js/main.js"></script>
