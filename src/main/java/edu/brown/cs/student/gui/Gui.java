@@ -326,8 +326,9 @@ public class Gui {
       Recipe currRecipe = null;
       try {
         System.out.println("ABOUT TO ENTER " + recipeURI);
+        RecipeDatabase.loadDatabase("/data/recipeDatabase.sqlite3");
         currRecipe = RecipeDatabase.getRecipeFromURI(recipeURI);
-      } catch (SQLException | InterruptedException | APIException | IOException e) {
+      } catch (SQLException | InterruptedException | APIException | IOException | ClassNotFoundException e) {
         System.out.println("SQLException getting recipe from database");
       }
       if(currRecipe == null){

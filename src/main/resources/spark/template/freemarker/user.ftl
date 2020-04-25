@@ -30,7 +30,7 @@
 
 <div class="queryBox">
     <div class="queryOption" id="saved_recipes">
-        <h2>Your Saved Recipes</h2>
+        <h2>Your Previous Recipes</h2>
         <ul id="saved_list">
         </ul>
     </div>

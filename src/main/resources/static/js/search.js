@@ -29,7 +29,9 @@ button.click(event => {
             console.log("Key 1: " + key[1]);
 
             // document.getElementById("container").innerHTML += "Name: " + index + " URL: " + key[0];
-            document.getElementById("container").innerHTML += " <h6 id=\"recipes\"><a href=\"/recipe/" + key[1] + "\"> " + index + " </a></h6>";
+            // document.getElementById("container").innerHTML += "HELLO?";
+            document.getElementById("container").innerHTML += "<h6><a href = \"recipe/" + key[1] + "\">" + index + " </a></h6>";
+            // document.getElementById("container").innerHTML += " <h6><a href=\"/recipe/" + key[1] + "\"> " + index + " </a></h6>";
 
         });
         // for(i = 0; i < output.recipes.length; i++){
