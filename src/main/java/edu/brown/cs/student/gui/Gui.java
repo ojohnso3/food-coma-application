@@ -41,7 +41,7 @@ public class Gui {
 //  private static FieldParser fieldParser;
 //  private static NutrientInfo nutrientInfo;
   private static final Gson GSON = new Gson();
-  private Map<String, Recipe> recipesMap;
+  public Map<String, Recipe> recipesMap;
   public Gui() {
     recipesMap = new HashMap<String, Recipe>();
 //    fieldParser = fp;
@@ -119,7 +119,7 @@ public class Gui {
   }
   
   
-  private static class SearchPostHandler implements Route{
+  private class SearchPostHandler implements Route{
     @Override
     public String handle(Request req, Response res){
       QueryParamsMap qm = req.queryMap();
@@ -134,16 +134,18 @@ public class Gui {
         Pattern load = Pattern.compile("#recipe_(.+)");
 
         for(int i = 0; i < recipes.length; i++){
+          recipesMap.put(recipes[i].getUri(), recipes[i]);
           System.out.println(recipes[i].getLabel());
           String[] fields = new String[2];
           fields[0] = recipes[i].getUrl();
           fields[1] = recipes[i].getUri();
+          System.out.println("Full URI: " + fields[1]);
           Matcher matchUri = load.matcher(recipes[i].getUri());
           if(matchUri.find()){
             fields[1] = matchUri.group(1);
             System.out.println("URI Found: " + matchUri.group(1));
           } else {
-            fields[1] = "";
+            fields[1] = "error";
           }
           simpleRecipeList.put(recipes[i].getLabel(), fields);
         }
@@ -208,6 +210,9 @@ public class Gui {
       String pass2 = map.value("pass2");
       String birth = map.value("birth");
 
+      
+      // TODO: fix login integration with back-end
+      
       String output = "Failed Sign-up: Please try again.";
       if(checkSignUpValidity(user, pass1, pass2)) {
         try {
@@ -274,21 +279,19 @@ public class Gui {
     @Override
     public String handle(Request req, Response res) {
       QueryParamsMap map = req.queryMap();
-      String userID = map.value("user");
+      String username = map.value("user");
       
-//      List<Recipe> output = new ArrayList<Recipe>(); // get Saved Recipes
-//      Recipe r = new Recipe("ID_HERE");
-//      output.add(r);
-//      Recipe r2 = new Recipe("SECOND_REC");
-//      output.add(r2);
-//            
-//      Map<String, Object> variables = ImmutableMap.of("title",
-//          "User", "output", output);
-//
-//      return GSON.toJson(variables);
+      System.out.println(username);
       
+      //User currUser = Accounts.getUser(username);
+      
+      List<Recipe> prevRecipes = new ArrayList<Recipe>(); //currUser.getPreviousRecipes();
       
       Map<String,String> output = new HashMap<String, String>();
+      
+      for (Recipe r : prevRecipes) {
+        output.put(r.getUri(), r.getLabel());
+      }
       output.put("URI1", "NAME1");
       output.put("URI2", "NAME2");
       output.put("URI3", "NAME3");
@@ -298,6 +301,17 @@ public class Gui {
       return GSON.toJson(variables);
 
     }
+    
+//  List<Recipe> output = new ArrayList<Recipe>(); // get Saved Recipes
+//  Recipe r = new Recipe("ID_HERE");
+//  output.add(r);
+//  Recipe r2 = new Recipe("SECOND_REC");
+//  output.add(r2);
+//        
+//  Map<String, Object> variables = ImmutableMap.of("title",
+//      "User", "output", output);
+//
+//  return GSON.toJson(variables);
     
   }
   
@@ -333,7 +347,7 @@ public class Gui {
       }
       if(currRecipe == null){
         try {
-          FieldParser.getRecipeFromURI(recipeURI);
+          currRecipe = FieldParser.getRecipeFromURI("http://www.edamam.com/ontologies/edamam.owl#recipe_" + recipeURI);
         } catch (IOException e) {
           System.out.println("IOException in getting recipe from API");
         } catch (InterruptedException e) {
@@ -344,41 +358,25 @@ public class Gui {
       }
       String actualName = currRecipe.getLabel();
       System.out.println("ACTUAL NAME: " + actualName);
-      List<Ingredient> sampleIngredients = new ArrayList<Ingredient>();
-      Ingredient tofu = new Ingredient("Tofu",200);
-      Ingredient sauce = new Ingredient("Sauce",100);
-      sampleIngredients.add(tofu);
-      sampleIngredients.add(sauce);
-      Map<String, double[]> nutrientList = new HashMap<String, double[]>();
-      nutrientList.put("Sugar", new double[2]);
-      nutrientList.put("Salt", new double[2]);
-      String[] dietLabelList = new String[2];
-      dietLabelList[0] = "Diet Label 1";
-      dietLabelList[1] = "Diet Label 2";
-      String[] healthLabelList = new String[2];
-      healthLabelList[0] = "Health label 0";
-      healthLabelList[1] = "Health label 1";
+      List<String> ingredientsList = new ArrayList<String>();
+      for(int i = 0; i < currRecipe.getIngredients().size(); i ++){
+        ingredientsList.add(currRecipe.getIngredients().get(i).getText());
+      }
+//      HashMap<String, String> map = new HashMap<String, String>();
+//      Set<String> keys = recipes.keySet();
 
-      Recipe recpOne = new Recipe("0100", "Tofu 1", "image","source", "url", 0.0,9.9,55.55,10.00,sampleIngredients, nutrientList,
-              dietLabelList, healthLabelList);
-
-      Recipe recpTwo = new Recipe("0200", "Tofu 2", "image","source", "url", 0.0,9.9,55.55,10.00,sampleIngredients, nutrientList,
-              dietLabelList, healthLabelList);
-      Recipe recpThree = new Recipe("0300", "Tofu 3", "image","source", "url", 0.0,9.9,55.55,10.00,sampleIngredients, nutrientList,
-              dietLabelList, healthLabelList);
-
-//      Recipe[] recpFour = FieldParser.parseJSON();
-//      System.out.println(recpFour);
-      Map<String,String> recipes = new HashMap<String, String>();
-      recipes.put(recpOne.getUri(), recpOne.getLabel());
-      recipes.put(recpTwo.getUri(), recpTwo.getLabel());
-      recipes.put(recpThree.getUri(), recpThree.getLabel());
-//      recipes.put(recpFour.getUri(), recpFour.getLabel());
-
-      HashMap<String, String> map = new HashMap<String, String>();
-      Set<String> keys = recipes.keySet();
-
-      Map<String, Object> variables = ImmutableMap.of("recipeList", recipes, "title", " " + actualName);
+      Map<String, String[]> recipePageRecipes = new HashMap<String, String[]>();
+      Set<String> keys = gui.recipesMap.keySet();
+      for(String key : keys){
+        if(key == currRecipe.getCompactUri()){
+          continue;
+        }
+        String[] fields = new String[gui.recipesMap.get(key).getIngredients().size() + 1];
+        Recipe currRec = gui.recipesMap.get(key);
+        fields[0] = currRec.getLabel();
+        recipePageRecipes.put(currRec.getCompactUri(), fields);
+      }
+      Map<String, Object> variables = ImmutableMap.of("recipeList", recipePageRecipes, "title", " " + actualName, "ingredients", ingredientsList);
       return GSON.toJson(variables);
 
     }
