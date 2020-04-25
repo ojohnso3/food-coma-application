@@ -17,6 +17,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -46,6 +47,29 @@ public final class FieldParser {
     temp = temp.replace("/", "%2F");
     temp = temp.replace("#", "%23");
     return temp;
+  }
+
+  /**
+   * Function to format the user dietary restrictions and query parameters into uri format.
+   * @param dietaryRestrictions - the user's saved dietary restrictions.
+   * @param paramsMap - the HashMap of constraints for the query -- see comment in InputMatcher
+   * for more details.
+   * @return - String of each element in the restrictions list and the params map formatted for
+   * uris.
+   */
+  private static String handleParamsAndRestrictions(List<String> dietaryRestrictions,
+                                                    Map<String, String> paramsMap) {
+    StringBuilder line = new StringBuilder();
+    for (String s : dietaryRestrictions) {
+      line.append("&").append("health=").append(s);
+    }
+
+    for (String param : paramsMap.keySet()) {
+      String option = paramsMap.get(param);
+      line.append("&").append(param).append("=").append(option);
+    }
+
+    return line.toString();
   }
 
   /**
@@ -113,14 +137,21 @@ public final class FieldParser {
   /**
    * This function retrieves recipes that correspond to the given query in the api.
    * @param query - the desired query to search for in the api.
+   * @param dietaryRestrictions - the diet and health labels to include in the query.
+   * @param paramsMap - the map of constraints for the query -- see comment in InputMatcher for
+   * more details.
    * @return - an array of recipes that correspond to the given query in the api.
    */
-  public static Recipe[] getRecipesFromQuery(String query) throws IOException, InterruptedException,
-      APIException, SQLException {
+  public static Recipe[] getRecipesFromQuery(String query, List<String> dietaryRestrictions,
+                                             Map<String, String> paramsMap)
+      throws IOException, InterruptedException, APIException, SQLException {
     HttpClient httpClient = HttpClient.newBuilder().build();
+    String queryUri = handleParamsAndRestrictions(dietaryRestrictions, paramsMap);
+
+    System.out.println("PARAMS " + queryUri);
     HttpRequest httpRequest = HttpRequest.newBuilder().GET()
         .uri(URI.create("https://api.edamam.com/search?q=" + query
-        + "&app_id=" + APP_ID + "&app_key=" + APP_KEY)).build();
+            + "&app_id=" + APP_ID + "&app_key=" + APP_KEY + queryUri)).build();
 
     HttpResponse<String> response = httpClient.send(httpRequest,
         HttpResponse.BodyHandlers.ofString());
@@ -141,22 +172,6 @@ public final class FieldParser {
     return recipes;
   }
 
-
-  /**
-   * This function retrieves a given number of recipes from the api.
-   * @param start - the starting index to retrieve recipes from.
-   * @param end - the ending index to retrieve recipes from.
-   * @return - A list of Recipe objects containing data from the api.
-   */
-  public static List<Recipe> getRecipeSubset(int start, int end) {
-    HttpClient httpClient = HttpClient.newBuilder().build();
-    HttpRequest httpRequest = HttpRequest.newBuilder().GET()
-        .uri(URI.create("https://api.edamam.com/search?q=")).build(); //fix this!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    return null;
-  }
-
-
-
   /**
    * Test api function.
    */
@@ -170,7 +185,8 @@ public final class FieldParser {
             "158f55a83eee58aff1544072b788784f")).build();
 
     try {
-      HttpResponse<String> response = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+      HttpResponse<String> response = httpClient.send(httpRequest,
+          HttpResponse.BodyHandlers.ofString());
       System.out.println(response.statusCode());
       System.out.println(response.body());
       return response.body();

@@ -129,7 +129,9 @@ public class Gui {
       Map<String, String[]> simpleRecipeList = new HashMap<String, String[]>();
       try {
         NutrientInfo.createNutrientsList();
-        recipes = FieldParser.getRecipesFromQuery(query);
+        List<String> restrictions = new ArrayList<>();
+        Map<String, String> paramsMap = new HashMap<>();
+        recipes = FieldParser.getRecipesFromQuery(query, restrictions, paramsMap);
         simpleRecipeList = new HashMap<String, String[]>();
         Pattern load = Pattern.compile("#recipe_(.+)");
 
