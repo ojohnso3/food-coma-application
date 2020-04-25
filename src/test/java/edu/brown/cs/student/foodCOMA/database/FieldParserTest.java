@@ -20,7 +20,12 @@ public class FieldParserTest {
   public void testGetRecipesFromQuery() {
     NutrientInfo.createNutrientsList();
     try {
-      Recipe[] recipes = FieldParser.getRecipesFromQuery("chicken");
+      Recipe[] recipes = new Recipe[0];
+      try {
+        recipes = FieldParser.getRecipesFromQuery("chicken");
+      } catch (SQLException e) {
+        System.out.println("SQL ERROR IN TEST");
+      }
       assertNotNull(recipes);
       for (Recipe r : recipes) {
         assertNotNull(r);

@@ -141,7 +141,7 @@ public class Gui {
         System.out.println("IOException getting recipes from query");
       } catch (InterruptedException e) {
         System.out.println("InterruptedException getting recipes from query");
-      } catch (APIException e) {
+      } catch (APIException | SQLException e) {
         System.out.println("API Exception getting recipes from query");
       }
 
@@ -203,7 +203,7 @@ public class Gui {
       try {
         System.out.println("ABOUT TO ENTER " + recipeURI);
         currRecipe = RecipeDatabase.getRecipeFromURI(recipeURI);
-      } catch (SQLException e) {
+      } catch (SQLException | InterruptedException | APIException | IOException e) {
         System.out.println("SQLException getting recipe from database");
       }
       if(currRecipe == null){
