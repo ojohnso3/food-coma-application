@@ -1,5 +1,7 @@
 package edu.brown.cs.student.kdtree;
 
+import edu.brown.cs.student.recommendation.RecipeNode;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -454,5 +456,95 @@ public class KDTree<N extends KDNode<N>> {
     List<Double> currBound = coordBounds.get(i);
     return currBound.get(0) <= currCoord && currCoord <= currBound.get(1)
             && inBoundsRec(coords, coordBounds, i + 1, dimen);
+  }
+
+  /**
+   * Function to normalize the coordinates of a list of nodes.
+   * @param nodes - all nodes to be normalized.
+   */
+  public static void normalize(List<KDNode> nodes, int dim) {
+    // create lists, maxes, mins for each considered nutrient
+    List<List<Double>> axisCoordsLists = new ArrayList<>();
+    List<Double> maxes = new ArrayList<>();
+    List<Double> mins = new ArrayList<>();
+
+    for (int i = 0; i < dim; i++) {
+      axisCoordsLists.add(new ArrayList<>());
+      maxes.add(Double.NEGATIVE_INFINITY);
+      mins.add(Double.POSITIVE_INFINITY);
+    }
+
+    // add the each nodes' nutrients to its list, check for max/min
+    for (KDNode node : nodes) {
+      List<Double> coords = node.getCoords();
+      for (int i = 0; i < dim; i++) {
+        double coord = coords.get(i);
+        if (coord > maxes.get(i)) {
+          maxes.set(i, coord);
+        } // check min-ness
+        if (coord < mins.get(i)) {
+          mins.set(i, coord);
+        }
+        // add the nutrient to its list
+        axisCoordsLists.get(i).add(coord);
+      }
+    }
+
+    // normalize all nutrients for each type
+    int sz = axisCoordsLists.size();
+    for (int i = 0; i < sz; i++) {
+      List<Double> axisCoords = axisCoordsLists.get(i);
+      for (int j = 0; j < dim; j++) {
+        double n = axisCoords.get(j);
+        double normalized = (n - mins.get(j)) / (maxes.get(j) - mins.get(j));
+        // replace coords with their new values
+        nodes.get(i).getCoords().set(j, normalized);
+      }
+    }
+  }
+
+  /**
+   * Function to normalize the coordinates of a list of nodes.
+   * @param nodes - all nodes to be normalized.
+   */
+  public void normalize(List<N> nodes) {
+    // create lists, maxes, mins for each considered nutrient
+    List<List<Double>> axisCoordsLists = new ArrayList<>();
+    List<Double> maxes = new ArrayList<>();
+    List<Double> mins = new ArrayList<>();
+
+    for (int i = 0; i < this.dim; i++) {
+      axisCoordsLists.add(new ArrayList<>());
+      maxes.add(Double.NEGATIVE_INFINITY);
+      mins.add(Double.POSITIVE_INFINITY);
+    }
+
+    // add the each nodes' nutrients to its list, check for max/min
+    for (N node : nodes) {
+      List<Double> coords = node.getCoords();
+      for (int i = 0; i < this.dim; i++) {
+        double coord = coords.get(i);
+        if (coord > maxes.get(i)) {
+          maxes.set(i, coord);
+        } // check min-ness
+        if (coord < mins.get(i)) {
+          mins.set(i, coord);
+        }
+        // add the nutrient to its list
+        axisCoordsLists.get(i).add(coord);
+      }
+    }
+
+    // normalize all nutrients for each type
+    int sz = axisCoordsLists.size();
+    for (int i = 0; i < sz; i++) {
+      List<Double> axisCoords = axisCoordsLists.get(i);
+      for (int j = 0; j < this.dim; j++) {
+        double n = axisCoords.get(j);
+        double normalized = (n - mins.get(j)) / (maxes.get(j) - mins.get(j));
+        // replace coords with their new values
+        nodes.get(i).getCoords().set(j, normalized);
+      }
+    }
   }
 }

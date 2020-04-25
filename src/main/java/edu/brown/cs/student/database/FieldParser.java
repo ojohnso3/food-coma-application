@@ -134,9 +134,9 @@ public final class FieldParser {
       throw new APIException("API returned malformed JSON");
     }
 
-    for (Recipe r : recipes) {
-      RecipeDatabase.insertRecipe(r);
-    }
+//    for (Recipe r : recipes) {
+//      RecipeDatabase.insertRecipe(r);
+//    }
 
     return recipes;
   }
@@ -158,14 +158,14 @@ public final class FieldParser {
 
 
   /**
-   * Test api function
+   * Test api function.
    */
   public static String apiCall() {
     HttpClient httpClient = HttpClient.newBuilder().build();
     HttpRequest httpRequest = HttpRequest.newBuilder().GET()
         .uri(URI.create("https://api.edamam.com/search?" +
             "q=chicken" +
-            "&app_id=2a676518" //need to parse uris we get from JSON
+            "&app_id=2a676518"
             + "&app_key=" +
             "158f55a83eee58aff1544072b788784f")).build();
 
@@ -181,7 +181,7 @@ public final class FieldParser {
   }
 
   /**
-   * Test Gson function
+   * Test Gson function.
    */
   public static Recipe parseJSON() {
     String json = apiCall();
