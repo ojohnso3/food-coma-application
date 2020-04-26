@@ -180,11 +180,14 @@ public class Gui {
       String password = map.value("text2");
 
       String output = "Failed Login: Please try again.";
-      try {
-        output = Accounts.checkLogin(username, password);
-      } catch (AccountException e) {
-        e.printStackTrace();
-      }
+//      try {
+//        output = Accounts.checkLogin(username, password);
+//      } catch (AccountException e) {
+//        e.printStackTrace();
+//      }
+      
+      output = "Valid username!"; // Accounts.checkLogin(username, password);
+
 
       Map<String, Object> variables = ImmutableMap.of("title",
           "Login", "output", output);
@@ -248,13 +251,13 @@ public class Gui {
       
       User currUser = Accounts.getUser(username);
       
-      List<Recipe> prevRecipes = currUser.getPreviousRecipes();
+//      List<Recipe> prevRecipes = currUser.getPreviousRecipes();
       
       Map<String,String> output = new HashMap<String, String>();
       
-      for (Recipe r : prevRecipes) {
-        output.put(r.getUri(), r.getLabel());
-      }
+//      for (Recipe r : prevRecipes) {
+//        output.put(r.getUri(), r.getLabel());
+//      }
       output.put("URI1", "NAME1");
       output.put("URI2", "NAME2");
       output.put("URI3", "NAME3");
