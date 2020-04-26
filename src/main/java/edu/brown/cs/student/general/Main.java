@@ -17,6 +17,7 @@ import edu.brown.cs.student.food.Recipe;
 import edu.brown.cs.student.gui.Gui;
 import edu.brown.cs.student.login.AccountException;
 import edu.brown.cs.student.login.Accounts;
+import edu.brown.cs.student.login.UserDatabase;
 import freemarker.template.Configuration;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -75,7 +76,7 @@ public final class Main {
       gui.runSparkServer((int) options.valueOf("port"));
     } else {
       try {
-        RecipeDatabase.loadDatabase("data/recipeDatabase.sqlite3");
+        UserDatabase.loadDatabase("data/userDatabase.sqlite3");
       } catch (FileNotFoundException e) {
         e.printStackTrace();
       } catch (ClassNotFoundException e) {
