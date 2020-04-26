@@ -20,10 +20,10 @@ public class UserTest {
     User u = new User(user, pass, PATH_CSV);
 
     assertEquals(user, u.getUsername());
-    assertEquals(user + " successfully Logged in!", Accounts.checkLogin(u.getUsername(), pass, PATH_CSV));
-    assertEquals("Failed Login: Please try again.", Accounts.checkLogin("fake user", pass, PATH_CSV));
-    assertEquals("Failed Login: Please try again.", Accounts.checkLogin(user, "fake pass", PATH_CSV));
-    assertEquals("Failed Login: Please try again.", Accounts.checkLogin("fake user", "fake pass", PATH_CSV));
+    assertEquals(true, Accounts.checkLogin(u.getUsername(), pass, PATH_CSV));
+    assertEquals(false, Accounts.checkLogin("fake user", pass, PATH_CSV));
+    assertEquals(false, Accounts.checkLogin(user, "fake pass", PATH_CSV));
+    assertEquals(false, Accounts.checkLogin("fake user", "fake pass", PATH_CSV));
 
   }
 }

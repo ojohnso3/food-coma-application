@@ -14,7 +14,13 @@ public class AccountsTest {
 
   @Test
   public void readHeaderTest() throws AccountException {
-//    assertEquals(Accounts.readHeader(), "username,passwordHash,salt");
+    // clear the file
+    try (BufferedWriter bw = new BufferedWriter(new FileWriter(PATH_CSV, false))) {
+      bw.write("username,passwordHash,salt");
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    assertEquals(Accounts.readHeader(), "username,passwordHash,salt");
   }
 
   @Test
@@ -91,9 +97,9 @@ public class AccountsTest {
       }
     }.callProtectedMethod(user, pass, salt, PATH_CSV);
 
-    assertEquals(user + " successfully Logged in!", Accounts.checkLogin(user, pass, PATH_CSV));
-    assertEquals("Failed Login: Please try again.", Accounts.checkLogin("fake user", pass, PATH_CSV));
-    assertEquals("Failed Login: Please try again.", Accounts.checkLogin(user, "fake pass", PATH_CSV));
-    assertEquals("Failed Login: Please try again.", Accounts.checkLogin("fake user", "fake pass", PATH_CSV));
+    assertEquals(true, Accounts.checkLogin(user, pass, PATH_CSV));
+    assertEquals(false, Accounts.checkLogin("fake user", pass, PATH_CSV));
+    assertEquals(false, Accounts.checkLogin(user, "fake pass", PATH_CSV));
+    assertEquals(false, Accounts.checkLogin("fake user", "fake pass", PATH_CSV));
   }
 }
