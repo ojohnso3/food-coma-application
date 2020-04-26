@@ -74,10 +74,8 @@ public class Accounts {
         throw new AccountException("header of login info file does not exist");
       }
     } catch (FileNotFoundException e) {
-      e.printStackTrace();
+      throw new AccountException("login info file does not exist");
     }
-
-    throw new AccountException("login info file does not exist");
   }
 
   /**
@@ -216,7 +214,7 @@ public class Accounts {
    * @throws UserCreationException if false
    */
   private static boolean userExists(String user) throws UserCreationException {
-    if (nameUserMap.containsKey(user)) {
+    if (!nameUserMap.containsKey(user)) {
       return true;
     } else {
       throw new UserCreationException("ERROR: username already taken");

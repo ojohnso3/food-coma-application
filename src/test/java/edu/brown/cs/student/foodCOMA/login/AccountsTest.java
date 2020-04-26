@@ -20,7 +20,7 @@ public class AccountsTest {
     } catch (IOException e) {
       e.printStackTrace();
     }
-    assertEquals(Accounts.readHeader(), "username,passwordHash,salt");
+    assertEquals("username,passwordHash,salt", Accounts.readHeader());
   }
 
   @Test
