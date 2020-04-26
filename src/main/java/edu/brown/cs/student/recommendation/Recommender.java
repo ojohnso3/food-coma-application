@@ -49,51 +49,6 @@ public class Recommender {
   }
 
   /**
-   * Function to normalize the coordinates of a list of RecipeNode.
-   * @param nodes - all RecipeNodes in the tree.
-   */
-  private void normalize(List<RecipeNode> nodes) {
-    // create lists, maxes, mins for each considered nutrient
-    List<List<Double>> nutrientsLists = new ArrayList<>();
-    List<Double> maxes = new ArrayList<>();
-    List<Double> mins = new ArrayList<>();
-
-    for (int i = 0; i < this.dim; i++) {
-      nutrientsLists.add(new ArrayList<>());
-      maxes.add(Double.NEGATIVE_INFINITY);
-      mins.add(Double.POSITIVE_INFINITY);
-    }
-
-    // add the each nodes' nutrients to its list, check for max/min
-    for (RecipeNode node : nodes) {
-      List<Double> coords = node.getCoords();
-      for (int i = 0; i < this.dim; i++) {
-        double coord = coords.get(i);
-        if (coord > maxes.get(i)) {
-          maxes.set(i, coord);
-        } // check min-ness
-        if (coord < mins.get(i)) {
-          mins.set(i, coord);
-        }
-        // add the nutrient to its list
-        nutrientsLists.get(i).add(coord);
-      }
-    }
-
-    // normalize all nutrients for each type
-    int sz = nutrientsLists.size();
-    for (int i = 0; i < sz; i++) {
-      List<Double> nuts = nutrientsLists.get(i);
-      for (int j = 0; j < this.dim; j++) {
-        double n = nuts.get(j);
-        double normalized = (n - mins.get(j)) / (maxes.get(j) - mins.get(j));
-        // replace coords with their new values
-        nodes.get(i).getCoords().set(j, normalized);
-      }
-    }
-  }
-
-  /**
    * Comment.
    * @param input Search input of user
    * @param paramsMap - parameters for the query the user has entered.
