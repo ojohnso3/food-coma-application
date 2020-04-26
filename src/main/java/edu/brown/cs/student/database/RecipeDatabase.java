@@ -64,7 +64,7 @@ public final class RecipeDatabase {
    * Function to create tables if the given database file is empty.
    * @throws SQLException - thrown if there is an error when creating the tables in the database.
    */
-  public static void createTables(Statement stat) throws SQLException {
+  private static void createTables(Statement stat) throws SQLException {
 
     String sql = "CREATE TABLE IF NOT EXISTS recipe("
         + "uri TEXT,"
@@ -237,27 +237,17 @@ public final class RecipeDatabase {
     return createIngredients(ingredientSet);
   }
 
-
   /**
-   * Function called at the beginning of the application to get a given amount of recipes from
-   * the api and load them into the database.
-   * @param num - the number of recipes to add to the database.
-   * @return - a list of RecipeNodes to be used to create the recommendation kdtree.
+   * Function to check if the given recipe uri is already in the database.
+   * @param uri - String uri of a recipe.
+   * @return - boolean representing whether the given uri is in the database.
    */
-  public static List<Recipe> getRecipeSubset(int num) {
-
-    return null;
+  public static boolean checkRecipeInDatabase(String uri) throws SQLException {
+    PreparedStatement prep = conn.prepareStatement("SELECT * FROM recipe WHERE uri = ?");
+    prep.setString(1, uri);
+    ResultSet recipeSet = prep.executeQuery();
+    return recipeSet.next();
   }
-
-  /**
-   *
-   * @param ingredients
-   * @return
-   */
-  public List<Recipe> getRecipeListByIngredient(Ingredient ingredients) {
-    return null;
-  }
-
 
   /**
    * Database test function.

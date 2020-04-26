@@ -10,14 +10,20 @@ import org.junit.Test;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 /**
  * This class tests the methods contained within the FieldParser class.
+ *
+ * Lots of things are commented out in this class -- running each test every time will use up our
+ * API queries per minute.
  */
 public class FieldParserTest {
-
 //  @Test
 //  public void testGetRecipesFromQuery() {
 //    NutrientInfo.createNutrientsList();

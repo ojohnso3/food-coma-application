@@ -6,6 +6,8 @@
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
 .mvn-classpath
+.idea/
+.idea/misc.xml
 
 foodCOMA.iml
 

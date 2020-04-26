@@ -11,7 +11,8 @@ import java.util.PriorityQueue;
  */
 public class KDTree<N extends KDNode<N>> {
   private N root;
-  private int dim;
+  private final int dim;
+  private static final double EPSILON = 1e-6;
 
   /**
    * Constructor.
@@ -102,10 +103,10 @@ public class KDTree<N extends KDNode<N>> {
 
   /**
    * generate tree from a list of nodes. Sets the root then calls a private recursive function
-   * which does the rest.
+   * which does the rest. If called twice, it ends with a new tree of just the second list of nodes;
+   * it does not add to existing tree from the first list. A null or empty list does not initialize.
    *
    * @param nodes - list of nodes composing the tree
-   *              //   * @return the median node/root of the subtree to be a child of the parent
    */
   public void initializeTree(List<N> nodes) {
     // if list is null or empty, abort
@@ -145,17 +146,6 @@ public class KDTree<N extends KDNode<N>> {
     median.setRightChild(initializeTreeRec(nodes.subList(medIndex + 1, size), depth));
     // return median as child of the parent that called this function
     return median;
-  }
-
-  @Deprecated
-  public void naiveGenerateTree(List<N> nodes) {
-    for (N node : nodes) {
-      if (this.root == null) {
-        this.root = node;
-      } else {
-        insert(node);
-      }
-    }
   }
 
   /**
@@ -199,20 +189,20 @@ public class KDTree<N extends KDNode<N>> {
   }
 
   /**
-   * Finds the k-nearest neighbors:
-   * Take in a location in space (specified as either an x,y,z-coordinate or the name of a star) and
-   * the desired number of neighbors to be found, a positive integer k.
+   * Finds the k-nearest neighbors to a target node.
    *
    * @param target target node to be close to
-   * @param k      num of neighbors in the list
-   * @return list of node
+   * @param k      num of neighbors to find
+   * @return list of closest node
    */
   public List<N> nearestSearch(N target, int k) throws KDTreeException {
-    // base cases, if returning 0 stars or have an empty tree, return null
+    // error cases: empty tree or returning negative stars
     if (this.root == null) {
       throw new KDTreeException("ERROR: tree must be initialized");
     } else if (k < 0) {
       throw new KDTreeException("ERROR: must search for a non-negative amount of neighbors");
+    } else if (k == 0) {
+      return new LinkedList<>();
     }
     // run recursive nearest neighbors fun
     PriorityQueue<N> nearbyStars = new PriorityQueue<>(new EuclideanComparator<>(target));
@@ -280,12 +270,19 @@ public class KDTree<N extends KDNode<N>> {
     }
   }
 
+  /**
+   * Finds all nodes in the current tree within a given radius (inclusive) around a given target.
+   *
+   * @param target target node, center of radius
+   * @param r      radius
+   * @return list of node in radius
+   */
   public List<N> radiusSearch(N target, double r) throws KDTreeException {
     // base cases, if negative radius or have an empty tree, return null
     if (this.root == null) {
       throw new KDTreeException("ERROR: tree must be initialized");
     } else if (r < 0) {
-      throw new KDTreeException("ERROR: must search within a non-negative radius");
+      throw new KDTreeException("ERROR: must search in a non-negative radius");
     }
     // run recursive nearest neighbors fun
     PriorityQueue<N> nearbyStars = new PriorityQueue<>(new EuclideanComparator<>(target));
@@ -297,7 +294,9 @@ public class KDTree<N extends KDNode<N>> {
     }
     return ls;
   }
-
+  /*
+   * recursive component.
+   */
   private void radiusSearchRec(N target, double r, N curr, PriorityQueue<N> nearbyStars, int axis) {
     // Base: if curr is null after leaf, end.
     if (curr == null) {
@@ -308,24 +307,22 @@ public class KDTree<N extends KDNode<N>> {
       nearbyStars.add(curr);
       radiusSearchRec(target, r, curr.getLeftChild(), nearbyStars, (axis + 1) % this.dim);
       radiusSearchRec(target, r, curr.getRightChild(), nearbyStars, (axis + 1) % this.dim);
-      return;
+      return; // End here.
     }
 
     // Children subtree elimination
     Double currCoord = curr.getCoords().get(axis);
     Double targetCoord = target.getCoords().get(axis);
     // if the axis distance is less than the radius, search both; else, only search under tree
-    if (r >= Math.abs(currCoord - targetCoord)) {
+    if (r + EPSILON >= Math.abs(currCoord - targetCoord)) {
       radiusSearchRec(target, r, curr.getLeftChild(), nearbyStars, (axis + 1) % this.dim);
       radiusSearchRec(target, r, curr.getRightChild(), nearbyStars, (axis + 1) % this.dim);
+    } else if (currCoord < targetCoord) {
+      // curr is too negative of the target area, search greater side subtree
+      radiusSearchRec(target, r, curr.getRightChild(), nearbyStars, (axis + 1) % this.dim);
     } else {
-      if (currCoord < targetCoord) {
-        // more negative of target, search greater side subtree
-        radiusSearchRec(target, r, curr.getRightChild(), nearbyStars, (axis + 1) % this.dim);
-      } else {
-        // search more negative side subtree
-        radiusSearchRec(target, r, curr.getLeftChild(), nearbyStars, (axis + 1) % this.dim);
-      }
+      // search more negative side subtree
+      radiusSearchRec(target, r, curr.getLeftChild(), nearbyStars, (axis + 1) % this.dim);
     }
   }
 
@@ -417,7 +414,6 @@ public class KDTree<N extends KDNode<N>> {
 
     return inBoundsRec(coords, coordBounds, 0, coords.size());
   }
-
   /*
    * recursively checks if the point is in each pair of bounds.
    */

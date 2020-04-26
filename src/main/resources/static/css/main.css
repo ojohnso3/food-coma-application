@@ -105,7 +105,12 @@ a:hover {
 .container {
     display: flex;
     width: 100%;
+<<<<<<< HEAD
     background-color:black;
+=======
+    background-color: black;
+    color: white;
+>>>>>>> 9bd440480b554ceffa8252a5c3b624ecdbb837d1
 }
 
 .art {

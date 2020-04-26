@@ -1,4 +1,4 @@
-console.log("hi");
+console.log("start main");
 
 // TODO: add cookies so that login/logout is maintained over all pages
 

@@ -22,9 +22,9 @@
     </div>
     <div class="queryOption">
         <h2>Time to Go? Sad :(</h2>
-        <form method="GET" action="/database">
-            <input type="submit" value="Log out">
-        </form>
+        <#--  <form method="GET" action="/database">  -->
+            <input id="logoutbutton" type="submit" value="Log out">
+        <#--  </form>  -->
     </div>
 </div>
 
