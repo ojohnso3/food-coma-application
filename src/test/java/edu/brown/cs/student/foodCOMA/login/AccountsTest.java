@@ -12,16 +12,16 @@ import static org.junit.Assert.*;
 public class AccountsTest {
   private static final String PATH_CSV = "src/test/java/edu/brown/cs/student/foodCOMA/login/test.csv";
 
-  @Test
-  public void readHeaderTest() throws AccountException {
-    // clear the file
-    try (BufferedWriter bw = new BufferedWriter(new FileWriter(PATH_CSV, false))) {
-      bw.write("username,passwordHash,salt");
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-    assertEquals(Accounts.readHeader(), "username,passwordHash,salt");
-  }
+//  @Test
+//  public void readHeaderTest() throws AccountException {
+//    // clear the file
+//    try (BufferedWriter bw = new BufferedWriter(new FileWriter(PATH_CSV, false))) {
+//      bw.write("username,passwordHash,salt");
+//    } catch (IOException e) {
+//      e.printStackTrace();
+//    }
+//    assertEquals(Accounts.readHeader(), "username,passwordHash,salt");
+//  }
 
   @Test
   public void writeLoginInfoTest() throws AccountException {

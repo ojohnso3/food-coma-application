@@ -76,6 +76,8 @@ public final class Main {
       gui.runSparkServer((int) options.valueOf("port"));
     } else {
       try {
+        RecipeDatabase.loadDatabase("data/recipeDatabase.sqlite3");
+        NutrientInfo.createNutrientsList();
         UserDatabase.loadDatabase("data/userDatabase.sqlite3");
         UserDatabase.testDatabaseFile();
       } catch (FileNotFoundException e) {

@@ -86,7 +86,7 @@ public final class UserDatabase {
    * @param username - the username to check for in the database.
    * @return - boolean representing whether the username is in the database.
    */
-  public static boolean checkRepeatUsername(String username) throws SQLException {
+  public static boolean checkUsername(String username) throws SQLException {
     PreparedStatement prep = conn.prepareStatement("SELECT * FROM account WHERE username = ?");
     prep.setString(1, username);
     ResultSet userSet = prep.executeQuery();
@@ -100,7 +100,7 @@ public final class UserDatabase {
    */
   public static void insertUser(User user) throws SQLException, AccountException {
 
-    if (checkRepeatUsername(user.getUsername())) {
+    if (checkUsername(user.getUsername())) {
       throw new AccountException("Username not available");
     }
 
@@ -161,45 +161,74 @@ public final class UserDatabase {
     prep.executeUpdate();
   }
 
-
+  /**
+   * Function to convert a ResultSet to a List.
+   * @param rs - ResultSet to convert.
+   * @return - the List representation of the ResultSet.
+   */
+  private static List<String> setToList(ResultSet rs) throws SQLException {
+    List<String> toReturn = new ArrayList<>();
+    while (rs.next()) {
+      toReturn.add(rs.getString(1));
+    }
+    return toReturn;
+  }
 
   /**
    * Function to retrieve a User object from the database.
    * @param username - the username of the desired User.
    * @return - the User object that was retrieved from the database.
    */
-  public static User getUser(String username) throws SQLException, InterruptedException, IOException, APIException {
+  public static User getUser(String username) throws SQLException, InterruptedException,
+      IOException, APIException, AccountException {
+
+    if (!checkUsername(username)) {
+      throw new AccountException("Cannot retrieve user: user does not exist");
+    }
+
     PreparedStatement prep = conn.prepareStatement("SELECT * FROM restriction WHERE username = ?");
     prep.setString(1, username);
     ResultSet restrictionSet = prep.executeQuery();
+    List<String> dietaryRestrictions = setToList(restrictionSet);
 
     prep = conn.prepareStatement("SELECT * FROM nutrient WHERE username = ?");
     prep.setString(1, username);
     ResultSet nutrientSet = prep.executeQuery();
+    List<String> nutrients = setToList(nutrientSet);
 
     prep = conn.prepareStatement("SELECT * FROM prev_recipe WHERE username = ?");
+    prep.setString(1, username);
     ResultSet recipeSet = prep.executeQuery();
 
     List<Recipe> prevRecipes = new ArrayList<>();
-    while(recipeSet.next()) {
+    while (recipeSet.next()) {
       Recipe r = RecipeDatabase.getRecipeFromURI(recipeSet.getString(1));
       prevRecipes.add(r);
     }
 
-
-    return null;
+    return new User(username, prevRecipes, dietaryRestrictions, nutrients);
   }
-
 
   /**
    * Database test function.
    */
   public static void testDatabaseFile() {
     try {
-      insertToNutrients("hello", "A");
-      insertToPrevRecipe("hello", "uri");
-      insertToRestriction("hello", "B");
+      Recipe r = new Recipe("http%3A%2F%2Fwww.edamam.com%2Fontologies%2Fedamam.owl%23recipe_9b5945e03f05acbf9d69625138385408");
+      User user = new User("ugh");
+      user.addToPreviousRecipes(r);
+      insertUser(user);
+      System.out.println(getUser("ugh").getUsername());
+      System.out.println("USER: " + user.getUsername());
     } catch (SQLException e) {
+      e.printStackTrace();
+    } catch (IOException e) {
+      e.printStackTrace();
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    } catch (APIException e) {
+      e.printStackTrace();
+    } catch (AccountException e) {
       e.printStackTrace();
     }
   }

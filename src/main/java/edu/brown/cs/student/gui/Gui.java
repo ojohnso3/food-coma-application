@@ -21,6 +21,7 @@ import edu.brown.cs.student.food.Recipe;
 import edu.brown.cs.student.login.AccountException;
 import edu.brown.cs.student.login.Accounts;
 import edu.brown.cs.student.login.User;
+import edu.brown.cs.student.login.UserCreationException;
 import freemarker.template.Configuration;
 import spark.ExceptionHandler;
 import spark.ModelAndView;
@@ -216,13 +217,17 @@ public class Gui {
       String birth = map.value("birth");
       
       String output = "Failed Sign-up: Please try again.";
-      if(Accounts.checkSignUpValidity(user, pass1, pass2)) {
-        try {
-          new User(user, pass1); // other info too?
-          output = "Successful Sign-up!";
-        } catch (AccountException e) {
-          e.printStackTrace(); // error
+      try {
+        if(Accounts.checkSignUpValidity(user, pass1, pass2)) {
+          try {
+            new User(user, pass1); // other info too?
+            output = "Successful Sign-up!";
+          } catch (AccountException e) {
+            e.printStackTrace(); // error
+          }
         }
+      } catch (UserCreationException e) {
+        e.printStackTrace();
       }
 
       Map<String, Object> variables = ImmutableMap.of("title",
