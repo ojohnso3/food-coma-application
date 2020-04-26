@@ -6,10 +6,9 @@
     <h2>Recipe Ingredients: </h2>
     <p id="ingredients" aria-live=polite></p>
 
-
     <h3>Other Recipes to Consider:</h3>
 
-    <p id="recipes" aria-live=polite></p>
+    <div id="recipes" aria-live=polite></div>
 
     <script src="../js/recipe.js"></script>
     <div id="container" class="container">

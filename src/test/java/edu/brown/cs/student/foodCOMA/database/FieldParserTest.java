@@ -18,34 +18,34 @@ import static org.junit.Assert.assertNotNull;
  */
 public class FieldParserTest {
 
-  @Test
-  public void testGetRecipesFromQuery() {
-    NutrientInfo.createNutrientsList();
-    try {
-      RecipeDatabase.loadDatabase("data/recipeDatabase.sqlite3");
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
-    } catch (ClassNotFoundException e) {
-      e.printStackTrace();
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
-    try {
-      Recipe[] recipes = new Recipe[0];
-      try {
-        recipes = FieldParser.getRecipesFromQuery("chicken");
-      } catch (SQLException e) {
-        System.out.println("SQL ERROR IN TEST");
-      }
-      assertNotNull(recipes);
-      for (Recipe r : recipes) {
-        assertNotNull(r);
-        assertNotNull(r.getUri());
-      }
-    } catch (IOException e) {
-      e.printStackTrace();
-    } catch (InterruptedException | APIException e) {
-      e.printStackTrace();
-    }
-  }
+//  @Test
+//  public void testGetRecipesFromQuery() {
+//    NutrientInfo.createNutrientsList();
+//    try {
+//      RecipeDatabase.loadDatabase("data/recipeDatabase.sqlite3");
+//    } catch (FileNotFoundException e) {
+//      e.printStackTrace();
+//    } catch (ClassNotFoundException e) {
+//      e.printStackTrace();
+//    } catch (SQLException e) {
+//      e.printStackTrace();
+//    }
+//    try {
+//      Recipe[] recipes = new Recipe[0];
+//      try {
+//        recipes = FieldParser.getRecipesFromQuery("chicken");
+//      } catch (SQLException e) {
+//        System.out.println("SQL ERROR IN TEST");
+//      }
+//      assertNotNull(recipes);
+//      for (Recipe r : recipes) {
+//        assertNotNull(r);
+//        assertNotNull(r.getUri());
+//      }
+//    } catch (IOException e) {
+//      e.printStackTrace();
+//    } catch (InterruptedException | APIException e) {
+//      e.printStackTrace();
+//    }
+//  }
 }
