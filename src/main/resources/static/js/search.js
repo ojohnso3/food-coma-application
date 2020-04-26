@@ -8,6 +8,12 @@ const preferences = $("#preferences");
 const button = $("#submit");
 console.log("HERE " + preferences.val());
 
+$(document).ready(function(){
+    $('#preferences').keypress(function(e){
+        if(e.keyCode==13)
+            $('#submit').click();
+    });
+});
 
 button.click(event => {
     const postParameters = {

@@ -13,24 +13,21 @@
     </div>
 </div>  -->
 
+    <img src="https://i.postimg.cc/Fzmcyx2s/How-to-Detox-From-Sugar-Header-new.jpg">
+
 <div class="buttonBox">
   <input id="preferences"
     type="text"
     placeholder="Search!"
     value="">
+
   </input>
   <br>
-  <button id="submit">Submit</button>
+  <button type="submit" id="submit">Submit</button>
   <br>
 </div>
 
-<form> <#-- action="/action_page.php" -->
-  <input type="checkbox" name="checkoff" value="Food">
-  <label for="checkoff">Some checkoff item</label><br>
-</form>
-
   <p class="output">
-
   <h3>List of recipes:</h3>
 
   </p>

@@ -24,8 +24,9 @@ $(document).ready(() => {
 function getRecipes(params){
     return $.post("/recipe/recipeuri", params, response =>{
         let obj = JSON.parse(response);
-        document.getElementById("title").innerHTML = obj.title + "<a href=\"http://www.facebook.com\"></a>";
-        // document.getElementById("title").href = obj.URL;
+        document.getElementById("title").innerHTML = " <h1><a href=\"" + obj.URL + "\"> " + obj.title + " </a></h1>";
+        console.log(obj.URL);
+        document.getElementById("title").href = obj.URL;
         $.each(obj.recipeList, function printRecipe(key, value){
             console.log(key + ": " + value[0]);
             document.getElementById("recipes").innerHTML += " <h6 id=\"recipes\"><a href=\"/recipe/" + key + "\"> " + value[0] + " </a></h6>";
