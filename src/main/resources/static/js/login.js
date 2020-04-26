@@ -15,7 +15,7 @@ submit.click(event => {
 
         document.getElementById("log_validity").innerHTML = output.output;
 
-        if (output.output == "Valid username!") {
+        if (output.output == "Valid Login!") {
             window.location.href = "/search";
             // console.log("WORKING");
             // document.getElementById("login_header").innerHTML = "User";

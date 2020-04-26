@@ -1,7 +1,7 @@
 const user = $("#user");
 const pass1 = $("#pass");
 const pass2 = $("#pass2");
-const birth = $("#bday");
+// const birth = $("#bday");
 const button = $("#sign_sub");
 
 button.click(event => {
@@ -9,7 +9,7 @@ button.click(event => {
         user: user.val(), 
         pass1: pass1.val(),
         pass2: pass2.val(),
-        birth: birth.val()
+        // birth: birth.val()
     };
 
     $.post("/signed", postParameters, response => {

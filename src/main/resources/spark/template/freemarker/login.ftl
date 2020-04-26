@@ -41,11 +41,11 @@
             placeholder="Confirm Password"
             value=""></input>
         <br>
-        <input id="bday" class="u-full-width"
+        <#--  <input id="bday" class="u-full-width"
             type="text"
             placeholder="Date of Birth"
             value=""></input>
-        <br>
+        <br>  -->
         <input id="sign_sub" type="submit" value="Sign Up!">
         <br>
         <p id="sign_validity" aria-live=polite></p>

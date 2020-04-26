@@ -21,6 +21,7 @@ import edu.brown.cs.student.food.Recipe;
 import edu.brown.cs.student.login.AccountException;
 import edu.brown.cs.student.login.Accounts;
 import edu.brown.cs.student.login.User;
+import edu.brown.cs.student.login.UserCreationException;
 import freemarker.template.Configuration;
 import spark.ExceptionHandler;
 import spark.ModelAndView;
@@ -179,15 +180,17 @@ public class Gui {
       String username = map.value("text1");
       String password = map.value("text2");
 
-      String output = "Failed Login: Please try again.";
-//      try {
-//        output = Accounts.checkLogin(username, password);
-//      } catch (AccountException e) {
-//        e.printStackTrace();
-//      }
+      boolean valid = false;
+      try {
+        valid = Accounts.checkLogin(username, password);
+      } catch (AccountException e) {
+        e.printStackTrace(); // TODO: error message
+      }
       
-      output = "Valid username!"; // Accounts.checkLogin(username, password);
-
+      String output = "Failed Login: Please try again.";
+      if (valid) {
+        output = "Valid Login!";
+      }
 
       Map<String, Object> variables = ImmutableMap.of("title",
           "Login", "output", output);
@@ -213,18 +216,20 @@ public class Gui {
       String user = map.value("user");
       String pass1 = map.value("pass1");
       String pass2 = map.value("pass2");
-      String birth = map.value("birth");
+//      String birth = map.value("birth");
       
       String output = "Failed Sign-up: Please try again.";
-      if(Accounts.checkSignUpValidity(user, pass1, pass2)) {
-        try {
-          new User(user, pass1); // other info too?
+      try {
+        if(Accounts.checkSignUpValidity(user, pass1, pass2)) {
+          new User(user, pass1);
           output = "Successful Sign-up!";
-        } catch (AccountException e) {
-          e.printStackTrace(); // error
         }
+      } catch (UserCreationException e1) {
+        e1.printStackTrace(); // TODO: error message
+      } catch (AccountException e) {
+        e.printStackTrace(); // TODO: error message
       }
-
+      
       Map<String, Object> variables = ImmutableMap.of("title",
           "Login", "output", output);
 
