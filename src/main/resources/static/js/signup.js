@@ -2,7 +2,7 @@ const user = $("#user");
 const pass1 = $("#pass");
 const pass2 = $("#pass2");
 const birth = $("#bday");
-const button = $("#sub");
+const button = $("#sign_sub");
 
 button.click(event => {
     const postParameters = {
@@ -15,7 +15,7 @@ button.click(event => {
     $.post("/signed", postParameters, response => {
 
         const output = JSON.parse(response);
-        document.getElementById("validity").innerHTML = output.output;
+        document.getElementById("sign_validity").innerHTML = output.output;
 
 
         if (output.output == "Successful Sign-up!") {

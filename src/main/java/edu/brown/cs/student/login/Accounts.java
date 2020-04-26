@@ -201,9 +201,9 @@ public class Accounts {
 
   private static boolean userExists(String user) {
     if (nameUserMap.containsKey(user)) {
-      return false;
-    } else {
       return true;
+    } else {
+      return false;
     }
   }
 

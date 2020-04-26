@@ -105,12 +105,8 @@ a:hover {
 .container {
     display: flex;
     width: 100%;
-<<<<<<< HEAD
-    background-color:black;
-=======
     background-color: black;
     color: white;
->>>>>>> 9bd440480b554ceffa8252a5c3b624ecdbb837d1
 }
 
 .art {
@@ -122,7 +118,7 @@ a:hover {
 
 .recipes{
     background-color: black;
-    font-color:white;
+    color:white;
 }
 
 .footer {
@@ -216,4 +212,26 @@ li {
 
 h6 {
     color: red;
+}
+
+.signContainer {
+    display: flex;
+    width: 25vw;
+    /* max-width: 25vw; */
+    flex-direction: row;
+    justify-content: center;
+    vertical-align: center;
+    text-align: center;
+    border: 10px solid #8aa1e6;
+    border-radius: 5px;
+    padding: 15px;
+    margin: 20px;
+    background-color: #8de0b7;
+}
+
+.signBox {
+    text-decoration: underline;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
