@@ -2,6 +2,7 @@ package edu.brown.cs.student.login;
 
 import com.google.common.io.Files;
 import edu.brown.cs.student.database.APIException;
+import edu.brown.cs.student.database.RecipeDatabase;
 import edu.brown.cs.student.food.Recipe;
 
 import java.io.File;
@@ -160,12 +161,41 @@ public final class UserDatabase {
     prep.executeUpdate();
   }
 
+
+
+  /**
+   * Function to retrieve a User object from the database.
+   * @param username - the username of the desired User.
+   * @return - the User object that was retrieved from the database.
+   */
+  public static User getUser(String username) throws SQLException, InterruptedException, IOException, APIException {
+    PreparedStatement prep = conn.prepareStatement("SELECT * FROM restriction WHERE username = ?");
+    prep.setString(1, username);
+    ResultSet restrictionSet = prep.executeQuery();
+
+    prep = conn.prepareStatement("SELECT * FROM nutrient WHERE username = ?");
+    prep.setString(1, username);
+    ResultSet nutrientSet = prep.executeQuery();
+
+    prep = conn.prepareStatement("SELECT * FROM prev_recipe WHERE username = ?");
+    ResultSet recipeSet = prep.executeQuery();
+
+    List<Recipe> prevRecipes = new ArrayList<>();
+    while(recipeSet.next()) {
+      Recipe r = RecipeDatabase.getRecipeFromURI(recipeSet.getString(1));
+      prevRecipes.add(r);
+    }
+
+
+    return null;
+  }
+
+
   /**
    * Database test function.
    */
   public static void testDatabaseFile() {
     try {
-
       insertToNutrients("hello", "A");
       insertToPrevRecipe("hello", "uri");
       insertToRestriction("hello", "B");

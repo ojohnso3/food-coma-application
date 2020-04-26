@@ -147,5 +147,25 @@ public class FieldParserTest {
 //    } catch (APIException e) {
 //      e.printStackTrace();
 //    }
+
+    //Testing queries with spaces.
+    try {
+      List<String> dietaryRestrictions = new ArrayList<>();
+      Map<String, String> paramsMap = new HashMap<>();
+      Recipe[] recipes = FieldParser.getRecipesFromQuery("peanut butter", dietaryRestrictions, paramsMap);
+      assertNotNull(recipes);
+      for (Recipe r : recipes) {
+        assertNotNull(r);
+        assertNotNull(r.getUri());
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    } catch (SQLException e) {
+      e.printStackTrace();
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    } catch (APIException e) {
+      e.printStackTrace();
+    }
   }
 }
