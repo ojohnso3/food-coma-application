@@ -107,7 +107,6 @@ public final class UserDatabase {
         + "\"" + user.getUsername() + "\");");
     prep.executeUpdate();
 
-    PreparedStatement prep;
     for (String s : user.getDietaryRestrictions()) {
       prep = conn.prepareStatement("INSERT INTO restriction VALUES(\"" + user.getUsername()
           + "\",\"" + s + "\");");
@@ -128,21 +127,49 @@ public final class UserDatabase {
   }
 
   /**
+   * Function to insert to the restriction table.
+   * @param username - the username to add the restriction to.
+   * @param label - the label of the restriction.
+   * @throws SQLException
+   */
+  public static void insertToRestriction(String username, String label) throws SQLException {
+    PreparedStatement prep = conn.prepareStatement("INSERT INTO restriction VALUES(\"" + username
+        + "\",\"" + label + "\");");
+    prep.executeUpdate();
+  }
+
+  /**
+   * Function to insert to the prev_recipe table.
+   * @param username - the username to add the recipe to.
+   * @param uri - the uri of the previous Recipe.
+   */
+  public static void insertToPrevRecipe(String username, String uri) throws SQLException {
+    PreparedStatement prep = conn.prepareStatement("INSERT INTO prev_recipe VALUES(\"" + username
+        + "\",\"" + uri + "\");");
+    prep.executeUpdate();
+  }
+
+  /**
+   * Function to insert to the nutrients table.
+   * @param username - the username to add the recipe to.
+   * @param code - the uri of the previous Recipe.
+   */
+  public static void insertToNutrients(String username, String code) throws SQLException {
+    PreparedStatement prep = conn.prepareStatement("INSERT INTO nutrient VALUES(\"" + username
+        + "\",\"" + code + "\");");
+    prep.executeUpdate();
+  }
+
+  /**
    * Database test function.
    */
   public static void testDatabaseFile() {
     try {
-      User user = new User("hello");
-      List<String> nutrients = new ArrayList<>();
-      nutrients.add("A");
-      nutrients.add("B");
-      user.setNutrients(nutrients);
-      user.addToRestrictions("A");
-      user.addToRestrictions("B");
-      Recipe r = new Recipe("uri");
-      user.addToPreviousRecipes(r);
-      insertUser(user);
-    } catch (SQLException | AccountException e) {
+
+      insertToNutrients("hello", "A");
+      insertToPrevRecipe("hello", "uri");
+      insertToRestriction("hello", "B");
+    } catch (SQLException e) {
       e.printStackTrace();
     }
   }
