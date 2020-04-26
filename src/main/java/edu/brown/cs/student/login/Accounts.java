@@ -48,7 +48,7 @@ public class Accounts {
   public static void initializeMap() throws AccountException {
     initializeMap(LOGIN_INFO_PATH);
   }
-  
+
   public static void initializeMap(String path) throws AccountException {
     nameUserMap = new HashMap<>();
     // create users from info files and databases
@@ -133,14 +133,14 @@ public class Accounts {
    * checks if a username and login pair are stored in the csv (user exists).
    * @param inpUser username
    * @param inpPass password
-   * @return text output for repl/gui
+   * @return true if can login, false else
    * @throws AccountException for file errors
    */
-  public static String checkLogin(String inpUser, String inpPass) throws AccountException {
+  public static boolean checkLogin(String inpUser, String inpPass) throws AccountException {
     return checkLogin(inpUser, inpPass, LOGIN_INFO_PATH);
   }
   // for repl, reads in username and password from user keyboard (System.in)
-  public static String checkLogin() throws AccountException {
+  public static boolean checkLogin() throws AccountException {
     try (Scanner keyboard = new Scanner(System.in)) {
       // get input from user
       System.out.println("Username: ");
@@ -151,7 +151,7 @@ public class Accounts {
     }
   }
   // computation
-  public static String checkLogin(String inpUser, String inpPass, String path) throws
+  public static boolean checkLogin(String inpUser, String inpPass, String path) throws
           AccountException {
     try (Scanner loginInfo = new Scanner(new FileReader(path))) {
       String[] login;
@@ -170,14 +170,14 @@ public class Accounts {
         salt = login[2];
         // check if user and pass match. BCrypt.checkpw(inpPass, passHash)
         if (user.equals(inpUser) && passHash.equals(BCrypt.hashpw(inpPass, salt))) {
-          return login(user);
+          return true;
         }
       }
     } catch (FileNotFoundException e) {
       throw new AccountException(e.getMessage(), e);
     }
     // none of the lines fit
-    return "Failed Login: Please try again.";
+    return false;
   }
 
   /**
