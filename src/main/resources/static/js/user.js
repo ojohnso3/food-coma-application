@@ -26,7 +26,7 @@ const search = $("#searchbutton");
 
 logout.click(event => {
     deleteCookie();
-    window.location.href = "/home";
+    window.location.href = "/login";
 });
 
 search.click(event => {

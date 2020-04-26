@@ -48,10 +48,19 @@ public class User {
    * Constructor for recreating a User from data files.
    * @param username - name
    */
+  public User(String username, List<Recipe> previousRecipes, List<String> dietaryRestrictions,
+              List<String> nutrients) {
+    this.username = username;
+    this.previousRecipes = previousRecipes;
+    this.dietaryRestrictions = dietaryRestrictions;
+    this.nutrients = nutrients;
+  }
+
   public User(String username) {
     this.username = username;
     this.previousRecipes = new ArrayList<>();
     this.dietaryRestrictions = new ArrayList<>();
+    this.nutrients = new ArrayList<>();
   }
 
   /**
