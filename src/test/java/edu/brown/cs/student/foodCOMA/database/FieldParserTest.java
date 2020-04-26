@@ -24,32 +24,29 @@ import static org.junit.Assert.*;
  * API queries per minute.
  */
 public class FieldParserTest {
-
   @Test
   public void testGetRecipesFromQuery() {
-    NutrientInfo.createNutrientsList();
-    try {
-      RecipeDatabase.loadDatabase("data/recipeDatabase.sqlite3");
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
-    } catch (ClassNotFoundException e) {
-      e.printStackTrace();
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
-
+//    NutrientInfo.createNutrientsList();
 //    try {
+//      RecipeDatabase.loadDatabase("data/recipeDatabase.sqlite3");
+//    } catch (FileNotFoundException e) {
+//      e.printStackTrace();
+//    } catch (ClassNotFoundException e) {
+//      e.printStackTrace();
+//    } catch (SQLException e) {
+//      e.printStackTrace();
+//    }
+//    try {
+//      Recipe[] recipes = new Recipe[0];
 //      try {
-//        List<String> dietaryRestrictions = new ArrayList<>();
-//        Map<String, String> paramsMap = new HashMap<>();
-//        Recipe[] recipes = FieldParser.getRecipesFromQuery("chicken", dietaryRestrictions, paramsMap);
-//        assertNotNull(recipes);
-//        for (Recipe r : recipes) {
-//          assertNotNull(r);
-//          assertNotNull(r.getUri());
-//        }
+//        recipes = FieldParser.getRecipesFromQuery("chicken");
 //      } catch (SQLException e) {
 //        System.out.println("SQL ERROR IN TEST");
+//      }
+//      assertNotNull(recipes);
+//      for (Recipe r : recipes) {
+//        assertNotNull(r);
+//        assertNotNull(r.getUri());
 //      }
 //    } catch (IOException e) {
 //      e.printStackTrace();
@@ -57,59 +54,16 @@ public class FieldParserTest {
 //      e.printStackTrace();
 //    }
 
-//    //Testing queries with one dietary restriction.
-//    try {
-//      List<String> dietaryRestrictions = new ArrayList<>();
-//      dietaryRestrictions.add("vegan");
-//      Map<String, String> paramsMap = new HashMap<>();
-//      Recipe[] recipes = FieldParser.getRecipesFromQuery("cake", dietaryRestrictions, paramsMap);
-//      assertNotNull(recipes);
-//      for (Recipe r : recipes) {
-//        assertNotNull(r);
-//        assertNotNull(r.getUri());
-//      }
-//    } catch (IOException e) {
-//      e.printStackTrace();
-//    } catch (SQLException e) {
-//      e.printStackTrace();
-//    } catch (InterruptedException e) {
-//      e.printStackTrace();
-//    } catch (APIException e) {
-//      e.printStackTrace();
-//    }
-
-//    //Testing queries with multiple dietary restrictions.
-//    try {
-//      List<String> dietaryRestrictions = new ArrayList<>();
-//      dietaryRestrictions.add("vegan");
-//      dietaryRestrictions.add("peanut-free");
-//      Map<String, String> paramsMap = new HashMap<>();
-//      Recipe[] recipes = FieldParser.getRecipesFromQuery("cake", dietaryRestrictions, paramsMap);
-//      assertNotNull(recipes);
-//      for (Recipe r : recipes) {
-//        assertNotNull(r);
-//        assertNotNull(r.getUri());
-//      }
-//    } catch (IOException e) {
-//      e.printStackTrace();
-//    } catch (SQLException e) {
-//      e.printStackTrace();
-//    } catch (InterruptedException e) {
-//      e.printStackTrace();
-//    } catch (APIException e) {
-//      e.printStackTrace();
-//    }
-
-//    //Testing queries with dietary restrictions and one param.
+    //Testing queries with dietary restrictions and multiple params.
 //    try {
 //      List<String> dietaryRestrictions = new ArrayList<>();
 //      dietaryRestrictions.add("vegan");
 //      dietaryRestrictions.add("peanut-free");
 //      Map<String, String> paramsMap = new HashMap<>();
 //      paramsMap.put("ingr", "5");
+//      paramsMap.put("diet", "low-fat");
 //      Recipe[] recipes = FieldParser.getRecipesFromQuery("cake", dietaryRestrictions, paramsMap);
 //      assertNotNull(recipes);
-//      assertTrue(recipes[0].getIngredients().size() < 5);
 //      for (Recipe r : recipes) {
 //        assertNotNull(r);
 //        assertNotNull(r.getUri());
@@ -148,24 +102,24 @@ public class FieldParserTest {
 //      e.printStackTrace();
 //    }
 
-    //Testing queries with spaces.
-    try {
-      List<String> dietaryRestrictions = new ArrayList<>();
-      Map<String, String> paramsMap = new HashMap<>();
-      Recipe[] recipes = FieldParser.getRecipesFromQuery("peanut butter", dietaryRestrictions, paramsMap);
-      assertNotNull(recipes);
-      for (Recipe r : recipes) {
-        assertNotNull(r);
-        assertNotNull(r.getUri());
-      }
-    } catch (IOException e) {
-      e.printStackTrace();
-    } catch (SQLException e) {
-      e.printStackTrace();
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    } catch (APIException e) {
-      e.printStackTrace();
-    }
+//    //Testing queries with spaces.
+//    try {
+//      List<String> dietaryRestrictions = new ArrayList<>();
+//      Map<String, String> paramsMap = new HashMap<>();
+//      Recipe[] recipes = FieldParser.getRecipesFromQuery("peanut butter", dietaryRestrictions, paramsMap);
+//      assertNotNull(recipes);
+//      for (Recipe r : recipes) {
+//        assertNotNull(r);
+//        assertNotNull(r.getUri());
+//      }
+//    } catch (IOException e) {
+//      e.printStackTrace();
+//    } catch (SQLException e) {
+//      e.printStackTrace();
+//    } catch (InterruptedException e) {
+//      e.printStackTrace();
+//    } catch (APIException e) {
+//      e.printStackTrace();
+//    }
   }
 }

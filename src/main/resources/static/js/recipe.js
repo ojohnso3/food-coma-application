@@ -27,7 +27,6 @@ function getRecipes(params){
         document.getElementById("title").innerHTML = obj.title;
         $.each(obj.recipeList, function printRecipe(key, value){
             console.log("HELLO???");
-
             console.log(key + ": " + value[0]);
             document.getElementById("recipes").innerHTML += " <h6 id=\"recipes\"><a href=\"/recipe/" + key + "\"> " + value[0] + " </a></h6>";
 
