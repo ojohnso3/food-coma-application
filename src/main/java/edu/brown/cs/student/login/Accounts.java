@@ -25,17 +25,9 @@ public class Accounts {
   protected Accounts() { }
 
   /**
-   * getter.
-   * @return map
-   */
-  public static Map<String, User> getNameUserMap() {
-    return nameUserMap;
-  }
-
-  /**
    * get a specific User.
    * @param username - name
-   * @return the User
+   * @return the User, null if they don't exist
    */
   public static User getUser(String username) {
     return nameUserMap.get(username);
@@ -58,7 +50,7 @@ public class Accounts {
         String[] login = loginInfo.nextLine().split(",");
         String username = login[0];
         User user = new User(username);
-        nameUserMap.put(username, user);
+        nameUserMap.putIfAbsent(username, user);
       }
     } catch (FileNotFoundException e) {
       throw new AccountException(e.getMessage(), e);
