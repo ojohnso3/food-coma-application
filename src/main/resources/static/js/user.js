@@ -1,4 +1,4 @@
-alertCookie();
+// alertCookie();
 
 var username = getCookie("username");
 loadSavedRecipes(username);
@@ -22,9 +22,13 @@ function loadSavedRecipes(userID) {
 }
 
 const logout = $("#logoutbutton");
+const search = $("#searchbutton");
 
 logout.click(event => {
-    console.log("LOGGING OUT YAYAYYAYYA");
     deleteCookie();
     window.location.href = "/home";
+});
+
+search.click(event => {
+    window.location.href = "/search";
 });

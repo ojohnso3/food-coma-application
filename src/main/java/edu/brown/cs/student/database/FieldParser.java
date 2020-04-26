@@ -145,6 +145,8 @@ public final class FieldParser {
   public static Recipe[] getRecipesFromQuery(String query, List<String> dietaryRestrictions,
                                              Map<String, String> paramsMap)
       throws IOException, InterruptedException, APIException, SQLException {
+
+    query = query.replace(" ", "+");
     HttpClient httpClient = HttpClient.newBuilder().build();
     String queryUri = handleParamsAndRestrictions(dietaryRestrictions, paramsMap);
 

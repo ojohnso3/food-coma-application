@@ -21,6 +21,7 @@ import edu.brown.cs.student.food.Recipe;
 import edu.brown.cs.student.login.AccountException;
 import edu.brown.cs.student.login.Accounts;
 import edu.brown.cs.student.login.User;
+import edu.brown.cs.student.login.UserCreationException;
 import freemarker.template.Configuration;
 import spark.ExceptionHandler;
 import spark.ModelAndView;
@@ -184,11 +185,16 @@ public class Gui {
       String username = map.value("text1");
       String password = map.value("text2");
 
-      String output = "Failed Login: Please try again.";
+      boolean valid = false;
       try {
-        output = Accounts.checkLogin(username, password);
+        valid = Accounts.checkLogin(username, password);
       } catch (AccountException e) {
-        e.printStackTrace();
+        e.printStackTrace(); // TODO: error message
+      }
+      
+      String output = "Failed Login: Please try again.";
+      if (valid) {
+        output = "Valid Login!";
       }
 
       Map<String, Object> variables = ImmutableMap.of("title",
@@ -215,62 +221,25 @@ public class Gui {
       String user = map.value("user");
       String pass1 = map.value("pass1");
       String pass2 = map.value("pass2");
-      String birth = map.value("birth");
-
-      
-      // TODO: fix login integration with back-end
+//      String birth = map.value("birth");
       
       String output = "Failed Sign-up: Please try again.";
-      if(checkSignUpValidity(user, pass1, pass2)) {
-        try {
-          new User(user, pass1); // other info too?
+      try {
+        if(Accounts.checkSignUpValidity(user, pass1, pass2)) {
+          new User(user, pass1);
           output = "Successful Sign-up!";
-        } catch (AccountException e) {
-          e.printStackTrace(); // error
         }
+      } catch (UserCreationException e1) {
+        e1.printStackTrace(); // TODO: error message
+      } catch (AccountException e) {
+        e.printStackTrace(); // TODO: error message
       }
-
+      
       Map<String, Object> variables = ImmutableMap.of("title",
           "Login", "output", output);
 
       return GSON.toJson(variables);
 
-    }
-
-    private boolean checkSignUpValidity(String user, String pass1, String pass2) {
-      // check if user already exists
-      // check if passwords are same
-      if(!userExists(user) && comparePasswords(pass1, pass2) &&
-          checkInputExists(user, pass1, pass2)) {
-        return true;
-      } else {
-        return false;
-      }
-      // informative error messages ??
-    }
-
-    private boolean checkInputExists(String user, String pass1, String pass2) {
-      if((user.length() > 0) && (pass1.length() > 0) && (pass2.length() > 0)) {
-        return true;
-      } else {
-        return false;
-      }
-    }
-
-    private boolean userExists(String user) {
-      if (!user.equals(user)) {
-        return true;
-      } else {
-        return false;
-      }
-    }
-
-    private boolean comparePasswords(String pass1, String pass2) {
-      if (pass1.equals(pass2)) {
-        return true;
-      } else {
-        return false;
-      }
     }
   }
   
@@ -290,15 +259,15 @@ public class Gui {
       
       System.out.println(username);
       
-      //User currUser = Accounts.getUser(username);
+      User currUser = Accounts.getUser(username);
       
-      List<Recipe> prevRecipes = new ArrayList<Recipe>(); //currUser.getPreviousRecipes();
+//      List<Recipe> prevRecipes = currUser.getPreviousRecipes();
       
       Map<String,String> output = new HashMap<String, String>();
       
-      for (Recipe r : prevRecipes) {
-        output.put(r.getUri(), r.getLabel());
-      }
+//      for (Recipe r : prevRecipes) {
+//        output.put(r.getUri(), r.getLabel());
+//      }
       output.put("URI1", "NAME1");
       output.put("URI2", "NAME2");
       output.put("URI3", "NAME3");
@@ -308,17 +277,6 @@ public class Gui {
       return GSON.toJson(variables);
 
     }
-    
-//  List<Recipe> output = new ArrayList<Recipe>(); // get Saved Recipes
-//  Recipe r = new Recipe("ID_HERE");
-//  output.add(r);
-//  Recipe r2 = new Recipe("SECOND_REC");
-//  output.add(r2);
-//        
-//  Map<String, Object> variables = ImmutableMap.of("title",
-//      "User", "output", output);
-//
-//  return GSON.toJson(variables);
     
   }
   

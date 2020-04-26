@@ -12,13 +12,11 @@
 <div class="queryBox">
     <div class="queryOption">
         <h2>Find New Recipes!</h2>
-        <form method="GET" action="/connect">
             <#--  <h4 for="text">Search</h4>
             <textarea name="actorOneText" id="text" placeholder="Search here!"></textarea>  -->
             <#--  <h4 for="text">Actor Two</h4>
             <textarea name="actorTwoText" id="text"></textarea>  -->
-            <input type="submit" value="Search!">
-        </form>
+            <input id="searchbutton" type="submit" value="Search">
     </div>
     <div class="queryOption">
         <h2>Time to Go? Sad :(</h2>

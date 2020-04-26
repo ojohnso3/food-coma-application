@@ -5,21 +5,18 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 import java.util.Scanner;
 
 /**
  * Static utility class that deals with login generation, storing, and attempts for all Accounts.
  */
 public class Accounts {
-  private static final Random RANDOM = new SecureRandom();
-  private static final int ITERATIONS = 10000;
-  private static final int KEY_LENGTH = 256;
-  private static final int SALT_LENGTH = 16;
+  private static final int MIN_PASS_LENGTH = 6;
+  private static final int MAX_LENGTH = 32;
   private static final String LOGIN_INFO_PATH = "src/main/resources/login/account-login-info.csv";
+
   private static Map<String, User> nameUserMap;
 
   /**
@@ -28,20 +25,12 @@ public class Accounts {
   protected Accounts() { }
 
   /**
-   * getter.
-   * @return map
-   */
-  public Map<String, User> getNameUserMap() {
-    return this.getNameUserMap();
-  }
-
-  /**
    * get a specific User.
    * @param username - name
-   * @return the User
+   * @return the User, null if they don't exist
    */
-  public User getUser(String username) {
-    return this.nameUserMap.get(username);
+  public static User getUser(String username) {
+    return nameUserMap.get(username);
   }
 
   /**
@@ -51,6 +40,7 @@ public class Accounts {
   public static void initializeMap() throws AccountException {
     initializeMap(LOGIN_INFO_PATH);
   }
+
   public static void initializeMap(String path) throws AccountException {
     nameUserMap = new HashMap<>();
     // create users from info files and databases
@@ -60,7 +50,7 @@ public class Accounts {
         String[] login = loginInfo.nextLine().split(",");
         String username = login[0];
         User user = new User(username);
-        nameUserMap.put(username, user);
+        nameUserMap.putIfAbsent(username, user);
       }
     } catch (FileNotFoundException e) {
       throw new AccountException(e.getMessage(), e);
@@ -69,8 +59,8 @@ public class Accounts {
 
   /**
    * reads the first line of the csv, for testing / checking files for proper format.
-   * @return
-   * @throws AccountException
+   * @return the header
+   * @throws AccountException on file error
    */
   public static String readHeader() throws AccountException {
     return readHeader(LOGIN_INFO_PATH);
@@ -84,25 +74,38 @@ public class Accounts {
         throw new AccountException("header of login info file does not exist");
       }
     } catch (FileNotFoundException e) {
-      e.printStackTrace();
+      throw new AccountException("login info file does not exist");
     }
+  }
 
-    throw new AccountException("login info file does not exist");
+  /**
+   * checks if the first line of the given file matches the desired header.
+   * @throws AccountException if the header is malformed
+   */
+  public static void checkHeader() throws AccountException {
+    checkHeader(LOGIN_INFO_PATH);
+  }
+
+  public static void checkHeader(String path) throws AccountException {
+    if (!readHeader(path).equals("username,passwordHash,salt")) {
+      throw new AccountException("login CSV header malformed");
+    }
   }
 
 
   /**
    * Stores a user's login info securely by encoding the password using salt hashing. Writes user,
    * password hash, salt to a csv.
-   * @param user
-   * @param pass
-   * @throws AccountException
+   * @param user username
+   * @param pass password
+   * @throws AccountException on write error
    */
   protected static void writeLoginInfo(String user, String pass) throws AccountException {
     writeLoginInfo(user, pass, BCrypt.gensalt(), LOGIN_INFO_PATH);
   }
   // actual computation
-  protected static void writeLoginInfo(String user, String pass, String salt, String path) throws AccountException {
+  protected static void writeLoginInfo(String user, String pass, String salt, String path) throws
+          AccountException {
     try (BufferedWriter writer = new BufferedWriter(new FileWriter(path, true))) {
       String hash = BCrypt.hashpw(pass, salt);
       writer.write("\n" + user + "," + hash + "," + salt);
@@ -111,7 +114,8 @@ public class Accounts {
     }
   }
   // for testing
-  protected static void writeLoginInfo(String user, String pass, String path) throws AccountException {
+  protected static void writeLoginInfo(String user, String pass, String path) throws
+          AccountException {
     writeLoginInfo(user, pass, BCrypt.gensalt(), path);
   }
 
@@ -119,14 +123,14 @@ public class Accounts {
    * checks if a username and login pair are stored in the csv (user exists).
    * @param inpUser username
    * @param inpPass password
-   * @return text output for repl/gui
+   * @return true if can login, false else
    * @throws AccountException for file errors
    */
-  public static String checkLogin(String inpUser, String inpPass) throws AccountException {
+  public static boolean checkLogin(String inpUser, String inpPass) throws AccountException {
     return checkLogin(inpUser, inpPass, LOGIN_INFO_PATH);
   }
   // for repl, reads in username and password from user keyboard (System.in)
-  public static String checkLogin() throws AccountException {
+  public static boolean checkLogin() throws AccountException {
     try (Scanner keyboard = new Scanner(System.in)) {
       // get input from user
       System.out.println("Username: ");
@@ -137,7 +141,8 @@ public class Accounts {
     }
   }
   // computation
-  public static String checkLogin(String inpUser, String inpPass, String path) throws AccountException {
+  public static boolean checkLogin(String inpUser, String inpPass, String path) throws
+          AccountException {
     try (Scanner loginInfo = new Scanner(new FileReader(path))) {
       String[] login;
       String user;
@@ -146,19 +151,23 @@ public class Accounts {
       // check each entry of login info csv to see if there's a match
       while (loginInfo.hasNext()) {
         login = loginInfo.nextLine().split(",");
+        if (login.length != 3) {
+          throw new AccountException("CSV malformed. All lines must adhere to the structure "
+                  + "\"username,passwordHash,salt\" and the file must not end in a newline");
+        }
         user = login[0];
         passHash = login[1];
         salt = login[2];
-        // check if user and pass match
-        if (user.equals(inpUser) && passHash.equals(BCrypt.hashpw(inpPass, salt))) {//BCrypt.checkpw(inpPass, passHash)
-          return login(user);
+        // check if user and pass match. BCrypt.checkpw(inpPass, passHash)
+        if (user.equals(inpUser) && passHash.equals(BCrypt.hashpw(inpPass, salt))) {
+          return true;
         }
       }
     } catch (FileNotFoundException e) {
       throw new AccountException(e.getMessage(), e);
     }
     // none of the lines fit
-    return "Failed Login: Please try again.";
+    return false;
   }
 
   /**
@@ -169,5 +178,75 @@ public class Accounts {
   public static String login(String user) {
     // give access to data of user for future commands
     return user + " successfully Logged in!";
+  }
+
+  /**
+   * Method for signup validity.
+   * @param user - username
+   * @param pass1 - password
+   * @param pass2 - password
+   * @return boolean for conditions
+   */
+  public static boolean checkSignUpValidity(String user, String pass1, String pass2) throws
+          UserCreationException {
+    return acceptableUserLength(user) && userExists(user) && acceptablePasswordLength(pass1)
+            && comparePasswords(pass1, pass2);
+  }
+
+  /**
+   * checks if username length is on [1,32].
+   * @param user - username
+   * @return bool
+   * @throws UserCreationException if false
+   */
+  private static boolean acceptableUserLength(String user) throws UserCreationException {
+    if (1 <= user.length() && user.length() <= MAX_LENGTH) {
+      return true;
+    } else {
+      throw new UserCreationException("ERROR: username length must be on [1,32]");
+    }
+  }
+
+  /**
+   * checks if username is taken.
+   * @param user - username
+   * @return bool
+   * @throws UserCreationException if false
+   */
+  private static boolean userExists(String user) throws UserCreationException {
+    if (!nameUserMap.containsKey(user)) {
+      return true;
+    } else {
+      throw new UserCreationException("ERROR: username already taken");
+    }
+  }
+
+  /**
+   * checks if password length is on [6,32].
+   * @param pass - password
+   * @return bool
+   * @throws UserCreationException if false
+   */
+  private static boolean acceptablePasswordLength(String pass) throws UserCreationException {
+    if (MIN_PASS_LENGTH <= pass.length() && pass.length() <= MAX_LENGTH) {
+      return true;
+    } else {
+      throw new UserCreationException("ERROR: password length must be on [6,32]");
+    }
+  }
+
+  /**
+   * checks if passwords match.
+   * @param pass1 - password
+   * @param pass2 - password
+   * @return bool
+   * @throws UserCreationException if false
+   */
+  private static boolean comparePasswords(String pass1, String pass2) throws UserCreationException {
+    if (pass1.equals(pass2)) {
+      return true;
+    } else {
+      throw new UserCreationException("ERROR: passwords do not match");
+    }
   }
 }

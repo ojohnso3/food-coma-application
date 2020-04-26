@@ -118,7 +118,7 @@ a:hover {
 
 .recipes{
     background-color: black;
-    font-color:white;
+    color:white;
 }
 
 .footer {
@@ -238,4 +238,25 @@ h6 {
     content: "";
     display: table;
     clear: both;
+
+.signContainer {
+    display: flex;
+    width: 25vw;
+    /* max-width: 25vw; */
+    flex-direction: row;
+    justify-content: center;
+    vertical-align: center;
+    text-align: center;
+    border: 10px solid #8aa1e6;
+    border-radius: 5px;
+    padding: 15px;
+    margin: 20px;
+    background-color: #8de0b7;
+}
+
+.signBox {
+    text-decoration: underline;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
