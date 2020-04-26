@@ -43,7 +43,7 @@ h1 {
     /* margin: 10px; */
     text-decoration: none;
     position: fixed;
-    display: inline-flexbox;
+ /* display: inline-flexbox;  */
     flex-direction: row;
     top: 0px;
     left: 0px;
@@ -213,6 +213,31 @@ li {
 h6 {
     color: red;
 }
+.column {
+    float: left;
+    width: 70%;
+}
+
+.column2{
+    float: left;
+    background-color: grey;
+    width: 30%
+}
+
+.recpTitle{
+    font-family: monospace;
+    font-size: 50px;
+}
+
+.recipeFood{
+    background-size: contain;
+}
+
+/* Clear floats after the columns */
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
 
 .signContainer {
     display: flex;

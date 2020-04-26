@@ -243,6 +243,7 @@ public final class RecipeDatabase {
    * @return - boolean representing whether the given uri is in the database.
    */
   public static boolean checkRecipeInDatabase(String uri) throws SQLException {
+    System.out.println("CONN--------------------------: " + conn);
     PreparedStatement prep = conn.prepareStatement("SELECT * FROM recipe WHERE uri = ?");
     prep.setString(1, uri);
     ResultSet recipeSet = prep.executeQuery();

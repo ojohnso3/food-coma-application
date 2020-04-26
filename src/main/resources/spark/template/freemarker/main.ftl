@@ -21,9 +21,9 @@
 
     <div class="navigation_bar">   
       <a href="/home" class="bar_item">Home</a>   
-      <a href="/login" id="login_header" class="bar_item">Join</a>   
-      <img src="css/foodCOMA.png" alt="HELP" id="real_logo">
-      <a href="/search" class="bar_item">Search</a>  
+      <a href="/login" id="login_header" class="bar_item">Join</a>
+        <img src="../css/foodCOMA.png" alt="HELP" id="real_logo">
+      <a href="/search" class="bar_item">Search</a>
       <a href="/about" class="bar_item">About</a>   
       <#--  <a href="/signup" class="bar_item">Sign Up</a>     -->
     </div>

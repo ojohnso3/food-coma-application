@@ -91,6 +91,9 @@ public class Recipe {
   public String getLabel(){
     return label;
   }
+  public String getImage(){
+    return image;
+  }
 
   public String getUrl(){
     return url;
