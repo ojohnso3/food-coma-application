@@ -40,8 +40,8 @@ public class Accounts {
    * @param username - name
    * @return the User
    */
-  public User getUser(String username) {
-    return this.nameUserMap.get(username);
+  public static User getUser(String username) {
+    return nameUserMap.get(username);
   }
 
   /**
@@ -169,5 +169,49 @@ public class Accounts {
   public static String login(String user) {
     // give access to data of user for future commands
     return user + " successfully Logged in!";
+  }
+  
+  
+  /**
+   * Method for signup validity.
+   * @param user
+   * @param pass1
+   * @param pass2
+   * @return
+   */
+  public static boolean checkSignUpValidity(String user, String pass1, String pass2) {
+    // check if user already exists
+    // check if passwords are same
+    if(!userExists(user) && comparePasswords(pass1, pass2) &&
+        checkInputExists(user, pass1, pass2)) {
+      return true;
+    } else {
+      return false;
+    }
+    // TODO: informative error messages for each specific signup error
+  }
+
+  private static boolean checkInputExists(String user, String pass1, String pass2) {
+    if((user.length() > 0) && (pass1.length() > 0) && (pass2.length() > 0)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  private static boolean userExists(String user) {
+    if (nameUserMap.containsKey(user)) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  private static boolean comparePasswords(String pass1, String pass2) {
+    if (pass1.equals(pass2)) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }

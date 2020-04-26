@@ -211,12 +211,9 @@ public class Gui {
       String pass1 = map.value("pass1");
       String pass2 = map.value("pass2");
       String birth = map.value("birth");
-
-      
-      // TODO: fix login integration with back-end
       
       String output = "Failed Sign-up: Please try again.";
-      if(checkSignUpValidity(user, pass1, pass2)) {
+      if(Accounts.checkSignUpValidity(user, pass1, pass2)) {
         try {
           new User(user, pass1); // other info too?
           output = "Successful Sign-up!";
@@ -230,42 +227,6 @@ public class Gui {
 
       return GSON.toJson(variables);
 
-    }
-
-    private boolean checkSignUpValidity(String user, String pass1, String pass2) {
-      // check if user already exists
-      // check if passwords are same
-      if(!userExists(user) && comparePasswords(pass1, pass2) &&
-          checkInputExists(user, pass1, pass2)) {
-        return true;
-      } else {
-        return false;
-      }
-      // informative error messages ??
-    }
-
-    private boolean checkInputExists(String user, String pass1, String pass2) {
-      if((user.length() > 0) && (pass1.length() > 0) && (pass2.length() > 0)) {
-        return true;
-      } else {
-        return false;
-      }
-    }
-
-    private boolean userExists(String user) {
-      if (!user.equals(user)) {
-        return true;
-      } else {
-        return false;
-      }
-    }
-
-    private boolean comparePasswords(String pass1, String pass2) {
-      if (pass1.equals(pass2)) {
-        return true;
-      } else {
-        return false;
-      }
     }
   }
   
@@ -285,9 +246,9 @@ public class Gui {
       
       System.out.println(username);
       
-      //User currUser = Accounts.getUser(username);
+      User currUser = Accounts.getUser(username);
       
-      List<Recipe> prevRecipes = new ArrayList<Recipe>(); //currUser.getPreviousRecipes();
+      List<Recipe> prevRecipes = currUser.getPreviousRecipes();
       
       Map<String,String> output = new HashMap<String, String>();
       
@@ -303,17 +264,6 @@ public class Gui {
       return GSON.toJson(variables);
 
     }
-    
-//  List<Recipe> output = new ArrayList<Recipe>(); // get Saved Recipes
-//  Recipe r = new Recipe("ID_HERE");
-//  output.add(r);
-//  Recipe r2 = new Recipe("SECOND_REC");
-//  output.add(r2);
-//        
-//  Map<String, Object> variables = ImmutableMap.of("title",
-//      "User", "output", output);
-//
-//  return GSON.toJson(variables);
     
   }
   

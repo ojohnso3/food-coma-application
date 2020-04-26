@@ -1,8 +1,10 @@
 const user = $("#user");
 const pass = $("#pass");
 const button = $("#sub");
+const login_head = $("#login_header");
 
 button.click(event => {
+    console.log("LOGGING IN HAHAH");
 
     const postParameters = {
       text1: user.val(), 
@@ -17,9 +19,9 @@ button.click(event => {
         document.getElementById("validity").innerHTML = output.output;
 
         if (output.output == "Valid username!") {
-            window.location.href = "/search";
+            // window.location.href = "/search";
 
-            // login_header.innerHTML = "User";
+            login_head.innerHTML = "CHANGED HERE HAHAHAHAH";
             // login_header.attr("href", "/user");
         }
     });
