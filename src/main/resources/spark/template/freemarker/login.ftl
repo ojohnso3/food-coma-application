@@ -8,12 +8,12 @@
         <h2> SIGN-IN </h2>
         <input id="log_user" class="u-full-width"
             type="text"
-            placeholder="username"
+            placeholder="Username"
             value=""></input>
         <br>    
         <input id="log_pass" class="u-full-width"
             type="text"
-            placeholder="password"
+            placeholder="Password"
             value=""></input>
         <input id="log_sub" type="submit" value="Sign In!">
         <br>

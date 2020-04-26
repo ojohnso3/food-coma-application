@@ -13,6 +13,7 @@ button.click(event => {
     };
 
     $.post("/signed", postParameters, response => {
+        console.log("MAKING REQUEST");
 
         const output = JSON.parse(response);
         document.getElementById("sign_validity").innerHTML = output.output;

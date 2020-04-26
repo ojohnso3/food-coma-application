@@ -220,14 +220,16 @@ public class Gui {
       
       String output = "Failed Sign-up: Please try again.";
       try {
+        System.out.println("CHECK " + Accounts.checkSignUpValidity(user, pass1, pass2));
         if(Accounts.checkSignUpValidity(user, pass1, pass2)) {
           new User(user, pass1);
           output = "Successful Sign-up!";
         }
       } catch (UserCreationException e1) {
-        e1.printStackTrace(); // TODO: error message
+        System.out.println(e1.getMessage());
+        output = e1.getMessage();
       } catch (AccountException e) {
-        e.printStackTrace(); // TODO: error message
+        System.out.println(e.getMessage());
       }
       
       Map<String, Object> variables = ImmutableMap.of("title",
