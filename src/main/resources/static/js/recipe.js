@@ -24,12 +24,12 @@ $(document).ready(() => {
 function getRecipes(params){
     return $.post("/recipe/recipeuri", params, response =>{
         let obj = JSON.parse(response);
-        document.getElementById("title").innerHTML = obj.title;
+        document.getElementById("title").innerHTML = obj.title + "<a href=\"http://www.facebook.com\"></a>";
+        // document.getElementById("title").href = obj.URL;
         $.each(obj.recipeList, function printRecipe(key, value){
-            console.log("HELLO???");
             console.log(key + ": " + value[0]);
             document.getElementById("recipes").innerHTML += " <h6 id=\"recipes\"><a href=\"/recipe/" + key + "\"> " + value[0] + " </a></h6>";
-
+            document.getElementById("foodImage").src = obj.image;
         })
         for(let i = 0; i < obj.ingredients.length; i ++){
             document.getElementById("ingredients").innerHTML += obj.ingredients[i] + "</br>";

@@ -43,8 +43,10 @@ public class Gui {
 //  private static NutrientInfo nutrientInfo;
   private static final Gson GSON = new Gson();
   public Map<String, Recipe> recipesMap;
+  public Set<String> clickedSet;
   public Gui() {
     recipesMap = new HashMap<String, Recipe>();
+    clickedSet  = new HashSet<String>();
 //    fieldParser = fp;
 //    nutrientInfo = nut;
   }
@@ -132,6 +134,7 @@ public class Gui {
         NutrientInfo.createNutrientsList();
         List<String> restrictions = new ArrayList<>();
         Map<String, String> paramsMap = new HashMap<>();
+        RecipeDatabase.loadDatabase("data/recipeDatabase.sqlite3");
         recipes = FieldParser.getRecipesFromQuery(query, restrictions, paramsMap);
         simpleRecipeList = new HashMap<String, String[]>();
         Pattern load = Pattern.compile("#recipe_(.+)");
@@ -153,11 +156,13 @@ public class Gui {
           simpleRecipeList.put(recipes[i].getLabel(), fields);
         }
       } catch (IOException e) {
-        System.out.println("IOException getting recipes from query");
+        System.out.println("IOException getting recipes from query: " + e.getMessage());
       } catch (InterruptedException e) {
         System.out.println("InterruptedException getting recipes from query");
       } catch (APIException | SQLException e) {
         System.out.println("API Exception getting recipes from query");
+      } catch (ClassNotFoundException e) {
+        System.out.println("Database not found when loading during search");
       }
 
       Map<String, Object> variables = ImmutableMap.of("recipes",recipes, "simpleRecipeList", simpleRecipeList);
@@ -180,15 +185,17 @@ public class Gui {
       String username = map.value("text1");
       String password = map.value("text2");
 
-      String output = "Failed Login: Please try again.";
-//      try {
-//        output = Accounts.checkLogin(username, password);
-//      } catch (AccountException e) {
-//        e.printStackTrace();
-//      }
+      boolean valid = false;
+      try {
+        valid = Accounts.checkLogin(username, password);
+      } catch (AccountException e) {
+        e.printStackTrace(); // TODO: error message
+      }
       
-      output = "Valid username!"; // Accounts.checkLogin(username, password);
-
+      String output = "Failed Login: Please try again.";
+      if (valid) {
+        output = "Valid Login!";
+      }
 
       Map<String, Object> variables = ImmutableMap.of("title",
           "Login", "output", output);
@@ -214,22 +221,22 @@ public class Gui {
       String user = map.value("user");
       String pass1 = map.value("pass1");
       String pass2 = map.value("pass2");
-      String birth = map.value("birth");
+//      String birth = map.value("birth");
       
       String output = "Failed Sign-up: Please try again.";
       try {
+        System.out.println("CHECK " + Accounts.checkSignUpValidity(user, pass1, pass2));
         if(Accounts.checkSignUpValidity(user, pass1, pass2)) {
-          try {
-            new User(user, pass1); // other info too?
-            output = "Successful Sign-up!";
-          } catch (AccountException e) {
-            e.printStackTrace(); // error
-          }
+          new User(user, pass1);
+          output = "Successful Sign-up!";
         }
-      } catch (UserCreationException e) {
-        e.printStackTrace();
+      } catch (UserCreationException e1) {
+        System.out.println(e1.getMessage());
+        output = e1.getMessage();
+      } catch (AccountException e) {
+        System.out.println(e.getMessage());
       }
-
+      
       Map<String, Object> variables = ImmutableMap.of("title",
           "Login", "output", output);
 
@@ -277,7 +284,7 @@ public class Gui {
   
 
   
-  private static class RecipeHandler implements Route{
+  private class RecipeHandler implements Route{
     private Gui gui;
     
     RecipeHandler(Gui g){
@@ -294,6 +301,8 @@ public class Gui {
         Matcher matchURL = load.matcher(url);
         if(matchURL.find()){
           recipeURI = matchURL.group(1);
+          String fullUri = "http://www.edamam.com/ontologies/edamam.owl#recipe_" + recipeURI;
+          clickedSet.add(fullUri);
           System.out.println("The Recipe URI is " + recipeURI);
         }
       }
@@ -314,6 +323,7 @@ public class Gui {
           System.out.println("InterruptedException in getting recipe from API");
         } catch (APIException e) {
           System.out.println("APIException in getting recipe from API");
+          System.out.println("Error message: " + e.getMessage());
         }
       }
       String actualName = currRecipe.getLabel();
@@ -336,7 +346,8 @@ public class Gui {
         fields[0] = currRec.getLabel();
         recipePageRecipes.put(currRec.getCompactUri(), fields);
       }
-      Map<String, Object> variables = ImmutableMap.of("recipeList", recipePageRecipes, "title", " " + actualName, "ingredients", ingredientsList);
+      System.out.println("Recipe URL is:" + currRecipe.getUrl());
+      Map<String, Object> variables = ImmutableMap.of("recipeList", recipePageRecipes, "title", " " + actualName, "ingredients", ingredientsList, "image", currRecipe.getImage(), "URL", currRecipe.getUrl());
       return GSON.toJson(variables);
 
     }

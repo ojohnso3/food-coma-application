@@ -8,12 +8,12 @@
         <h2> SIGN-IN </h2>
         <input id="log_user" class="u-full-width"
             type="text"
-            placeholder="username"
+            placeholder="Username"
             value=""></input>
         <br>    
         <input id="log_pass" class="u-full-width"
             type="text"
-            placeholder="password"
+            placeholder="Password"
             value=""></input>
         <input id="log_sub" type="submit" value="Sign In!">
         <br>
@@ -41,11 +41,11 @@
             placeholder="Confirm Password"
             value=""></input>
         <br>
-        <input id="bday" class="u-full-width"
+        <#--  <input id="bday" class="u-full-width"
             type="text"
             placeholder="Date of Birth"
             value=""></input>
-        <br>
+        <br>  -->
         <input id="sign_sub" type="submit" value="Sign Up!">
         <br>
         <p id="sign_validity" aria-live=polite></p>

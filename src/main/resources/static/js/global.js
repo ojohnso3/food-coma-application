@@ -5,11 +5,12 @@ function alertCookie() {
 }
 
 function checkLoginStatus() {
+    console.log("BEFore cookie " + document.cookie);
     if (document.cookie != "") {
+        console.log("COOOKIE");
         var login_header = document.getElementById("login_header");
         login_header.innerHTML = "User";
         login_header.setAttribute("href", "/user");
-
         // login_header.attr("href", "/user");
         // document.getElementById("login_header").innerHTML = "User";
         // document.getElementById("login_header").attr("href", "/user");
