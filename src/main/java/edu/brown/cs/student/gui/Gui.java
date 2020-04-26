@@ -42,8 +42,10 @@ public class Gui {
 //  private static NutrientInfo nutrientInfo;
   private static final Gson GSON = new Gson();
   public Map<String, Recipe> recipesMap;
+  public Set<String> clickedSet;
   public Gui() {
     recipesMap = new HashMap<String, Recipe>();
+    clickedSet  = new HashSet<String>();
 //    fieldParser = fp;
 //    nutrientInfo = nut;
   }
@@ -131,6 +133,7 @@ public class Gui {
         NutrientInfo.createNutrientsList();
         List<String> restrictions = new ArrayList<>();
         Map<String, String> paramsMap = new HashMap<>();
+        RecipeDatabase.loadDatabase("data/recipeDatabase.sqlite3");
         recipes = FieldParser.getRecipesFromQuery(query, restrictions, paramsMap);
         simpleRecipeList = new HashMap<String, String[]>();
         Pattern load = Pattern.compile("#recipe_(.+)");
@@ -152,11 +155,13 @@ public class Gui {
           simpleRecipeList.put(recipes[i].getLabel(), fields);
         }
       } catch (IOException e) {
-        System.out.println("IOException getting recipes from query");
+        System.out.println("IOException getting recipes from query: " + e.getMessage());
       } catch (InterruptedException e) {
         System.out.println("InterruptedException getting recipes from query");
       } catch (APIException | SQLException e) {
         System.out.println("API Exception getting recipes from query");
+      } catch (ClassNotFoundException e) {
+        System.out.println("Database not found when loading during search");
       }
 
       Map<String, Object> variables = ImmutableMap.of("recipes",recipes, "simpleRecipeList", simpleRecipeList);
@@ -319,7 +324,7 @@ public class Gui {
   
 
   
-  private static class RecipeHandler implements Route{
+  private class RecipeHandler implements Route{
     private Gui gui;
     
     RecipeHandler(Gui g){
@@ -336,6 +341,8 @@ public class Gui {
         Matcher matchURL = load.matcher(url);
         if(matchURL.find()){
           recipeURI = matchURL.group(1);
+          String fullUri = "http://www.edamam.com/ontologies/edamam.owl#recipe_" + recipeURI;
+          clickedSet.add(fullUri);
           System.out.println("The Recipe URI is " + recipeURI);
         }
       }
@@ -356,6 +363,7 @@ public class Gui {
           System.out.println("InterruptedException in getting recipe from API");
         } catch (APIException e) {
           System.out.println("APIException in getting recipe from API");
+          System.out.println("Error message: " + e.getMessage());
         }
       }
       String actualName = currRecipe.getLabel();
@@ -378,7 +386,8 @@ public class Gui {
         fields[0] = currRec.getLabel();
         recipePageRecipes.put(currRec.getCompactUri(), fields);
       }
-      Map<String, Object> variables = ImmutableMap.of("recipeList", recipePageRecipes, "title", " " + actualName, "ingredients", ingredientsList);
+      System.out.println("Recipe URL is:" + currRecipe.getUrl());
+      Map<String, Object> variables = ImmutableMap.of("recipeList", recipePageRecipes, "title", " " + actualName, "ingredients", ingredientsList, "image", currRecipe.getImage(), "URL", currRecipe.getUrl());
       return GSON.toJson(variables);
 
     }
