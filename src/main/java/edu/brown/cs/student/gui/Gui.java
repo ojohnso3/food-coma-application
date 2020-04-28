@@ -22,6 +22,7 @@ import edu.brown.cs.student.login.AccountException;
 import edu.brown.cs.student.login.Accounts;
 import edu.brown.cs.student.login.User;
 import edu.brown.cs.student.login.UserCreationException;
+import edu.brown.cs.student.recommendation.Recommender;
 import freemarker.template.Configuration;
 import spark.ExceptionHandler;
 import spark.ModelAndView;
@@ -88,6 +89,7 @@ public class Gui {
     Spark.post("/logged", new LoginHandler());
     Spark.post("/signed", new SignupHandler());
     Spark.post("/saved", new SavedHandler());
+    Spark.post("/survey_post", new SurveyHandler());
     Spark.post("/recipe/recipeuri", new RecipeHandler(this));
 
     // OLD Routes
@@ -127,7 +129,11 @@ public class Gui {
     public String handle(Request req, Response res){
       QueryParamsMap qm = req.queryMap();
       String query = qm.value("prefs");
-      System.out.println("THE QUERY WAS : " + query);
+      String username = qm.value("username");
+      
+      User currUser = Accounts.getUser(username);
+      // Recommender recommender = currUser.getRecommender(); // use object!
+      
       Recipe[] recipes = new Recipe[0];
       Map<String, String[]> simpleRecipeList = new HashMap<String, String[]>();
       try {
@@ -168,6 +174,54 @@ public class Gui {
       Map<String, Object> variables = ImmutableMap.of("recipes",recipes, "simpleRecipeList", simpleRecipeList);
       return GSON.toJson(variables);
     }
+  }
+  
+  /**
+   * Handles the functionality of printing out the result of the Stars algorithms.
+   *
+   */
+  private static class SurveyHandler implements Route {
+    private Map<String, String> nutrientsMap;
+    
+    SurveyHandler() {
+      NutrientInfo.createNutrientsList();
+      nutrientsMap = NutrientInfo.getNutrientsMap();
+    }
+
+    @Override
+    public String handle(Request req, Response res) {
+      QueryParamsMap map = req.queryMap();
+      String username = map.value("username");
+            
+      User currUser = Accounts.getUser(username);
+      
+      List<String> nutrients = new ArrayList<String>();
+      
+      // TODO: CHOOSE NUTRIENTS & ADD FUNCTIONALITY TO THOSE
+
+      for (String nutrient: nutrientsMap.keySet()) {
+        String currNu = map.value(nutrient);
+        if (currNu.equals("true")) {
+          nutrients.add(nutrientsMap.get(nutrient));
+        }
+      }
+      
+      String output = "Invalid Survey: Please try again.";
+      
+      if (nutrients.size() > 2) {
+        currUser.setNutrients(nutrients);
+        output = "Valid Survey!";
+      } else {
+        output = "Invalid Survey: Please select at least three nutrients.";
+      }
+      
+      Map<String, Object> variables = ImmutableMap.of("title",
+          "Login", "output", output);
+
+      return GSON.toJson(variables);
+
+    }
+
   }
 
   /**
@@ -294,7 +348,11 @@ public class Gui {
     public String handle(Request req, Response res){
       QueryParamsMap qm = req.queryMap();
       String url = qm.value("url");
-      System.out.println("The URL is " + url);
+      String username = qm.value("username");
+      
+      User currUser = Accounts.getUser(username);
+      // Recommender recommender = currUser.getRecommender(); // use object!
+      
       Pattern load = Pattern.compile("localhost:.+\\/recipe\\/(.+)");
       String recipeURI = null;
       if(url != null){
@@ -347,7 +405,8 @@ public class Gui {
         recipePageRecipes.put(currRec.getCompactUri(), fields);
       }
       System.out.println("Recipe URL is:" + currRecipe.getUrl());
-      Map<String, Object> variables = ImmutableMap.of("recipeList", recipePageRecipes, "title", " " + actualName, "ingredients", ingredientsList, "image", currRecipe.getImage(), "URL", currRecipe.getUrl());
+      Map<String, Object> variables = ImmutableMap.of("recipeList", recipePageRecipes, "title", " " + actualName, 
+          "ingredients", ingredientsList, "image", currRecipe.getImage(), "URL", currRecipe.getUrl());
       return GSON.toJson(variables);
 
     }

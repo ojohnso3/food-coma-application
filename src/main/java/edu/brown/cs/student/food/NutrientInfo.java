@@ -9,22 +9,32 @@ public final class NutrientInfo {
    * nutrients - hashmap of nutrient codes to an array of nutrient names and units.
    */
   public static Map<String, String[]> nutrients;
+  public static Map<String, String> allNutrients;
 
+  public static Map<String, String> getNutrientsMap() {
+    return allNutrients;
+  }
+  
   /**
    * This function sets up the hashmap of nutrients that recipes include.
    * This hashmap will be used in recipe parsing.
    */
   public static void createNutrientsList() {
     nutrients = new HashMap<String, String[]>();
+    
+    allNutrients = new HashMap<String, String>();
+    
     String[] calcium = new String[2];
     calcium[0] = "Calcium";
     calcium[1] = "mg";
     nutrients.put("CA", calcium);
+    allNutrients.put("Calcium", "CA");
 
     String[] carbs = new String[2];
     calcium[0] = "Carbs";
     carbs[1] = "g";
     nutrients.put("CHOCDF", carbs);
+    allNutrients.put("Carbs", "CHOCDF");
 
     String[] cholesterol = new String[2];
     cholesterol[0] = "Cholesterol";
@@ -95,6 +105,7 @@ public final class NutrientInfo {
     energy[0] = "Energy";
     energy[1] = "kcal";
     nutrients.put("ENERC_KCAL", energy);
+    allNutrients.put("Energy", "ENERC_KCAL");
 
     String[] niacin = new String[2];
     niacin[0] = "Niacin (B3)";

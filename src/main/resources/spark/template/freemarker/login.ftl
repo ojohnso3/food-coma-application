@@ -9,12 +9,12 @@
         <input id="log_user" class="u-full-width"
             type="text"
             placeholder="Username"
-            value=""></input>
+            value="">
         <br>    
         <input id="log_pass" class="u-full-width"
             type="text"
             placeholder="Password"
-            value=""></input>
+            value="">
         <input id="log_sub" type="submit" value="Sign In!">
         <br>
         <p id="log_validity" aria-live=polite></p>
@@ -29,12 +29,12 @@
         <input id="user" class="u-full-width"
             type="text"
             placeholder="Username"
-            value=""></input>
+            value="">
         <br>    
         <input id="pass" class="u-full-width"
             type="text"
             placeholder="Password"
-            value=""></input>
+            value="">
         <br>
         <input id="pass2" class="u-full-width"
             type="text"
