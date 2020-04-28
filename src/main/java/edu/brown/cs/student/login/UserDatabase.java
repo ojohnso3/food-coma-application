@@ -215,10 +215,6 @@ public final class UserDatabase {
    */
   public static void testDatabaseFile() {
     try {
-//      Recipe r = new Recipe("http%3A%2F%2Fwww.edamam.com%2Fontologies%2Fedamam.owl%23recipe_9b5945e03f05acbf9d69625138385408");
-//      User user = new User("ugh");
-//      user.addToPreviousRecipes(r);
-//      insertUser(user);
       User user = getUser("ugh");
       System.out.println(user.getUsername());
       System.out.println(user.getDietaryRestrictions());
