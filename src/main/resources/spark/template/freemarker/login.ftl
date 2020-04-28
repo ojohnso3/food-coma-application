@@ -12,7 +12,7 @@
             value=""></input>
         <br>    
         <input id="log_pass" class="u-full-width"
-            type="text"
+            type="password"
             placeholder="Password"
             value=""></input>
         <input id="log_sub" type="submit" value="Sign In!">
@@ -32,12 +32,12 @@
             value=""></input>
         <br>    
         <input id="pass" class="u-full-width"
-            type="text"
+            type="password"
             placeholder="Password"
             value=""></input>
         <br>
         <input id="pass2" class="u-full-width"
-            type="text"
+            type="password"
             placeholder="Confirm Password"
             value=""></input>
         <br>

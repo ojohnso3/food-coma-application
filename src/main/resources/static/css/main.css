@@ -218,6 +218,53 @@ h6 {
 .column {
     float: left;
     width: 70%;
+    color:grey;
+}
+
+.shoppingBag{
+    width:70%;
+    height:70%;
+}
+
+.shopBag{
+    float:left;
+    color:black;
+    text-color:black;
+    max-width: 50%;
+
+}
+
+.recipeText{
+    color:black;
+    position:relative;
+    text-align:center;
+    float:left;
+    width:100px;
+    font-size:18px;
+    left: 200px;
+    top: 80px;
+}
+
+.bagContainer{
+    position:relative;
+    text-align:center;
+}
+
+.rollingDonut{
+    position:relative;
+    animation-name: rollDonut;
+    animation-duration: 5s;
+}
+
+@keyframes rollDonut {
+    from{
+        left:-50%;
+        transform: rotate(0deg);
+    }to{
+        transform:rotate(720deg);
+        left:100%;
+    }
+
 }
 
 .column2{
@@ -240,6 +287,7 @@ h6 {
     content: "";
     display: table;
     clear: both;
+}
 
 .signContainer {
     display: flex;
@@ -262,3 +310,4 @@ h6 {
     flex-direction: column;
     justify-content: center;
 }
+
