@@ -28,7 +28,7 @@ public class Recommender {
 
   public Recommender(User user) {
     this.user = user;
-    this.dim = user.getNutrients().size();
+    this.dim = 3; //user.getNutrients().size();
   }
 
   /**
