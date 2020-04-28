@@ -24,7 +24,7 @@ public class KDTreeTest {
 
   private KDTree<BaseKDNode> kdt;
 
-  private static final double D = 1e-3;
+  private static final double D = 1e-6;
 
   @Before
   public void setUp() {
@@ -198,4 +198,38 @@ public class KDTreeTest {
     assertTrue(kdt.boxSearch(List.of(List.of(-2., 2.), List.of(-2., 2.))).containsAll(ls));
     assertTrue(ls.containsAll(kdt.boxSearch(List.of(List.of(-2., 2.), List.of(-2., 2.)))));
   }
+
+//  @Test
+//  public void normalizeTest() {
+//    BaseKDNode n0 = new BaseKDNode("0", List.of(0.));
+//    BaseKDNode n1 = new BaseKDNode("1", List.of(1.));
+//    BaseKDNode n2 = new BaseKDNode("2", List.of(2.));
+//    BaseKDNode n_5 = new BaseKDNode("3", List.of(.5));
+//    BaseKDNode n5 = new BaseKDNode("4", List.of(5.));
+//    BaseKDNode n10 = new BaseKDNode("5", List.of(10.));
+//    BaseKDNode neg1 = new BaseKDNode("6", List.of(-1.));
+//    KDTree<BaseKDNode> tree = null;
+//    try {
+//      tree = new KDTree<>(1);
+//      List<BaseKDNode> ls = new ArrayList<>();
+//      ls.add(n0);
+//      ls.add(n1);
+//      ls.add(n2);
+//      ls.add(n_5);
+//      ls.add(n5);
+//      ls.add(n10);
+//      ls.add(neg1);
+//      tree.normalize(ls);
+//    } catch (KDTreeException e) {
+//      return;
+//    }
+//
+//    assertEquals(0., n0.getCoords().get(0), D);
+//    assertEquals(.1, n1.getCoords().get(0), D);
+//    assertEquals(.2, n2.getCoords().get(0), D);
+//    assertEquals(.05, n_5.getCoords().get(0), D);
+//    assertEquals(.5, n5.getCoords().get(0), D);
+//    assertEquals(1., n10.getCoords().get(0), D);
+//    assertEquals(-.1, neg1.getCoords().get(0), D);
+//  }
 }
