@@ -265,7 +265,7 @@ public class KDTreeTest {
       ls.add(n_5);
       ls.add(n5);
       ls.add(nten);
-      tree.normalize(ls);
+      tree.normalizeAxes(ls);
     } catch (KDTreeException e) {
       System.err.println(e.getMessage());
     }
@@ -290,7 +290,7 @@ public class KDTreeTest {
     ls2.add(n10);
     ls2.add(n11);
     ls2.add(neg11);
-    kdt.normalize(ls2);
+    kdt.normalizeAxes(ls2);
 
     double min = -1.;
     double max = 1.;

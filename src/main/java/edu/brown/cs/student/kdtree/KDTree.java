@@ -81,6 +81,31 @@ public class KDTree<N extends KDNode<N>> {
   }
 
   /**
+   * gives a list of all the nodes.
+   */
+  public List<N> getNodes() {
+    List<N> nodes = new ArrayList<>();
+    if (this.root != null) {
+      nodes.add(this.root);
+    }
+
+    getNodesRec(this.root.getLeftChild(), nodes);
+    getNodesRec(this.root.getRightChild(), nodes);
+    return nodes;
+  }
+  /*
+   * recursive component.
+   */
+  private void getNodesRec(N curr, List<N> nodes) {
+    if (curr == null) {
+      return;
+    }
+    nodes.add(curr);
+    getNodesRec(curr.getLeftChild(), nodes);
+    getNodesRec(curr.getRightChild(), nodes);
+  }
+
+  /**
    * Calculates Euclidean distance between two nodes.
    *
    * @param node1 - node
@@ -430,10 +455,17 @@ public class KDTree<N extends KDNode<N>> {
   }
 
   /**
+   * Extra function to normalize the coordinates of a list of nodes.
+   */
+  public void normalizeAxes() {
+    normalizeAxes(getNodes());
+  }
+
+  /**
    * Function to normalize the coordinates of a list of nodes.
    * @param nodes - all nodes to be normalized.
    */
-  public void normalize(List<N> nodes) {
+  public void normalizeAxes(List<N> nodes) {
     // create lists, maxes, mins for each considered nutrient
     List<List<Double>> axisCoordsLists = new ArrayList<>();
     List<Double> maxes = new ArrayList<>();
