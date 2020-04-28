@@ -3,6 +3,7 @@ package edu.brown.cs.student.login;
 import edu.brown.cs.student.database.APIException;
 import edu.brown.cs.student.database.RecipeDatabase;
 import edu.brown.cs.student.food.Ingredient;
+
 import edu.brown.cs.student.food.Recipe;
 import edu.brown.cs.student.recommendation.Recommender;
 
@@ -40,6 +41,10 @@ public class User {
     this.previousRecipes = new ArrayList<>();
     this.dietaryRestrictions = new ArrayList<>();
     Accounts.writeLoginInfo(user, password); // write the login info to our csv
+    // TODO: initialize nutrients list with results from survey
+
+    // TODO: create a personal recommender
+    this.recommender = new Recommender(this);
   }
   // testing constructor
   public User(String username, String password, String path) throws AccountException {
@@ -48,6 +53,8 @@ public class User {
     this.dietaryRestrictions = new ArrayList<>();
     // write the login info to any csv (for testing)
     Accounts.writeLoginInfo(username, password, path);
+    // create a personal recommender
+    this.recommender = new Recommender(this);
   }
 
   /**
@@ -143,5 +150,13 @@ public class User {
    */
   public void setNutrients(List<String> n) {
     this.nutrients = n;
+  }
+
+  /**
+   * getter.
+   * @return rec
+   */
+  public Recommender getRecommender() {
+    return recommender;
   }
 }
