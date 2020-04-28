@@ -5,9 +5,7 @@ $(document).ready(() => {
 
 const skip = $("#survey_skip");
 const submit = $("#survey_submit");
-
-
-
+const feedback = $("#last_q");
 
 skip.click(event => {
     window.location.href = "/user";
@@ -34,6 +32,7 @@ submit.click(event => {
 
     const postParameters = {
         username: getCookie("username"),
+        feedback: feedback.val(),
         Calcium: calcium,
         Carbs: carbs,
         Energy: energy

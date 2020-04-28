@@ -192,6 +192,10 @@ public class Gui {
     public String handle(Request req, Response res) {
       QueryParamsMap map = req.queryMap();
       String username = map.value("username");
+      String feedback = map.value("feedback");
+      
+      System.out.println("USER " + username);
+      System.out.println("FEEDBACK " + feedback);
             
       User currUser = Accounts.getUser(username);
       
@@ -313,11 +317,11 @@ public class Gui {
       QueryParamsMap map = req.queryMap();
       String username = map.value("user");
       
-      System.out.println(username);
+//      System.out.println(username);
       
       User currUser = Accounts.getUser(username);
       
-//      List<Recipe> prevRecipes = currUser.getPreviousRecipes();
+      List<Recipe> prevRecipes = currUser.getPreviousRecipes();
       
       Map<String,String> output = new HashMap<String, String>();
       
