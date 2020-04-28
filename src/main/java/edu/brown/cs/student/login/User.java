@@ -1,8 +1,12 @@
 package edu.brown.cs.student.login;
 
+import edu.brown.cs.student.database.APIException;
+import edu.brown.cs.student.database.RecipeDatabase;
 import edu.brown.cs.student.food.Ingredient;
 import edu.brown.cs.student.food.Recipe;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,6 +83,15 @@ public class User {
     return previousRecipes;
   }
 
+  /**
+   * Function to add to the previousRecipes field given the uri of a Recipe.
+   * @param uri - the uri of the Recipe to add to previousRecpes.
+   */
+  public void addToPreviousRecipesByURI(String uri) throws InterruptedException, SQLException,
+      APIException, IOException {
+    Recipe r = RecipeDatabase.getRecipeFromURI(uri);
+    this.previousRecipes.add(r);
+  }
 
   /**
    * Function to add to the previousRecipes field.
