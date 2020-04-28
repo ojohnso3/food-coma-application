@@ -38,7 +38,7 @@ public class User {
     // TODO: initialize nutrients list with results from survey
 
     // TODO: create a personal recommender
-//    this.rec = new Recommender(this);
+    this.rec = new Recommender(this);
   }
   // testing constructor
   public User(String username, String password, String path) throws AccountException {
@@ -48,7 +48,7 @@ public class User {
     // write the login info to any csv (for testing)
     Accounts.writeLoginInfo(username, password, path);
     // create a personal recommender
-//    this.rec = new Recommender(this);
+    this.rec = new Recommender(this);
   }
 
   /**
