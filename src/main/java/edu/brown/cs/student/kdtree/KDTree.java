@@ -463,13 +463,14 @@ public class KDTree<N extends KDNode<N>> {
 
     // normalize all nutrients for each type
     int sz = axisCoordsLists.size();
-    for (int i = 0; i < sz; i++) {
+    for (int i = 0; i < sz; i++) { // dim
       List<Double> axisCoords = axisCoordsLists.get(i);
-      for (int j = 0; j < this.dim; j++) {
+      int sz2 = axisCoords.size();
+      for (int j = 0; j < sz2; j++) { //nodes size
         double n = axisCoords.get(j);
-        double normalized = (n - mins.get(j)) / (maxes.get(j) - mins.get(j));
+        double normalized = (n - mins.get(i)) / (maxes.get(i) - mins.get(i));
         // replace coords with their new values
-        nodes.get(i).getCoords().set(j, normalized);
+        nodes.get(j).getCoords().set(i, normalized);
       }
     }
   }
