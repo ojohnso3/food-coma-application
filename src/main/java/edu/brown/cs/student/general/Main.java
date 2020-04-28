@@ -78,8 +78,8 @@ public final class Main {
       try {
         RecipeDatabase.loadDatabase("data/recipeDatabase.sqlite3");
         NutrientInfo.createNutrientsList();
-        UserDatabase.loadDatabase("data/userDatabase.sqlite3");
-        UserDatabase.testDatabaseFile();
+//        UserDatabase.loadDatabase("data/userDatabase.sqlite3");
+//        UserDatabase.testDatabaseFile();
       } catch (FileNotFoundException e) {
         e.printStackTrace();
       } catch (ClassNotFoundException e) {

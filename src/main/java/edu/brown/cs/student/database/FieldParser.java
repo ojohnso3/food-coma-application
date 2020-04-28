@@ -78,7 +78,10 @@ public final class FieldParser {
    * @param json - the JSON text of the recipe.
    * @return - the array of Recipe objects containing information from the JSON.
    */
-  private static Recipe[] parseRecipeJSON(String json) {
+  private static Recipe[] parseRecipeJSON(String json) throws APIException {
+    if (json.equals("[")) {
+      throw new APIException("No recipe(s) found.");
+    }
     System.out.println("got here");
     GsonBuilder gsonBuilder = new GsonBuilder();
     JsonDeserializer<Recipe> recipeDeserializer = new RecipeDeserializer();
@@ -127,6 +130,7 @@ public final class FieldParser {
     if (response.statusCode() != 200) {
       throw new APIException("API returned error " + response.statusCode());
     }
+    System.out.println(response.body());
     Recipe[] recipeArray = parseRecipeJSON(response.body());
     if (recipeArray == null) {
       throw new APIException("API returned malformed JSON");
@@ -206,7 +210,7 @@ public final class FieldParser {
   /**
    * Test Gson function.
    */
-  public static Recipe parseJSON() {
+  public static Recipe parseJSON() throws APIException {
     String json = apiCall();
     Recipe[] recipes = parseRecipeJSON(json);
     for (int i = 0; i < recipes.length; i++) {
