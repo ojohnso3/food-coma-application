@@ -186,22 +186,23 @@ public final class UserDatabase {
       throw new AccountException("Cannot retrieve user: user does not exist");
     }
 
-    PreparedStatement prep = conn.prepareStatement("SELECT * FROM restriction WHERE username = ?");
+    PreparedStatement prep = conn.prepareStatement("SELECT health_label FROM restriction WHERE username = ?");
     prep.setString(1, username);
     ResultSet restrictionSet = prep.executeQuery();
     List<String> dietaryRestrictions = setToList(restrictionSet);
 
-    prep = conn.prepareStatement("SELECT * FROM nutrient WHERE username = ?");
+    prep = conn.prepareStatement("SELECT code FROM nutrient WHERE username = ?");
     prep.setString(1, username);
     ResultSet nutrientSet = prep.executeQuery();
     List<String> nutrients = setToList(nutrientSet);
 
-    prep = conn.prepareStatement("SELECT * FROM prev_recipe WHERE username = ?");
+    prep = conn.prepareStatement("SELECT recipe_uri FROM prev_recipe WHERE username = ?");
     prep.setString(1, username);
     ResultSet recipeSet = prep.executeQuery();
 
     List<Recipe> prevRecipes = new ArrayList<>();
     while (recipeSet.next()) {
+      System.out.println("RECIPE: " + recipeSet.getString(1));
       Recipe r = RecipeDatabase.getRecipeFromURI(recipeSet.getString(1));
       prevRecipes.add(r);
     }
@@ -214,12 +215,10 @@ public final class UserDatabase {
    */
   public static void testDatabaseFile() {
     try {
-      Recipe r = new Recipe("http%3A%2F%2Fwww.edamam.com%2Fontologies%2Fedamam.owl%23recipe_9b5945e03f05acbf9d69625138385408");
-      User user = new User("ugh");
-      user.addToPreviousRecipes(r);
-      insertUser(user);
-      System.out.println(getUser("ugh").getUsername());
-      System.out.println("USER: " + user.getUsername());
+      User user = getUser("ugh");
+      System.out.println(user.getUsername());
+      System.out.println(user.getDietaryRestrictions());
+      System.out.println(user.getPreviousRecipes().get(0).getUri());
     } catch (SQLException e) {
       e.printStackTrace();
     } catch (IOException e) {

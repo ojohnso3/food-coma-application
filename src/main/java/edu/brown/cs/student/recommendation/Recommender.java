@@ -28,7 +28,7 @@ public class Recommender {
 
   public Recommender(User user) {
     this.user = user;
-    this.dim = user.getNutrients().size();
+    this.dim = 3; //user.getNutrients().size();
   }
 
   /**
@@ -42,7 +42,7 @@ public class Recommender {
         this.user.getDietaryRestrictions(), paramsMap));
     // normalize the coordinates of every node
     List<RecipeNode> nodes = convertRecipesToRecipeNodes(recipesList);
-    this.recipeTree.normalize(nodes);
+    this.recipeTree.normalizeAxes(nodes);
 //    normalize((nodes));
     // also normalize user history?
     this.recipeTree.initializeTree(nodes);

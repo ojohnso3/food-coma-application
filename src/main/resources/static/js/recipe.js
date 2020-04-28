@@ -5,7 +5,8 @@ console.log("hello??");
 $(document).ready(() => {
     console.log("second print line!");
     let postParams = {
-        url: window.location.href
+        url: window.location.href,
+        username: getCookie("username")
     };
     console.log(postParams.url);
     getRecipes(postParams);
@@ -24,7 +25,7 @@ $(document).ready(() => {
 function getRecipes(params){
     return $.post("/recipe/recipeuri", params, response =>{
         let obj = JSON.parse(response);
-        document.getElementById("title").innerHTML = " <h1><a href=\"" + obj.URL + "\"> " + obj.title + " </a></h1>";
+        document.getElementById("title").innerHTML = " <h1><a target=_blank href=\"" + obj.URL + "\"> " + obj.title + " </a></h1>";
         console.log(obj.URL);
         document.getElementById("title").href = obj.URL;
         $.each(obj.recipeList, function printRecipe(key, value){

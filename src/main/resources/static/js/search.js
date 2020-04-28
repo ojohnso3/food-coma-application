@@ -24,6 +24,7 @@ button.click(event => {
     const postParameters = {
         //TODO: get the text inside the input box
         prefs: preferences.val(),
+        username: getCookie("username")
     };
     //TODO: make a post request to the url to handle this request you set in your Main.java
 
