@@ -22,7 +22,7 @@ public class User {
   private List<Recipe> previousRecipes;
   private List<String> dietaryRestrictions;
   private List<String> nutrients;
-  private Recommender rec;
+  private Recommender recommender;
 
   /**
    * Constructors for adding a new User.
@@ -38,7 +38,7 @@ public class User {
     // TODO: initialize nutrients list with results from survey
 
     // TODO: create a personal recommender
-    this.rec = new Recommender(this);
+    this.recommender = new Recommender(this);
   }
   // testing constructor
   public User(String username, String password, String path) throws AccountException {
@@ -48,7 +48,7 @@ public class User {
     // write the login info to any csv (for testing)
     Accounts.writeLoginInfo(username, password, path);
     // create a personal recommender
-    this.rec = new Recommender(this);
+    this.recommender = new Recommender(this);
   }
 
   /**
@@ -141,7 +141,7 @@ public class User {
    * getter.
    * @return rec
    */
-  public Recommender getRec() {
-    return rec;
+  public Recommender getRecommender() {
+    return recommender;
   }
 }
