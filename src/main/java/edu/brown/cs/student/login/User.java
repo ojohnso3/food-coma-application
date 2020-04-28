@@ -4,6 +4,7 @@ import edu.brown.cs.student.database.APIException;
 import edu.brown.cs.student.database.RecipeDatabase;
 import edu.brown.cs.student.food.Ingredient;
 import edu.brown.cs.student.food.Recipe;
+import edu.brown.cs.student.recommendation.Recommender;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -26,6 +27,7 @@ public class User {
   private List<Recipe> previousRecipes;
   private List<String> dietaryRestrictions;
   private List<String> nutrients;
+  private Recommender recommender;
 
   /**
    * Constructors for adding a new User.
