@@ -2,8 +2,6 @@
 
 <h1>New User Survey!</h1>
 
-<img src="https://tinyurl.com/y86lsznl" id="foodCOMA">
-
 <div class="skip">
     <p>If you don't want to fill out the survey, press the button below. <br>
     NOTE: this survey is for recipe recommendation purposes only, and we 
@@ -15,7 +13,7 @@
 <br>
 <br>
 <div class="survey">
-    <h3>Please input your dietary preferences below:</h3>
+    <h3>Please check the nutrients you would like to focus on:</h3>
 
     <div id="left_survey">
         <label class="check">Calcium
@@ -26,56 +24,56 @@
             <input id="carbs" type="checkbox">
             <span class="checkmark"></span>
         </label>
-        <label class="check">Cholestorol
-            <input type="checkbox">
+        <label class="check">Cholesterol
+            <input id="cholesterol" type="checkbox">
             <span class="checkmark"></span>
         </label>
         <label class="check">Monounsaturated
-            <input type="checkbox">
+            <input id="monounsaturated" type="checkbox">
             <span class="checkmark"></span>
         </label> 
             <label class="check">Polyunsaturated
-            <input type="checkbox">
+            <input id="polyunsaturated" type="checkbox">
             <span class="checkmark"></span>
         </label>
         <label class="check">Sugars
-            <input type="checkbox">
+            <input id="sugars" type="checkbox">
             <span class="checkmark"></span>
         </label>
         <label class="check">Fat
-            <input type="checkbox">
+            <input id="fat" type="checkbox">
             <span class="checkmark"></span>
         </label>
         <label class="check">Trans
-            <input type="checkbox">
+            <input id="trans" type="checkbox">
             <span class="checkmark"></span>
         </label> 
             <label class="check">Iron
-            <input type="checkbox">
+            <input id="iron" type="checkbox">
             <span class="checkmark"></span>
         </label>
         <label class="check">Fiber
-            <input type="checkbox">
+            <input id="fiber" type="checkbox">
             <span class="checkmark"></span>
         </label>
-        <label class="check">Folate (Equivalent)
+        <#--  <label class="check">Folate (Equivalent)
             <input type="checkbox">
             <span class="checkmark"></span>
-        </label>
+        </label>  -->
         <label class="check">Potassium
-            <input type="checkbox">
+            <input id="potassium" type="checkbox">
             <span class="checkmark"></span>
         </label> 
             <label class="check">Magnesium
-            <input type="checkbox">
+            <input id="magnesium" type="checkbox">
             <span class="checkmark"></span>
         </label>
         <label class="check">Sodium
-            <input type="checkbox">
+            <input id="sodium" type="checkbox">
             <span class="checkmark"></span>
         </label>
         <label class="check">Vitamin B6
-            <input type="checkbox">
+            <input id="vitaminB6" type="checkbox">
             <span class="checkmark"></span>
         </label>
     </div>
@@ -85,62 +83,62 @@
             <input id="energy" type="checkbox">
             <span class="checkmark"></span>
         </label>
-        <label class="check">Niacin (B3)
+        <#--  <label class="check">Niacin (B3)
             <input type="checkbox">
             <span class="checkmark"></span>
-        </label>
-        <label class="check">Phosphorus
+        </label>  -->
+        <#--  <label class="check">Phosphorus
             <input type="checkbox">
             <span class="checkmark"></span>
-        </label>
+        </label>  -->
         <label class="check">Protein
-            <input type="checkbox">
+            <input id="protein" type="checkbox">
             <span class="checkmark"></span>
         </label> 
-            <label class="check">Riboflavin (B2)
+        <#--  <label class="check">Riboflavin (B2)
             <input type="checkbox">
             <span class="checkmark"></span>
-        </label>
+        </label>  -->
         <label class="check">Sugars, added
-            <input type="checkbox">
+            <input id="sugarsadded" type="checkbox">
             <span class="checkmark"></span>
         </label>
         <label class="check">Saturated
-            <input type="checkbox">
+            <input id="saturated" type="checkbox">
             <span class="checkmark"></span>
         </label>
         <label class="check">Vitamin E
-            <input type="checkbox">
+            <input id="vitaminE" type="checkbox">
             <span class="checkmark"></span>
         </label> 
             <label class="check">Vitamin A
-            <input type="checkbox">
+            <input id="vitaminA" type="checkbox">
             <span class="checkmark"></span>
         </label>
         <label class="check">Vitamin B12
-            <input type="checkbox">
+            <input id="vitaminB12" type="checkbox">
             <span class="checkmark"></span>
         </label>
-        <label class="check">Folate (food)
+        <#--  <label class="check">Folate (food)
             <input type="checkbox">
             <span class="checkmark"></span>
-        </label>
+        </label>  -->
         <label class="check">Vitamin C
-            <input type="checkbox">
+            <input id="vitaminC" type="checkbox">
             <span class="checkmark"></span>
         </label> 
             <label class="check">Vitamin D
-            <input type="checkbox">
+            <input id="vitaminD" type="checkbox">
             <span class="checkmark"></span>
         </label>
         <label class="check">Vitamin K
-            <input type="checkbox">
+            <input id="vitaminK" type="checkbox">
             <span class="checkmark"></span>
         </label>
-        <label class="check">Thiamin (B1)
+        <#--  <label class="check">Thiamin (B1)
             <input type="checkbox">
             <span class="checkmark"></span>
-        </label>
+        </label>  -->
     </div>
     <br>
     <p>If you have any feedback or questions for the creators of foodCOMA,
@@ -160,10 +158,9 @@
     <br>
 </div>
 
-
 <p id="validity" aria-live=polite></p>
 
-
+<img src="https://tinyurl.com/y86lsznl" id="foodCOMA">
 
 <script src="js/survey.js"></script>
 

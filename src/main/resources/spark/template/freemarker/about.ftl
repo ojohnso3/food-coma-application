@@ -1,11 +1,9 @@
 <#assign content>
 
+
+<img src="css/foodCOMA.png" alt="HELP">
+
 <p>About this company, blah blah blah.</p>
-
-<#--  <div id="fc_logo">
-    <p>HI</p>
-</div>  -->
-
 
 <div class="container">
   <div class="art">
@@ -26,7 +24,6 @@
   </div>
 </div> 
 <br>
-<img src="css/foodCOMA.png" alt="HELP">
 
 
 </#assign>
