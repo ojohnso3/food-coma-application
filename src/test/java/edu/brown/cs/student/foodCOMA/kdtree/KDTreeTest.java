@@ -57,7 +57,7 @@ public class KDTreeTest {
 
     try {
       kdt = new KDTree<>(2);
-    } catch (KDTreeException e) {
+    } catch (KDTreeException ignored) {
     }
 
     try {
@@ -155,7 +155,7 @@ public class KDTreeTest {
   @Test
   public void nearestSearchTest() throws KDTreeException {
     setUp();
-    List<BaseKDNode> ls = new ArrayList<BaseKDNode>();
+    List<BaseKDNode> ls = new ArrayList<>();
     ls.add(n00);
     ls.add(n01);
     ls.add(n10);
@@ -164,8 +164,12 @@ public class KDTreeTest {
 
     kdt.initializeTree(ls);
 
-//    assertTrue(kdt.nearestSearch(n00, 0).isEmpty());
-//    assertTrue(kdt.nearestSearch(null, -123).isEmpty());
+    assertTrue(kdt.nearestSearch(n00, 0).isEmpty());
+    try {
+      assertTrue(kdt.nearestSearch(null, -123).isEmpty());
+    } catch (KDTreeException e) {
+      assertEquals("ERROR: must search for a non-negative amount of neighbors", e.getMessage());
+    }
     // search by target doesn't self choose
     assertEquals(kdt.nearestSearch(neg11, 1).get(0), n00);
     assertEquals(kdt.nearestSearch(new BaseKDNode("-1", List.of(-1., -1.)), 1).get(0), neg11);
@@ -191,11 +195,14 @@ public class KDTreeTest {
     ls.add(n10);
     ls.add(n11);
     ls.add(neg11);
-
     kdt.initializeTree(ls);
 
-    assertTrue(kdt.radiusSearch(n00, 0).isEmpty());
-//    assertTrue(kdt.radiusSearch(null, -123).isEmpty());
+    assertEquals(kdt.radiusSearch(new BaseKDNode("-1", List.of(0., 0.)), 0).get(0), n00);
+    try {
+      assertTrue(kdt.radiusSearch(null, -123).isEmpty());
+    } catch (KDTreeException e) {
+      assertEquals("ERROR: must search in a non-negative radius", e.getMessage());
+    }
     // search by target doesn't self choose
     assertEquals(kdt.radiusSearch(neg11, 1.5).get(0), n00);
     assertEquals(kdt.radiusSearch(new BaseKDNode("-1", List.of(-1., -1.)), 1).get(0), neg11);
