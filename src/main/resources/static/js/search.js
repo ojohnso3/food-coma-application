@@ -16,6 +16,11 @@ $(document).ready(function(){
 });
 
 button.click(event => {
+    var donut = document.getElementById("rollingDonut");
+    var newDonut = donut.cloneNode(true);
+    donut.parentNode.replaceChild(newDonut, donut);
+    document.getElementById("rollingDonut").src = "https://i.postimg.cc/c4XzqfF1/image.png";
+
     const postParameters = {
         //TODO: get the text inside the input box
         prefs: preferences.val(),
@@ -27,6 +32,7 @@ button.click(event => {
         console.log("We made a post request!");
         const output = JSON.parse(response);
         // document.getElementById("#preferences").innerHTML = "";
+        let i = 0;
         $.each(output.simpleRecipeList, function printRecipe(index, key){
             // document.getElementById("container").innerHTML +=
             console.log("Inside each statement simpleRecipeList");
@@ -38,6 +44,15 @@ button.click(event => {
             // document.getElementById("container").innerHTML += "Name: " + index + " URL: " + key[0];
             // document.getElementById("container").innerHTML += "HELLO?";
             document.getElementById("container").innerHTML += "<h6><a href = \"recipe/" + key[1] + "\">" + index + " </a></h6>";
+
+            console.log("shoppingBag" + i);
+            var shoppingBagHtml = "<a class=\"recipeText\" href = \"recipe/" + key[1] + "\">" + index + " </a>"
+            shoppingBagHtml.toString();
+            // document.getElementById("shoppingBag" + i).innerHTML += shoppingBagHtml;
+            document.getElementById("shoppingBag" + i).innerHTML += "<a class=\"recipeText\" href = \"recipe/" + key[1] + "\">" + index + " </a>";
+            // document.getElementById("shoppingBag" + i).innerHTML += "<a class=\"recipeText\" href = \"recipe/" + key[1] + "\">" + "hello??????????????????" + " </a>";
+
+            i++;
             // document.getElementById("container").innerHTML += " <h6><a href=\"/recipe/" + key[1] + "\"> " + index + " </a></h6>";
 
         });
