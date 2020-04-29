@@ -91,6 +91,9 @@ public class Gui {
     Spark.post("/saved", new SavedHandler());
     Spark.post("/survey_post", new SurveyHandler());
     Spark.post("/recipe/recipeuri", new RecipeHandler(this));
+    Spark.post("/toggleNutrient", new NutrientHandler());
+
+
 
     // OLD Routes
 //    Spark.get("/results", new SubmitHandler(), freeMarker);
@@ -201,8 +204,6 @@ public class Gui {
       
       List<String> nutrients = new ArrayList<String>();
       
-      // TODO: CHOOSE NUTRIENTS & ADD FUNCTIONALITY TO THOSE
-
       for (String nutrient: nutrientsMap.keySet()) {
         String currNu = map.value(nutrient);
         if (currNu.equals("true")) {
@@ -325,12 +326,14 @@ public class Gui {
       
       Map<String,String> output = new HashMap<String, String>();
       
-//      for (Recipe r : prevRecipes) {
-//        output.put(r.getUri(), r.getLabel());
-//      }
-      output.put("URI1", "NAME1");
-      output.put("URI2", "NAME2");
-      output.put("URI3", "NAME3");
+      for (Recipe r : prevRecipes) {
+        output.put(r.getUri(), r.getLabel());
+      }
+      
+      System.out.println("MAP SIZE " + output.size());
+//      output.put("URI1", "NAME1");
+//      output.put("URI2", "NAME2");
+//      output.put("URI3", "NAME3");
 
       Map<String, Object> variables = ImmutableMap.of("title", "User", "output", output);
   
@@ -415,90 +418,17 @@ public class Gui {
 
     }
   }
-  
-  
-  
-  
-  
-  
-  
-//  /**
-//   * Handle requests to the front page of our Stars website.
-//   *
-//   */
-//  private static class SearchHandler implements TemplateViewRoute {
-//    @Override
-//    public ModelAndView handle(Request req, Response res) {
-//
-//      List<Recipe> recipeList = new ArrayList<Recipe>();
-//      Map<String, Object> variables = ImmutableMap.of("title",
-//          "Recipe Search", "recipeList", recipeList);
-//      return new ModelAndView(variables, "search.ftl");
-//    }
-//  }
-  
-//try {
-//NutrientInfo.createNutrientsList();
-//recipes = FieldParser.getRecipesFromQuery(query);
-//simpleRecipeList = new HashMap<String, String[]>();
-//Pattern load = Pattern.compile("#recipe_(.+)");
-//
-//for(int i = 0; i < recipes.length; i++){
-//  System.out.println(recipes[i].getLabel());
-//  String[] fields = new String[2];
-//  fields[0] = recipes[i].getUrl();
-//  fields[1] = recipes[i].getUri();
-//  Matcher matchUri = load.matcher(recipes[i].getUri());
-//  if(matchUri.find()){
-//    fields[1] = matchUri.group(1);
-//    System.out.println("URI Found: " + matchUri.group(1));
-//  } else {
-//    fields[1] = "";
-//  }
-//  simpleRecipeList.put(recipes[i].getLabel(), fields);
-//}
-//} catch (IOException e) {
-//System.out.println("IOException getting recipes from query");
-//} catch (InterruptedException e) {
-//System.out.println("InterruptedException getting recipes from query");
-//} catch (APIException e) {
-//System.out.println("API Exception getting recipes from query");
-//}
 
+  private class NutrientHandler implements Route{
 
-//  /**
-//   * Handles the functionality of printing out the result of the Stars algorithms.
-//   *
-//   */
-//  private static class SubmitHandler implements TemplateViewRoute {
-//
-//    SubmitHandler() {
-//    }
-//
-//    @Override
-//    public ModelAndView handle(Request req, Response res) {
-//      QueryParamsMap qm = req.queryMap();
-//      String textFromTextField = qm.value("text");
-//      List<Recipe> recipeList = new ArrayList<Recipe>();
-//      String valFromMap = qm.value("x1");
-//
-//
-//      Recipe tempRecp = new Recipe("9999");
-//      Recipe tempRecpO = new Recipe("9999");
-//      Recipe tempRecpT = new Recipe("9990");
-//
-//      recipeList.add(tempRecp);
-//      recipeList.add(tempRecpO);
-//      recipeList.add(tempRecpT);
-//
-//      // replace default with new String output
-//      Map<String, Object> variables = ImmutableMap.of("title", "foodCOMA Query", "recipeList", recipeList);
-//      return new ModelAndView(variables, "search.ftl");
-//    }
-//  }
-
-
-
+    @Override
+    public String handle(Request request, Response response) throws Exception {
+      QueryParamsMap qm = request.queryMap();
+      String nutrient = qm.value("nut");
+      System.out.println(nutrient);
+      return "Success";
+    }
+  }
   /**
    * Display an error page when an exception occurs in the server.
    *
