@@ -201,8 +201,6 @@ public class Gui {
       
       List<String> nutrients = new ArrayList<String>();
       
-      // TODO: CHOOSE NUTRIENTS & ADD FUNCTIONALITY TO THOSE
-
       for (String nutrient: nutrientsMap.keySet()) {
         String currNu = map.value(nutrient);
         if (currNu.equals("true")) {
@@ -325,12 +323,14 @@ public class Gui {
       
       Map<String,String> output = new HashMap<String, String>();
       
-//      for (Recipe r : prevRecipes) {
-//        output.put(r.getUri(), r.getLabel());
-//      }
-      output.put("URI1", "NAME1");
-      output.put("URI2", "NAME2");
-      output.put("URI3", "NAME3");
+      for (Recipe r : prevRecipes) {
+        output.put(r.getUri(), r.getLabel());
+      }
+      
+      System.out.println("MAP SIZE " + output.size());
+//      output.put("URI1", "NAME1");
+//      output.put("URI2", "NAME2");
+//      output.put("URI3", "NAME3");
 
       Map<String, Object> variables = ImmutableMap.of("title", "User", "output", output);
   

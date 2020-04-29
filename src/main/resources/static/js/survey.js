@@ -13,29 +13,58 @@ skip.click(event => {
 
 submit.click(event => {
 
-    // const calcium = $('#calcium:checked').val();
-    // const carbs = $('#carbs:checked').val();
-    // const cholestorol = $('#cholestorol:checked').val();
-    // const monounsaturated = $('#monounsaturated:checked').val();
-    // const polysaturated = $('#polysaturated:checked').val();
-    // const sugar = $('#sugar:checked').val();
-    // const fat = $('#fat:checked').val();
-    // const trans = $('#trans:checked').val();
-    // const iron = $('#iron:checked').val();
-    // const fiber = $('#fiber:checked').val();
-    // const folate = $('#folate:checked').val();
-
-    // const saturated = $('#saturated:checked').val();
     const calcium = $("#calcium").is(":checked");
     const carbs = $("#carbs").is(":checked");
+    const cholesterol = $("#cholesterol").is(":checked");
+    const monounsaturated = $("#monounsaturated").is(":checked");
+    const polyunsaturated = $("#polyunsaturated").is(":checked");
+    const sugars = $("#sugars").is(":checked");
+    const fat = $("#fat").is(":checked");
+    const trans = $("#trans").is(":checked");
+    const iron = $("#iron").is(":checked");
+    const fiber = $("#fiber").is(":checked");
+    const potassium = $("#potassium").is(":checked");
+    const magnesium = $("#magnesium").is(":checked");
+    const sodium = $("#sodium").is(":checked");
+    const vitaminB6 = $("#vitaminB6").is(":checked");
     const energy = $("#energy").is(":checked");
+    const protein = $("#protein").is(":checked");
+    const sugarsadded = $("#sugarsadded").is(":checked");
+    const saturated = $("#saturated").is(":checked");
+    const vitaminE = $("#vitaminE").is(":checked");
+    const vitaminA = $("#vitaminA").is(":checked");
+    const vitaminB12 = $("#vitaminB12").is(":checked");
+    const vitaminC = $("#vitaminC").is(":checked");
+    const vitaminD = $("#vitaminD").is(":checked");
+    const vitaminK = $("#vitaminK").is(":checked");
 
     const postParameters = {
         username: getCookie("username"),
         feedback: feedback.val(),
         Calcium: calcium,
         Carbs: carbs,
-        Energy: energy
+        Cholesterol: cholesterol,
+        Monounsaturated: monounsaturated,
+        Polyunsaturated: polyunsaturated,
+        Sugars: sugars,
+        Fat: fat,
+        Trans: trans,
+        Iron: iron,
+        Fiber: fiber,
+        Potassium: potassium,
+        Magnesium: magnesium,
+        Sodium: sodium,
+        VitaminB6: vitaminB6,
+        Energy: energy,
+        Protein: protein,
+        Sugarsadded: sugarsadded,
+        Saturated: saturated,
+        VitaminE: vitaminE,
+        VitaminA: vitaminA,
+        VitaminB12: vitaminB12,
+        VitaminC: vitaminC,
+        VitaminD: vitaminD,
+        VitaminK: vitaminK
     };
 
     $.post("/survey_post", postParameters, response => {
