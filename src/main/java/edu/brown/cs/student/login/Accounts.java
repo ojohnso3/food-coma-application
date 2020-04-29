@@ -35,7 +35,7 @@ public class Accounts {
 
   /**
    * adds previously added users to the map; to be called at the start of running application.
-   * @throws AccountException on file failure
+   * @throws AccountException on file UserDatabase failure
    */
   public static void initializeMap() throws AccountException {
     initializeMap(LOGIN_INFO_PATH);
@@ -49,11 +49,11 @@ public class Accounts {
       while (loginInfo.hasNext()) {
         String[] login = loginInfo.nextLine().split(",");
         String username = login[0];
-        User user = new User(username);
+        User user = UserDatabase.getUser(username);
         nameUserMap.putIfAbsent(username, user);
       }
-    } catch (FileNotFoundException e) {
-      throw new AccountException(e.getMessage(), e);
+    } catch (Exception e) {
+      throw new AccountException(e.getMessage());
     }
   }
 
