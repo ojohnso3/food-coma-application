@@ -25,6 +25,19 @@
   <br>
   <button type="submit" id="submit">Submit</button>
   <br>
+
+  <div class="dropdown">
+    <button class="dropbtn">Select Nutrient Preferences</button>
+    <div class="dropdown-content">
+      <input type="checkbox" id="nut1" value="" onclick="toggleNutrition('nut1')">
+      <label for="nut1">Nutrient 1</label><br>
+      <input type="checkbox" id="nut2" value="">
+      <label for="nut2">Nutrient 2</label><br>
+      <input type="checkbox" id="nut3" value="">
+      <label for="nut3">Nutrient 3</label><br>
+    </div>
+  </div>
+
 </div>
 
 
