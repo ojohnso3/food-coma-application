@@ -29,8 +29,13 @@ public class Accounts {
    * @param username - name
    * @return the User, null if they don't exist
    */
-  public static User getUser(String username) {
-    return nameUserMap.get(username);
+  public static User getUser(String username) { //throws AccountException
+    User user = nameUserMap.get(username);
+//    if (user == null) {
+//      throw new AccountException("no user found with name " + username);
+//    } else {
+      return user;
+//    }
   }
 
   protected static void addUserMap(User user) throws AccountException {
