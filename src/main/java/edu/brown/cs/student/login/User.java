@@ -45,6 +45,8 @@ public class User {
 
     // TODO: create a personal recommender
     this.recommender = new Recommender(this);
+    // add to user map
+    Accounts.addUserMap(this);
   }
   // testing constructor
   public User(String username, String password, String path) throws AccountException {
