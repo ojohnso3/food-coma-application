@@ -214,6 +214,8 @@ public class Gui {
       String output = "Invalid Survey: Please try again.";
       
       if (nutrients.size() > 2) {
+        System.out.println(nutrients);
+        System.out.println(currUser);
         currUser.setNutrients(nutrients);
         output = "Valid Survey!";
       } else {
