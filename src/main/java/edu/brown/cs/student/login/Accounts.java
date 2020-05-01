@@ -33,6 +33,15 @@ public class Accounts {
     return nameUserMap.get(username);
   }
 
+  protected static void addUserMap(User user) throws AccountException {
+    if (nameUserMap == null) {
+      throw new AccountException("map not initialized");
+    } else {
+      nameUserMap.put(user.getUsername(), user);
+    }
+
+  }
+
   /**
    * adds previously added users to the map; to be called at the start of running application.
    * @throws AccountException on file UserDatabase failure

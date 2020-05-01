@@ -114,3 +114,6 @@ _On your first meeting with your mentor TA, you should plan dates for at least t
 
 ## How to Build and Run
 _A necessary part of any README!_
+
+Accreditations: We use a BCrypt solution in this project from: 
+https://howtodoinjava.com/security/how-to-generate-secure-password-hash-md5-sha-pbkdf2-bcrypt-examples/
