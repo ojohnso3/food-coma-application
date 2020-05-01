@@ -45,9 +45,11 @@ public class Gui {
   private static final Gson GSON = new Gson();
   public Map<String, Recipe> recipesMap;
   public Set<String> clickedSet;
+  private Set<String> nutrients;
   public Gui() {
     recipesMap = new HashMap<String, Recipe>();
     clickedSet  = new HashSet<String>();
+    nutrients = new HashSet<String>();
 //    fieldParser = fp;
 //    nutrientInfo = nut;
   }
@@ -131,23 +133,46 @@ public class Gui {
     @Override
     public String handle(Request req, Response res){
       QueryParamsMap qm = req.queryMap();
+      HashMap<String, String> healthInfo = new HashMap<String, String>();
+      HashMap<String, String> dietInfo = new HashMap<String, String>();
       String query = qm.value("prefs");
       String username = qm.value("username");
-      
+      String balanced = qm.value("bal");
+      healthInfo.put("vegan",qm.value("vg"));
+      healthInfo.put("vegetarian",qm.value("veg"));
+      healthInfo.put("sugar-conscious",qm.value("sug"));
+      healthInfo.put("peanut-free",qm.value("pf"));
+      healthInfo.put("tree-nut-free",qm.value("tf"));
+      healthInfo.put("alcohol-free",qm.value("af"));
+
+      Set<String> healthKeys = healthInfo.keySet();
+      Set<String> dietKeys = dietInfo.keySet();
+
+
+      for(String dietKey : dietKeys){
+
+      }
+
       User currUser = Accounts.getUser(username);
       // Recommender recommender = currUser.getRecommender(); // use object!
-      
       Recipe[] recipes = new Recipe[0];
       Map<String, String[]> simpleRecipeList = new HashMap<String, String[]>();
       try {
         NutrientInfo.createNutrientsList();
         List<String> restrictions = new ArrayList<>();
+        for(String healthKey : healthKeys){
+          if(healthInfo.get(healthKey).equals(true)){
+            restrictions.add(healthKey);
+          }
+        }
+        //Usage "balanced", "true"
         Map<String, String> paramsMap = new HashMap<>();
+
         RecipeDatabase.loadDatabase("data/recipeDatabase.sqlite3");
         recipes = FieldParser.getRecipesFromQuery(query, restrictions, paramsMap);
         simpleRecipeList = new HashMap<String, String[]>();
         Pattern load = Pattern.compile("#recipe_(.+)");
-
+        recipesMap.clear();
         for(int i = 0; i < recipes.length; i++){
           recipesMap.put(recipes[i].getUri(), recipes[i]);
           System.out.println(recipes[i].getLabel());
@@ -177,6 +202,7 @@ public class Gui {
       Map<String, Object> variables = ImmutableMap.of("recipes",recipes, "simpleRecipeList", simpleRecipeList);
       return GSON.toJson(variables);
     }
+
   }
   
   /**
@@ -422,11 +448,16 @@ public class Gui {
   private class NutrientHandler implements Route{
 
     @Override
-    public String handle(Request request, Response response) throws Exception {
+    public Object handle(Request request, Response response) throws Exception {
       QueryParamsMap qm = request.queryMap();
       String nutrient = qm.value("nut");
+      if(nutrients.contains(nutrient)){
+        nutrients.remove(nutrient);
+      } else {
+        nutrients.add(nutrient);
+      }
       System.out.println(nutrient);
-      return "Success";
+      return null;
     }
   }
   /**

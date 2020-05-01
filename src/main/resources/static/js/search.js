@@ -16,6 +16,18 @@ $(document).ready(function(){
 });
 
 button.click(event => {
+    const balanced = $("#balanced").is(":checked");
+    const lowfat = $("#low-fat").is(":checked");
+    const lowcarb = $("#low-carb").is(":checked");
+    const highprotein = $("#high-protein").is(":checked");
+    const vegan = $("#vegan").is(":checked");
+    const vegetarian = $("#vegetarian").is(":checked");
+    const sugarconscious = $("#sugar-conscious").is(":checked");
+    const peanutfree = $("#peanut-free").is(":checked");
+    const treenutfree = $("#tree-nut-free").is(":checked");
+    const alcoholfree = $("#alcohol-free").is(":checked");
+
+
     var donut = document.getElementById("rollingDonut");
     var newDonut = donut.cloneNode(true);
     donut.parentNode.replaceChild(newDonut, donut);
@@ -24,7 +36,13 @@ button.click(event => {
     const postParameters = {
         //TODO: get the text inside the input box
         prefs: preferences.val(),
-        username: getCookie("username")
+        username: getCookie("username"),
+        vg: vegan,
+        veg: vegetarian,
+        sug: sugarconscious,
+        pf: peanutfree,
+        tf: treenutfree,
+        af: alcoholfree
     };
     //TODO: make a post request to the url to handle this request you set in your Main.java
 
@@ -88,13 +106,9 @@ button.click(event => {
 
 function toggleNutrition(nutrient){
     console.log("NUTRIENT CALLED: " + nutrient);
-    const postParameters = {
-        nut: nutrient
-    };
-
-    $.post("/toggleNutrient", postParameters, response =>{
-        const output = JSON.parse(response);
-        console.log(output);
-    });
+    // const postParameters = {
+    //     nut: nutrient
+    // };
+    // $.post("/toggleNutrient", postParameters);
 }
 
