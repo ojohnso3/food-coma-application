@@ -153,8 +153,6 @@ public class Gui {
 
       }
 
-
-
       User currUser = Accounts.getUser(username);
       Map<String, String[]> paramsMap = new HashMap<>();
       // Recommender recommender = currUser.getRecommender(); // use object!

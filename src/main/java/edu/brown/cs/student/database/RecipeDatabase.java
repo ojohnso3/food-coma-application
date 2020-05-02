@@ -93,6 +93,12 @@ public final class RecipeDatabase {
       + "total_nutrient_val REAL,"
       + "FOREIGN KEY (recipe_uri) REFERENCES recipe(uri));";
     stat.executeUpdate(sql);
+
+    sql = "CREATE TABLE IF NOT EXISTS nutrient_info("
+            + "query TEXT,"
+            + "recipe_uri TEXT,"
+            + "FOREIGN KEY (recipe_uri) REFERENCES recipe(uri));";
+    stat.executeUpdate(sql);
   }
 
 
@@ -131,6 +137,10 @@ public final class RecipeDatabase {
         prep.executeUpdate();
       }
     }
+  }
+
+  public static void insertQuery(String query, String[] uriList){
+
   }
 
   /**
@@ -257,6 +267,18 @@ public final class RecipeDatabase {
   public static boolean checkRecipeInDatabase(String uri) throws SQLException {
     PreparedStatement prep = conn.prepareStatement("SELECT * FROM recipe WHERE uri = ?");
     prep.setString(1, uri);
+    ResultSet recipeSet = prep.executeQuery();
+    return recipeSet.next();
+  }
+
+  /**
+   * Function to check if the given query is already in the database.
+   * @param query - String uri of a recipe.
+   * @return - boolean representing whether the given uri is in the database.
+   */
+  public static boolean checkQueryInDatabase(String query) throws SQLException {
+    PreparedStatement prep = conn.prepareStatement("SELECT * FROM recipe WHERE query = ?"); //////////////// recipe?
+    prep.setString(1, query);
     ResultSet recipeSet = prep.executeQuery();
     return recipeSet.next();
   }
