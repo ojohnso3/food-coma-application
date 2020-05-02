@@ -234,7 +234,6 @@ public final class RecipeDatabase {
   private static Recipe createRecipe(ResultSet recipeSet, ResultSet ingredientSet,
                                      ResultSet nutrientSet, String uri) throws
       SQLException, InterruptedException, IOException, APIException {
-    System.out.println("IN DATABASE? " + recipeSet.next());
     if (recipeSet.next()) {
       String label = recipeSet.getString("label");
       String image = recipeSet.getString("image");
@@ -344,18 +343,20 @@ public final class RecipeDatabase {
    * Database test function.
    */
   public static void testDatabaseFile() {
-//    try {
-//      Recipe r = getRecipeFromURI("http%3A%2F%2Fwww.edamam.com%2Fontologies%2Fedamam.owl%23recipe_9b5945e03f05acbf9d69625138385408");
+    try {
+      String[] uriList = new String[1];
+      uriList[0] = "http://www.edamam.com/ontologies/edamam.owl#recipe_b79327d05b8e5b838ad6cfd9576b30b6";
+      insertQuery("x", uriList);
 //      System.out.println("URI: " + r.getUri());
-//    } catch (SQLException e) {
-//      e.printStackTrace();
+    } catch (SQLException e) {
+      e.printStackTrace();
 //    } catch (InterruptedException e) {
 //      e.printStackTrace();
 //    } catch (APIException e) {
 //      e.printStackTrace();
 //    } catch (IOException e) {
 //      e.printStackTrace();
-//    }
+    }
   }
 }
 

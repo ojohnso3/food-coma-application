@@ -82,7 +82,8 @@ public final class Main {
       try {
         NutrientInfo.createNutrientsList();
         RecipeDatabase.loadDatabase("data/recipeDatabase.sqlite3");
-        Recipe r = RecipeDatabase.getRecipeFromURI("1234");
+        RecipeDatabase.testDatabaseFile();
+//        Recipe r = RecipeDatabase.getRecipeFromURI("1234");
 //        UserDatabase.loadDatabase("data/userDatabase.sqlite3");
 //        UserDatabase.testDatabaseFile();
       } catch (FileNotFoundException e) {
@@ -91,10 +92,10 @@ public final class Main {
         e.printStackTrace();
       } catch (SQLException e) {
         e.printStackTrace();
-      } catch (InterruptedException e) {
-        e.printStackTrace();
-      } catch (APIException e) {
-        e.printStackTrace();
+//      } catch (InterruptedException e) {
+////        e.printStackTrace();
+////      } catch (APIException e) {
+////        e.printStackTrace();
       } catch (IOException e) {
         e.printStackTrace();
       }

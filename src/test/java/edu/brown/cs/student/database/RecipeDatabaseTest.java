@@ -32,26 +32,26 @@ public class RecipeDatabaseTest {
    */
   @Test
   public void testAll() {
-//    List<Ingredient> ingredients = new ArrayList<>();
-//    Ingredient i = new Ingredient("text", 0.0);
-//    ingredients.add(i);
-//
-//    Map<String, double[]> nutrients = new HashMap<>();
-//    double[] testVal = new double[2];
-//    testVal[0] = 1.0;
-//    testVal[1] = 2.0;
-//    nutrients.put("CA", testVal);
-//
-//    Random rand = new Random();
-//    String uri = rand.nextInt(1000) + "";
-//    this.r2 = new Recipe(uri, "label", "image", "source", "url", 0.0,
-//        0.0, 0.0, 0.0, ingredients, nutrients);
-//
-//    int num = rand.nextInt(1000);
-//    this.r3 = new Recipe("http://edamam.api.com/Ontology#" + num, "label", "image" , "source",
-//        "url", 0.0, 0.0, 0.0, 0.0, ingredients, nutrients);
-//
-//    this.testInsertRecipe(uri, num);
+    List<Ingredient> ingredients = new ArrayList<>();
+    Ingredient i = new Ingredient("text", 0.0);
+    ingredients.add(i);
+
+    Map<String, double[]> nutrients = new HashMap<>();
+    double[] testVal = new double[2];
+    testVal[0] = 1.0;
+    testVal[1] = 2.0;
+    nutrients.put("CA", testVal);
+
+    Random rand = new Random();
+    String uri = rand.nextInt(1000) + "";
+    this.r2 = new Recipe(uri, "label", "image", "source", "url", 0.0,
+        0.0, 0.0, 0.0, ingredients, nutrients);
+
+    int num = rand.nextInt(1000);
+    this.r3 = new Recipe("http://edamam.api.com/Ontology#" + num, "label", "image" , "source",
+        "url", 0.0, 0.0, 0.0, 0.0, ingredients, nutrients);
+
+    this.testInsertRecipe(uri, num);
 //    this.testGetRecipeFromUri();
 //    this.testQueryAlreadyInDb();
   }
@@ -110,6 +110,7 @@ public class RecipeDatabaseTest {
       NutrientInfo.createNutrientsList();
 
       System.out.println("URI 2 " + r2.getUri());
+      System.out.println("IN DATABASE?" + RecipeDatabase.checkRecipeInDatabase(r2.getUri()));
       //Test with regular uris.
       Recipe r2Test = RecipeDatabase.getRecipeFromURI(r2.getUri());
       Recipe r3Test = RecipeDatabase.getRecipeFromURI(r3.getUri());
