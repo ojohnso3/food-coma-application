@@ -24,8 +24,8 @@ import static org.junit.Assert.*;
  * API queries per minute.
  */
 public class FieldParserTest {
-  @Test
-  public void testGetRecipesFromQuery() {
+//  @Test
+//  public void testGetRecipesFromQuery() {
 //    NutrientInfo.createNutrientsList();
 //    try {
 //      RecipeDatabase.loadDatabase("data/recipeDatabase.sqlite3");
@@ -53,8 +53,8 @@ public class FieldParserTest {
 //    } catch (InterruptedException | APIException e) {
 //      e.printStackTrace();
 //    }
-
-    //Testing queries with dietary restrictions and multiple params.
+//
+////    Testing queries with dietary restrictions and multiple params.
 //    try {
 //      List<String> dietaryRestrictions = new ArrayList<>();
 //      dietaryRestrictions.add("vegan");
@@ -77,7 +77,7 @@ public class FieldParserTest {
 //    } catch (APIException e) {
 //      e.printStackTrace();
 //    }
-
+//
 //    //Testing queries with dietary restrictions and multiple params.
 //    try {
 //      List<String> dietaryRestrictions = new ArrayList<>();
@@ -101,7 +101,7 @@ public class FieldParserTest {
 //    } catch (APIException e) {
 //      e.printStackTrace();
 //    }
-
+//
 //    //Testing queries with spaces.
 //    try {
 //      List<String> dietaryRestrictions = new ArrayList<>();
@@ -121,5 +121,5 @@ public class FieldParserTest {
 //    } catch (APIException e) {
 //      e.printStackTrace();
 //    }
-  }
+//  }
 }

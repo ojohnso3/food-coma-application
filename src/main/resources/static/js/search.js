@@ -64,10 +64,10 @@ button.click(event => {
             document.getElementById("container").innerHTML += "<h6><a href = \"recipe/" + key[1] + "\">" + index + " </a></h6>";
 
             console.log("shoppingBag" + i);
-            var shoppingBagHtml = "<a class=\"recipeText\" href = \"recipe/" + key[1] + "\">" + index + " </a>"
-            shoppingBagHtml.toString();
+            var fullShopBagHtml = "<img src=\"https://i.postimg.cc/FK87G91b/bag-161440-1280.png\" class=\"shoppingBag\"><a class=\"recipeText\" href = \"recipe/" + key[1] + "\">" + index + " </a>"
+
             // document.getElementById("shoppingBag" + i).innerHTML += shoppingBagHtml;
-            document.getElementById("shoppingBag" + i).innerHTML += "<a class=\"recipeText\" href = \"recipe/" + key[1] + "\">" + index + " </a>";
+            document.getElementById("shoppingBag" + i).innerHTML = fullShopBagHtml.toString();
             // document.getElementById("shoppingBag" + i).innerHTML += "<a class=\"recipeText\" href = \"recipe/" + key[1] + "\">" + "hello??????????????????" + " </a>";
 
             i++;

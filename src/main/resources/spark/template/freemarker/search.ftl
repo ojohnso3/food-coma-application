@@ -57,16 +57,16 @@
   <p class="output">
   <h3>List of recipes:</h3>
   <div class="bagContainer">
-  <div class="shopBag" id="shoppingBag0"><img src="https://i.postimg.cc/FK87G91b/bag-161440-1280.png" class="shoppingBag"></div>
-  <div class="shopBag" id="shoppingBag1"><img src="https://i.postimg.cc/FK87G91b/bag-161440-1280.png" class="shoppingBag"></div>
-  <div class="shopBag" id="shoppingBag2"><img src="https://i.postimg.cc/FK87G91b/bag-161440-1280.png" class="shoppingBag"></div>
-  <div class="shopBag" id="shoppingBag3"><img src="https://i.postimg.cc/FK87G91b/bag-161440-1280.png" class="shoppingBag"></div>
-  <div class="shopBag" id="shoppingBag4"><img src="https://i.postimg.cc/FK87G91b/bag-161440-1280.png" class="shoppingBag"></div>
-  <div class="shopBag" id="shoppingBag5"><img src="https://i.postimg.cc/FK87G91b/bag-161440-1280.png" class="shoppingBag"></div>
-  <div class="shopBag" id="shoppingBag6"><img src="https://i.postimg.cc/FK87G91b/bag-161440-1280.png" class="shoppingBag"></div>
-  <div class="shopBag" id="shoppingBag7"><img src="https://i.postimg.cc/FK87G91b/bag-161440-1280.png" class="shoppingBag"></div>
-  <div class="shopBag" id="shoppingBag8"><img src="https://i.postimg.cc/FK87G91b/bag-161440-1280.png" class="shoppingBag"></div>
-  <div class="shopBag" id="shoppingBag9"><img src="https://i.postimg.cc/FK87G91b/bag-161440-1280.png" class="shoppingBag"></div>
+    <div class="shopBag" id="shoppingBag0"><img class="shoppingBag"></div>
+    <div class="shopBag" id="shoppingBag1"><img class="shoppingBag"></div>
+    <div class="shopBag" id="shoppingBag2"><img class="shoppingBag"></div>
+    <div class="shopBag" id="shoppingBag3"><img class="shoppingBag"></div>
+    <div class="shopBag" id="shoppingBag4"><img class="shoppingBag"></div>
+    <div class="shopBag" id="shoppingBag5"><img class="shoppingBag"></div>
+    <div class="shopBag" id="shoppingBag6"><img class="shoppingBag"></div>
+    <div class="shopBag" id="shoppingBag7"><img class="shoppingBag"></div>
+    <div class="shopBag" id="shoppingBag8"><img class="shoppingBag"></div>
+    <div class="shopBag" id="shoppingBag9"><img class="shoppingBag"></div>
   </div>
 
 
