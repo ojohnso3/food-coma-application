@@ -173,6 +173,11 @@ public class Gui {
 
         RecipeDatabase.loadDatabase("data/recipeDatabase.sqlite3");
         recipes = FieldParser.getRecipesFromQuery(query, restrictions, paramsMap);
+        String[] recipesForDb = new String[recipes.length];
+        for(int i = 0; i < recipes.length; i++){
+          recipesForDb[i] = recipes[i].getUri();
+        }
+        RecipeDatabase.insertQuery(query, recipesForDb);
         simpleRecipeList = new HashMap<String, String[]>();
         Pattern load = Pattern.compile("#recipe_(.+)");
         recipesMap.clear();
@@ -391,7 +396,7 @@ public class Gui {
       String username = qm.value("username");
       
       User currUser = Accounts.getUser(username);
-      Recommender recommender = currUser.getRecommender(); 
+      Recommender recommender = currUser.getRecommender();
       
       // TODO: use Recommender object below!
       
