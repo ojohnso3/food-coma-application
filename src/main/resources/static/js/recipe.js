@@ -6,7 +6,7 @@ $(document).ready(() => {
     console.log("second print line!");
     let postParams = {
         url: window.location.href,
-        username: getCookie("username")
+        // username: getCookie("username")
     };
     console.log(postParams.url);
     getRecipes(postParams);

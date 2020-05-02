@@ -38,12 +38,9 @@ public class User {
    */
   public User(String user, String password) throws AccountException {
     this.username = user;
-    this.previousRecipes = new ArrayList<>();
-    this.dietaryRestrictions = new ArrayList<>();
+    this.previousRecipes = new ArrayList<>(); // initialized
+    this.dietaryRestrictions = new ArrayList<>(); // initialized w/ survey in GUI
     Accounts.writeLoginInfo(user, password); // write the login info to our csv
-    // TODO: initialize nutrients list with results from survey
-
-    // TODO: create a personal recommender
     this.recommender = new Recommender(this);
     // add to user map
     Accounts.addUserMap(this);

@@ -43,7 +43,6 @@ public class Recommender {
     // normalize the coordinates of every node
     List<RecipeNode> nodes = convertRecipesToRecipeNodes(recipesList);
     this.recipeTree.normalizeAxes(nodes);
-//    normalize((nodes));
     // also normalize user history?
     this.recipeTree.initializeTree(nodes);
   }
@@ -65,10 +64,10 @@ public class Recommender {
     this.initRecipeTree(input, paramsMap);
     List<Recipe> recs;
     List<Recipe> userHistory = this.user.getPreviousRecipes();
-    try {
-      recs = this.getRecommendedRecipes(userHistory);
-    } catch (RecommendationException e) {
-      throw new RecommendationException(e.getMessage());
+    recs = this.getRecommendedRecipes(userHistory);
+    // TODO: correct place/way to handle this?
+    if (recs.isEmpty()) {
+      throw new RecommendationException("no recipes found for " + input);
     }
 
     for (Recipe r : recs) { //maybe only want to save recent history??????????????????????????????
@@ -112,13 +111,14 @@ public class Recommender {
    * @return - a RecipeNode at the coordinates determined by the query and the user's history.
    */
   private RecipeNode getTargetNode(List<Recipe> userHistory) {
+    // get nodes for prev recipes and prepare a list to sum their coords in
     List<RecipeNode> prevRecipeNodes = this.convertRecipesToRecipeNodes(userHistory);
     List<Double> coordsSum = new ArrayList<>();
     for (int i = 0; i < this.dim; i++) {
       coordsSum.add(0.);
     }
 
-    //find the midpoint of all coordinates of prevRecipeNodes
+    // accumulate the sum of each dimension
     for (RecipeNode r: prevRecipeNodes) {
       List<Double> coords = r.getCoords();
       for (int i = 0; i < coordsSum.size(); i++) {
@@ -128,19 +128,19 @@ public class Recommender {
       }
     }
 
+    // find the average for each coord by dividing by the total # of recipes
     List<Double> targetCoords = new ArrayList<>();
     for (double sum : coordsSum) {
-      targetCoords.add(sum / this.dim);
+      targetCoords.add(sum / prevRecipeNodes.size());
     }
 
     return new RecipeNode(targetCoords);
   }
 
-
   private List<Recipe> getRecommendedRecipes(List<Recipe> userHistory)
       throws RecommendationException {
     List<Recipe> recs = new ArrayList<>();
-
+    // create a target node using the average position of all previous recipes
     RecipeNode target = this.getTargetNode(userHistory);
 
     // search for the nearest/most relevant recipes
