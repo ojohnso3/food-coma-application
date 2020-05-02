@@ -115,5 +115,14 @@ _On your first meeting with your mentor TA, you should plan dates for at least t
 ## How to Build and Run
 _A necessary part of any README!_
 
+## Recipe Database API
+**The database's tagging isn't perfect; for example, checking
+a vegetarian dietary preference then searching up beef will
+give you a bunch of non-vegetarian beef options. There are 
+other ways to get conflicts...so in general results might
+not be as expected.
+
+
 Accreditations: We use a BCrypt solution in this project from: 
 https://howtodoinjava.com/security/how-to-generate-secure-password-hash-md5-sha-pbkdf2-bcrypt-examples/
+
