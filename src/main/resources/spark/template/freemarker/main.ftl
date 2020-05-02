@@ -29,7 +29,7 @@
       <#--  <a href="/signup" class="bar_item">Sign Up</a>     -->
     </div>
     
-    <script src="js/global.js"></script>
+    <script src="../js/global.js"></script>
 
     ${content}
 
@@ -44,7 +44,7 @@
       <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">edamame FIX</a></p>
     </footer>
 
-    <script src="js/main.js"></script>
+    <script src="../js/main.js"></script>
 
      <!-- Again, we're serving up the unminified source for clarity. -->
 

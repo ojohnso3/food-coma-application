@@ -346,11 +346,13 @@ public class Gui {
       QueryParamsMap map = req.queryMap();
       String username = map.value("user");
       
-//      System.out.println(username);
+      System.out.println(username);
       
       User currUser = Accounts.getUser(username);
       
       List<Recipe> prevRecipes = currUser.getPreviousRecipes();
+      
+      System.out.println("SIZE " + prevRecipes.size());
       
       Map<String,String> output = new HashMap<String, String>();
       
@@ -386,7 +388,9 @@ public class Gui {
       String username = qm.value("username");
       
       User currUser = Accounts.getUser(username);
-      // Recommender recommender = currUser.getRecommender(); // use object!
+      Recommender recommender = currUser.getRecommender(); 
+      
+      // TODO: use Recommender object below!
       
       Pattern load = Pattern.compile("localhost:.+\\/recipe\\/(.+)");
       String recipeURI = null;
