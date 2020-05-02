@@ -327,6 +327,19 @@ public final class RecipeDatabase {
     return recipeSet.next();
   }
 
+  public static List<String> getQueryURIListFromDatabase(String query) throws SQLException{
+    PreparedStatement prep = conn.prepareStatement("SELECT recipe_uri as r FROM queries WHERE query = ?");
+    prep.setString(1, query);
+    ResultSet recipeSet = prep.executeQuery();
+    prep.close();
+    List<String> recipesFromExactQuery = new ArrayList<String>();
+    while(recipeSet.next()){
+      String uri = recipeSet.getString("recipe_uri");
+      recipesFromExactQuery.add(uri);
+    }
+    return recipesFromExactQuery;
+  }
+
   /**
    * Database test function.
    */
