@@ -20,6 +20,10 @@ h1 {
     text-decoration: underline;
 }
 
+.dropdown-content{
+    float:left;
+}
+
 .border {
 	background: #8aa1e6;
     position: fixed;

@@ -29,7 +29,6 @@
   <div class="dropdown">
     <button class="dropbtn">Select Nutrient Preferences</button>
     <div class="dropdown-content">
-      <input type="checkbox" id="balanced" value="" onclick="toggleNutrition('balanced')">
       <input type="checkbox" id="vegan" value="" onclick="toggleNutrition('vegan')">
       <label for="vegan">Vegan</label><br>
       <input type="checkbox" id="vegetarian" value="" onclick="toggleNutrition('vegetarian')">
@@ -42,11 +41,6 @@
       <label for="tree-nut-free">Tree Nut Free</label><br>
       <input type="checkbox" id="alcohol-free" value="" onclick="toggleNutrition('alcohol-free')">
       <label for="alcohol-free">Alcohol Free</label><br>
-
-      <input type="checkbox" id="nut2" value="">
-      <label for="nut2">Nutrient 2</label><br>
-      <input type="checkbox" id="nut3" value="">
-      <label for="nut3">Nutrient 3</label><br>
     </div>
   </div>
 

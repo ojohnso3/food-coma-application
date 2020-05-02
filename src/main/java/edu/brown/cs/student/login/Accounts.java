@@ -29,28 +29,35 @@ public class Accounts {
    * @param username - name
    * @return the User, null if they don't exist
    */
-  public static User getUser(String username) {
-    return nameUserMap.get(username);
+  public static User getUser(String username) throws AccountException {
+    User user = nameUserMap.get(username);
+    if (user == null) {
+      throw new AccountException("no user found with name " + username);
+    } else {
+      return user;
+    }
   }
 
   protected static void addUserMap(User user) throws AccountException {
     if (nameUserMap == null) {
-      throw new AccountException("map not initialized");
+      throw new AccountException("name-user map not initialized");
     } else {
       nameUserMap.put(user.getUsername(), user);
     }
-
   }
 
   /**
-   * adds previously added users to the map; to be called at the start of running application.
+   * adds previously added users in the UserDatabase to the current process' nameUser map;
+   * to be called at the start of running application.
    * @throws AccountException on file UserDatabase failure
    */
   public static void initializeMap() throws AccountException {
     initializeMap(LOGIN_INFO_PATH);
   }
-
-  public static void initializeMap(String path) throws AccountException {
+  /*
+   * implementation
+   */
+  protected static void initializeMap(String path) throws AccountException {
     nameUserMap = new HashMap<>();
     // create users from info files and databases
     try (Scanner loginInfo = new Scanner(new FileReader(path))) {
@@ -74,8 +81,10 @@ public class Accounts {
   public static String readHeader() throws AccountException {
     return readHeader(LOGIN_INFO_PATH);
   }
-  // implementation
-  public static String readHeader(String path) throws AccountException {
+  /*
+   * implementation
+   */
+  protected static String readHeader(String path) throws AccountException {
     try (Scanner loginInfo = new Scanner(new FileReader(path))) {
       if (loginInfo.hasNext()) {
         return loginInfo.next();
@@ -94,7 +103,9 @@ public class Accounts {
   public static void checkHeader() throws AccountException {
     checkHeader(LOGIN_INFO_PATH);
   }
-
+  /*
+   * implementation
+   */
   public static void checkHeader(String path) throws AccountException {
     if (!readHeader(path).equals("username,passwordHash,salt")) {
       throw new AccountException("login CSV header malformed");
@@ -112,7 +123,9 @@ public class Accounts {
   protected static void writeLoginInfo(String user, String pass) throws AccountException {
     writeLoginInfo(user, pass, BCrypt.gensalt(), LOGIN_INFO_PATH);
   }
-  // actual computation
+  /*
+   * implementation
+   */
   protected static void writeLoginInfo(String user, String pass, String salt, String path) throws
           AccountException {
     try (BufferedWriter writer = new BufferedWriter(new FileWriter(path, true))) {
@@ -122,7 +135,9 @@ public class Accounts {
       throw new AccountException(e.getMessage(), e);
     }
   }
-  // for testing
+  /*
+   * for testing
+   */
   protected static void writeLoginInfo(String user, String pass, String path) throws
           AccountException {
     writeLoginInfo(user, pass, BCrypt.gensalt(), path);
@@ -138,7 +153,9 @@ public class Accounts {
   public static boolean checkLogin(String inpUser, String inpPass) throws AccountException {
     return checkLogin(inpUser, inpPass, LOGIN_INFO_PATH);
   }
-  // for repl, reads in username and password from user keyboard (System.in)
+  /*
+   * for repl, reads in username and password from user keyboard (System.in)
+   */
   public static boolean checkLogin() throws AccountException {
     try (Scanner keyboard = new Scanner(System.in)) {
       // get input from user
@@ -149,7 +166,9 @@ public class Accounts {
       return checkLogin(inpUser, inpPass, LOGIN_INFO_PATH);
     }
   }
-  // computation
+  /*
+   * implementation
+   */
   public static boolean checkLogin(String inpUser, String inpPass, String path) throws
           AccountException {
     try (Scanner loginInfo = new Scanner(new FileReader(path))) {

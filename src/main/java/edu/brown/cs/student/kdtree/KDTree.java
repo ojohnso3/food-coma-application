@@ -1,5 +1,8 @@
 package edu.brown.cs.student.kdtree;
 
+import edu.brown.cs.student.food.Recipe;
+import edu.brown.cs.student.recommendation.RecipeNode;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -416,6 +419,41 @@ public class KDTree<N extends KDNode<N>> {
       // search more neg
       boxSearchRec(boxNodes, coordBounds, curr.getLeftChild(), (axis + 1) % this.dim);
     }
+  }
+
+  /**
+   * sets a target node with coords as the average/midpoint of given list of nodes
+   * @param target - node to change the coords of
+   * @param nodes - list
+   */
+  public void makeAverageNode(N target, List<N> nodes) {
+    List<Double> coordsSum = new ArrayList<>();
+    for (int i = 0; i < this.dim; i++) {
+      coordsSum.add(0.);
+    }
+
+    // accumulate the sum of each dimension
+    for (N node: nodes) {
+      List<Double> coords = node.getCoords();
+      for (int i = 0; i < coordsSum.size(); i++) {
+        double currSum = coordsSum.get(i);
+        currSum += coords.get(i);
+        coordsSum.set(i, currSum);
+      }
+    }
+
+    // find the average for each coord by dividing by the total # of recipes
+    List<Double> newCoords = new ArrayList<>();
+    for (double sum : coordsSum) {
+      newCoords.add(sum / nodes.size());
+    }
+
+    List<Double> targetCoords = target.getCoords();
+    for (int i = 0; i < coordsSum.size(); i++) {
+      targetCoords.set(i, coordsSum.get(i) / new Double(nodes.size()));
+    }
+
+
   }
 
   /**
