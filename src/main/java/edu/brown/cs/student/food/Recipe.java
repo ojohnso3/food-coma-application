@@ -3,6 +3,7 @@ package edu.brown.cs.student.food;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -67,10 +68,6 @@ public class Recipe {
     this.nutrients = nutrients;
   }
 
-  public Recipe(String uri) {
-    this.uri = uri;
-  }
-
   public List<Ingredient> getIngredients() {
     return ingredients;
   }
@@ -80,6 +77,9 @@ public class Recipe {
   }
 
   public double[] getNutrientVals(String nutrientCode) {
+    if (this.nutrients == null) {
+      return null;
+    }
     return this.nutrients.get(nutrientCode);
   }
 
@@ -109,4 +109,16 @@ public class Recipe {
     }
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof Recipe)) return false;
+    Recipe recipe = (Recipe) o;
+    return uri.equals(recipe.uri);
+  }
+
+  @Override
+  public int hashCode() {
+    return this.uri.hashCode();
+  }
 }

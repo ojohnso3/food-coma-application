@@ -25,10 +25,10 @@ import com.google.common.io.Files;
  */
 
 public final class RecipeDatabase {
-  
+
   private static Connection conn;
 
-  public RecipeDatabase() {
+  private RecipeDatabase() {
 
   }
 
@@ -93,6 +93,7 @@ public final class RecipeDatabase {
       + "total_nutrient_val REAL,"
       + "FOREIGN KEY (recipe_uri) REFERENCES recipe(uri));";
     stat.executeUpdate(sql);
+    stat.close();
   }
 
 
@@ -102,6 +103,11 @@ public final class RecipeDatabase {
    * @return - a boolean representing whether insertion was successful.
    */
   public static void insertRecipe(Recipe recipe) throws SQLException {
+
+    if (checkRecipeInDatabase(recipe.getUri())) {
+      throw new SQLException("duplicate");
+    }
+
     PreparedStatement prep = conn.prepareStatement("INSERT INTO recipe VALUES("
         + recipe.prepareForInsert() + ");");
     prep.executeUpdate();
@@ -118,12 +124,15 @@ public final class RecipeDatabase {
     for (String code : NutrientInfo.nutrients.keySet()) {
       double[] currVals = recipe.getNutrientVals(code);
 
-      String line = "\"" + code + "\",\"" + recipe.getUri() + "\"," + currVals[0] + "," + currVals[1];
+      if (currVals != null) {
+        String line = "\"" + code + "\",\"" + recipe.getUri() + "\"," + currVals[0] + "," + currVals[1];
 
-      prep = conn.prepareStatement("INSERT INTO nutrient_info VALUES("
-          + line + ")");
-      prep.executeUpdate();
+        prep = conn.prepareStatement("INSERT INTO nutrient_info VALUES("
+            + line + ")");
+        prep.executeUpdate();
+      }
     }
+    prep.close();
   }
 
   /**
@@ -191,8 +200,11 @@ public final class RecipeDatabase {
       double calories = recipeSet.getDouble("calories");
       double totalWeight = recipeSet.getDouble("total_weight");
       double totalTime = recipeSet.getDouble("total_time");
+      System.out.println("all primitives passed");
       List<Ingredient> ingredients = createIngredients(ingredientSet);
+      System.out.println("after ingredients");
       Map<String, double[]> nutrients = createNutrients(nutrientSet);
+      System.out.println("after nutrients");
 
       return new Recipe(uri, label, image, source, url, yield, calories, totalWeight, totalTime,
           ingredients, nutrients);
@@ -208,6 +220,7 @@ public final class RecipeDatabase {
    */
   public static Recipe getRecipeFromURI(String uri) throws SQLException, InterruptedException,
       APIException, IOException {
+
     PreparedStatement prep = conn.prepareStatement("SELECT * FROM recipe WHERE uri = ?");
     prep.setString(1, uri);
     ResultSet recipeSet = prep.executeQuery();
@@ -220,7 +233,13 @@ public final class RecipeDatabase {
     prep.setString(1, uri);
     ResultSet nutrientSet = prep.executeQuery();
 
-    return createRecipe(recipeSet, ingredientSet, nutrientSet, uri);
+    Recipe r = createRecipe(recipeSet, ingredientSet, nutrientSet, uri);
+    prep.close();
+    recipeSet.close();
+    ingredientSet.close();
+    nutrientSet.close();
+
+    return r;
   }
 
 
@@ -243,11 +262,13 @@ public final class RecipeDatabase {
    * @return - boolean representing whether the given uri is in the database.
    */
   public static boolean checkRecipeInDatabase(String uri) throws SQLException {
-    System.out.println("CONN--------------------------: " + conn);
     PreparedStatement prep = conn.prepareStatement("SELECT * FROM recipe WHERE uri = ?");
     prep.setString(1, uri);
     ResultSet recipeSet = prep.executeQuery();
-    return recipeSet.next();
+    boolean retVal = recipeSet.next();
+    prep.close();
+    recipeSet.close();
+    return retVal;
   }
 
   /**

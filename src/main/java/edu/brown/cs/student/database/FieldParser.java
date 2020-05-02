@@ -58,15 +58,18 @@ public final class FieldParser {
    * uris.
    */
   private static String handleParamsAndRestrictions(List<String> dietaryRestrictions,
-                                                    Map<String, String> paramsMap) {
+                                                    Map<String, String[]> paramsMap) {
     StringBuilder line = new StringBuilder();
     for (String s : dietaryRestrictions) {
       line.append("&").append("health=").append(s);
     }
 
     for (String param : paramsMap.keySet()) {
-      String option = paramsMap.get(param);
-      line.append("&").append(param).append("=").append(option);
+      String[] option = paramsMap.get(param);
+      for (String elt : option) {
+        line.append("&").append(param).append("=").append(elt);
+      }
+
     }
 
     return line.toString();
@@ -78,9 +81,9 @@ public final class FieldParser {
    * @param json - the JSON text of the recipe.
    * @return - the array of Recipe objects containing information from the JSON.
    */
-  private static Recipe[] parseRecipeJSON(String json) throws APIException {
+  private static Recipe[] parseRecipeJSON(String json) {
     if (json.equals("[")) {
-      throw new APIException("No recipe(s) found.");
+      return new Recipe[0];
     }
     System.out.println("got here");
     GsonBuilder gsonBuilder = new GsonBuilder();
@@ -147,7 +150,7 @@ public final class FieldParser {
    * @return - an array of recipes that correspond to the given query in the api.
    */
   public static Recipe[] getRecipesFromQuery(String query, List<String> dietaryRestrictions,
-                                             Map<String, String> paramsMap)
+                                             Map<String, String[]> paramsMap)
       throws IOException, InterruptedException, APIException, SQLException {
 
     query = query.replace(" ", "+");
