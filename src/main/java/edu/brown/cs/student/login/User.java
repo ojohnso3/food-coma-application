@@ -44,6 +44,12 @@ public class User {
     this.recommender = new Recommender(this);
     // add to user map
     Accounts.addUserMap(this);
+    // add user to user database
+    try {
+      UserDatabase.insertUser(this);
+    } catch (SQLException e) {
+      throw new AccountException(e.getMessage());
+    }
   }
   // testing constructor
   public User(String username, String password, String path) throws AccountException {
