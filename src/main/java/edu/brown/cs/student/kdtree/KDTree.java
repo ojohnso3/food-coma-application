@@ -1,8 +1,5 @@
 package edu.brown.cs.student.kdtree;
 
-import edu.brown.cs.student.food.Recipe;
-import edu.brown.cs.student.recommendation.RecipeNode;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -85,6 +82,7 @@ public class KDTree<N extends KDNode<N>> {
 
   /**
    * gives a list of all the nodes.
+   * @return all nodes in the tree
    */
   public List<N> getNodes() {
     List<N> nodes = new ArrayList<>();
@@ -422,11 +420,16 @@ public class KDTree<N extends KDNode<N>> {
   }
 
   /**
-   * sets a target node with coords as the average/midpoint of given list of nodes
+   * sets a target node with coords as the average/midpoint of given list of nodes.
    * @param target - node to change the coords of
    * @param nodes - list
    */
-  public void makeAverageNode(N target, List<N> nodes) {
+  public void makeAverageNode(N target, List<N> nodes) throws KDTreeException {
+    if (nodes == null || nodes.size() == 0) {
+      throw new KDTreeException("ERROR: nodes list cannot be null or empty");
+    } else if (target == null) {
+      throw new KDTreeException("ERROR: target node is null");
+    }
     List<Double> coordsSum = new ArrayList<>();
     for (int i = 0; i < this.dim; i++) {
       coordsSum.add(0.);
@@ -442,18 +445,11 @@ public class KDTree<N extends KDNode<N>> {
       }
     }
 
-    // find the average for each coord by dividing by the total # of recipes
-    List<Double> newCoords = new ArrayList<>();
-    for (double sum : coordsSum) {
-      newCoords.add(sum / nodes.size());
-    }
-
+    // find the average for each coord by dividing by the total # of recipes and set
     List<Double> targetCoords = target.getCoords();
     for (int i = 0; i < coordsSum.size(); i++) {
-      targetCoords.set(i, coordsSum.get(i) / new Double(nodes.size()));
+      targetCoords.set(i, coordsSum.get(i) / nodes.size());
     }
-
-
   }
 
   /**
@@ -495,7 +491,7 @@ public class KDTree<N extends KDNode<N>> {
   /**
    * Extra function to normalize the coordinates of a list of nodes.
    */
-  public void normalizeAxes() {
+  public void normalizeTreeAxes() {
     normalizeAxes(getNodes());
   }
 

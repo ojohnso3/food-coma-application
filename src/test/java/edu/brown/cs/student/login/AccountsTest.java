@@ -1,8 +1,5 @@
 package edu.brown.cs.student.login;
 
-import edu.brown.cs.student.login.AccountException;
-import edu.brown.cs.student.login.Accounts;
-import edu.brown.cs.student.login.BCrypt;
 import org.junit.Test;
 
 import java.io.*;
@@ -44,16 +41,13 @@ public class AccountsTest {
     }
 
     // access protected write info method
-    new Accounts() {
-      public void callProtectedMethod(String user, String pass, String salt, String path) throws AccountException {
-        writeLoginInfo(user, pass, salt, path);
-      }
-    }.callProtectedMethod(user, pass, salt, PATH_CSV);
-    new Accounts() {
-      public void callProtectedMethod(String user, String pass, String salt, String path) throws AccountException {
-        writeLoginInfo(user, pass, salt, path);
-      }
-    }.callProtectedMethod(user2, pass2, salt2, PATH_CSV);
+    Accounts.writeLoginInfo(user, pass, salt, PATH_CSV);
+    Accounts.writeLoginInfo(user2, pass2, salt2, PATH_CSV);
+//    new Accounts() {
+//      public void callProtectedMethod(String user, String pass, String salt, String path) throws AccountException {
+//        writeLoginInfo(user, pass, salt, path);
+//      }
+//    }.callProtectedMethod(user2, pass2, salt2, PATH_CSV);
 
     // check the that written in things match what was created and
     try (BufferedReader br = new BufferedReader(new FileReader(PATH_CSV))) {
@@ -91,15 +85,11 @@ public class AccountsTest {
       e.printStackTrace();
     }
 
-    new Accounts() {
-      public void callProtectedMethod(String user, String pass, String salt, String path) throws AccountException {
-        writeLoginInfo(user, pass, salt, path);
-      }
-    }.callProtectedMethod(user, pass, salt, PATH_CSV);
+    Accounts.writeLoginInfo(user, pass, salt, PATH_CSV);
 
-    assertEquals(true, Accounts.checkLogin(user, pass, PATH_CSV));
-    assertEquals(false, Accounts.checkLogin("fake user", pass, PATH_CSV));
-    assertEquals(false, Accounts.checkLogin(user, "fake pass", PATH_CSV));
-    assertEquals(false, Accounts.checkLogin("fake user", "fake pass", PATH_CSV));
+    assertTrue(Accounts.checkLogin(user, pass, PATH_CSV));
+    assertFalse(Accounts.checkLogin("fake user", pass, PATH_CSV));
+    assertFalse(Accounts.checkLogin(user, "fake pass", PATH_CSV));
+    assertFalse(Accounts.checkLogin("fake user", "fake pass", PATH_CSV));
   }
 }
