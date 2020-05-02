@@ -349,11 +349,13 @@ public class Gui {
       QueryParamsMap map = req.queryMap();
       String username = map.value("user");
       
-//      System.out.println(username);
+      System.out.println(username);
       
       User currUser = Accounts.getUser(username);
       
       List<Recipe> prevRecipes = currUser.getPreviousRecipes();
+      
+      System.out.println("SIZE " + prevRecipes.size());
       
       Map<String,String> output = new HashMap<String, String>();
       
@@ -389,7 +391,9 @@ public class Gui {
       String username = qm.value("username");
       
       User currUser = Accounts.getUser(username);
-      // Recommender recommender = currUser.getRecommender(); // use object!
+      Recommender recommender = currUser.getRecommender(); 
+      
+      // TODO: use Recommender object below!
       
       Pattern load = Pattern.compile("localhost:.+\\/recipe\\/(.+)");
       String recipeURI = null;
@@ -399,7 +403,17 @@ public class Gui {
           recipeURI = matchURL.group(1);
           String fullUri = "http://www.edamam.com/ontologies/edamam.owl#recipe_" + recipeURI;
           clickedSet.add(fullUri);
-
+          try {
+            currUser.addToPreviousRecipesByURI(fullUri);
+          } catch (InterruptedException e) {
+            System.out.println("InterruptedException when adding recipe to previous recipes: " + e.getMessage());
+          } catch (SQLException e) {
+            System.out.println("SQLException when adding recipe to previous recipes: " + e.getMessage());
+          } catch (APIException e) {
+            System.out.println("APIException when adding recipe to previous recipes: " + e.getMessage());
+          } catch (IOException e) {
+            System.out.println("IOException when adding recipe to previous recipes: " + e.getMessage());
+          }
           System.out.println("The Recipe URI is " + recipeURI);
         }
       }
@@ -414,6 +428,7 @@ public class Gui {
       if(currRecipe == null){
         try {
           currRecipe = FieldParser.getRecipeFromURI("http://www.edamam.com/ontologies/edamam.owl#recipe_" + recipeURI);
+
         } catch (IOException e) {
           System.out.println("IOException in getting recipe from API");
         } catch (InterruptedException e) {
