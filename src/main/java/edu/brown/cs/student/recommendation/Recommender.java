@@ -24,7 +24,10 @@ public class Recommender {
   private final int dim;
   private final User user;
 
-
+  /**
+   * constructor; should be called on initial survey or on user recreation.
+   * @param user - user
+   */
   public Recommender(User user) {
     this.user = user;
     this.dim = user.getNutrients().size();
@@ -42,7 +45,10 @@ public class Recommender {
     // normalize the coordinates of every node
     List<RecipeNode> nodes = convertRecipesToRecipeNodes(recipesList);
     this.recipeTree.normalizeAxes(nodes);
-    // also normalize user history?
+    // TODO: also normalize user history?
+
+
+
     this.recipeTree.initializeTree(nodes);
   }
 
@@ -109,31 +115,21 @@ public class Recommender {
    * @param userHistory - the previous recipes that the user has accessed.
    * @return - a RecipeNode at the coordinates determined by the query and the user's history.
    */
-  private RecipeNode getTargetNode(List<Recipe> userHistory) {
-    // get nodes for prev recipes and prepare a list to sum their coords in
+  private RecipeNode getTargetNode(List<Recipe> userHistory) throws RecommendationException {
+    // get nodes for prev recipes and prepare target
     List<RecipeNode> prevRecipeNodes = this.convertRecipesToRecipeNodes(userHistory);
-    List<Double> coordsSum = new ArrayList<>();
+    List<Double> coords = new ArrayList<>();
     for (int i = 0; i < this.dim; i++) {
-      coordsSum.add(0.);
+      coords.add(Double.NaN);
     }
-
-    // accumulate the sum of each dimension
-    for (RecipeNode r: prevRecipeNodes) {
-      List<Double> coords = r.getCoords();
-      for (int i = 0; i < coordsSum.size(); i++) {
-        double currSum = coordsSum.get(i);
-        currSum += coords.get(i);
-        coordsSum.set(i, currSum);
-      }
+    RecipeNode target = new RecipeNode(coords);
+    // set the coords to be the midpoint
+    try {
+      recipeTree.makeAverageNode(target, prevRecipeNodes);
+    } catch (KDTreeException e) {
+      throw new RecommendationException(e.getMessage());
     }
-
-    // find the average for each coord by dividing by the total # of recipes
-    List<Double> targetCoords = new ArrayList<>();
-    for (double sum : coordsSum) {
-      targetCoords.add(sum / prevRecipeNodes.size());
-    }
-
-    return new RecipeNode(targetCoords);
+    return target;
   }
 
   private List<Recipe> getRecommendedRecipes(List<Recipe> userHistory)
