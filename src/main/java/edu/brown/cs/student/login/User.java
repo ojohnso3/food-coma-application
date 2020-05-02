@@ -31,7 +31,7 @@ public class User {
   private Recommender recommender;
 
   /**
-   * Constructors for adding a new User.
+   * Constructors for adding a new User on sign up.
    * @param user name
    * @param password password
    * @throws AccountException on write failure, just propagate message to handle.
@@ -60,6 +60,9 @@ public class User {
     Accounts.writeLoginInfo(username, password, path);
     // create a personal recommender
     this.recommender = new Recommender(this);
+    // add to current user map
+    Accounts.addUserMap(this);
+    // don't add test users to user database
   }
 
   /**

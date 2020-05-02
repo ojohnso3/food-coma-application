@@ -47,7 +47,8 @@ public class Accounts {
   }
 
   /**
-   * adds previously added users to the map; to be called at the start of running application.
+   * adds previously added users in the UserDatabase to the current process' nameUser map;
+   * to be called at the start of running application.
    * @throws AccountException on file UserDatabase failure
    */
   public static void initializeMap() throws AccountException {
