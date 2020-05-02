@@ -53,6 +53,7 @@ public class RecipeDatabaseTest {
 //
 //    this.testInsertRecipe(uri, num);
 //    this.testGetRecipeFromUri();
+//    this.testQueryAlreadyInDb();
   }
 
   /**
@@ -141,6 +142,15 @@ public class RecipeDatabaseTest {
       e.printStackTrace();
     } catch (NullPointerException npe) {
       npe.printStackTrace();
+    }
+  }
+
+
+  public void testQueryAlreadyInDb(){
+    try {
+      System.out.println("ALREADY IN DATABASE? " + RecipeDatabase.checkQueryInDatabase("sauce"));
+    } catch (SQLException e) {
+      System.out.println("SQLException in testing");
     }
   }
 
