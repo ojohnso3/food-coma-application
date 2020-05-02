@@ -81,9 +81,9 @@ public final class FieldParser {
    * @param json - the JSON text of the recipe.
    * @return - the array of Recipe objects containing information from the JSON.
    */
-  private static Recipe[] parseRecipeJSON(String json) throws APIException {
+  private static Recipe[] parseRecipeJSON(String json) {
     if (json.equals("[")) {
-      throw new APIException("No recipe(s) found.");
+      return new Recipe[0];
     }
     System.out.println("got here");
     GsonBuilder gsonBuilder = new GsonBuilder();

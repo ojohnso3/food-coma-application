@@ -25,10 +25,10 @@ import com.google.common.io.Files;
  */
 
 public final class RecipeDatabase {
-  
+
   private static Connection conn;
 
-  public RecipeDatabase() {
+  private RecipeDatabase() {
 
   }
 
@@ -93,6 +93,7 @@ public final class RecipeDatabase {
       + "total_nutrient_val REAL,"
       + "FOREIGN KEY (recipe_uri) REFERENCES recipe(uri));";
     stat.executeUpdate(sql);
+    stat.close();
   }
 
 
@@ -131,6 +132,7 @@ public final class RecipeDatabase {
         prep.executeUpdate();
       }
     }
+    prep.close();
   }
 
   /**
@@ -231,8 +233,13 @@ public final class RecipeDatabase {
     prep.setString(1, uri);
     ResultSet nutrientSet = prep.executeQuery();
 
-    System.out.println("got here");
-    return createRecipe(recipeSet, ingredientSet, nutrientSet, uri);
+    Recipe r = createRecipe(recipeSet, ingredientSet, nutrientSet, uri);
+    prep.close();
+    recipeSet.close();
+    ingredientSet.close();
+    nutrientSet.close();
+
+    return r;
   }
 
 
@@ -258,7 +265,10 @@ public final class RecipeDatabase {
     PreparedStatement prep = conn.prepareStatement("SELECT * FROM recipe WHERE uri = ?");
     prep.setString(1, uri);
     ResultSet recipeSet = prep.executeQuery();
-    return recipeSet.next();
+    boolean retVal = recipeSet.next();
+    prep.close();
+    recipeSet.close();
+    return retVal;
   }
 
   /**
