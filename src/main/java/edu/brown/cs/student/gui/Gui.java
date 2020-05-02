@@ -233,9 +233,8 @@ public class Gui {
       
       System.out.println("USER " + username);
       System.out.println("FEEDBACK " + feedback);
-            
       User currUser = Accounts.getUser(username);
-      
+
       List<String> nutrients = new ArrayList<String>();
       
       for (String nutrient: nutrientsMap.keySet()) {
