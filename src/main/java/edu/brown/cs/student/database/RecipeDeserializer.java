@@ -71,16 +71,16 @@ public class RecipeDeserializer implements JsonDeserializer<Recipe> {
 
     JsonElement dietArray = jsonObject.get("dietLabels");
     JsonArray jsonDietLabels = dietArray.getAsJsonArray();
-    String[] dietLabels = new String[jsonDietLabels.size()];
+    List<String> dietLabels = new ArrayList<>();
     for (int i = 0; i < jsonDietLabels.size(); i++) {
-       dietLabels[i] = jsonDietLabels.get(i).getAsString();
+      dietLabels.add(jsonDietLabels.get(i).getAsString());
     }
 
     JsonElement healthArray = jsonObject.get("healthLabels");
     JsonArray jsonHealthLabels = healthArray.getAsJsonArray();
-    String[] healthLabels = new String[jsonHealthLabels.size()];
+    List<String> healthLabels = new ArrayList<>();
     for (int j = 0; j < jsonHealthLabels.size(); j++) {
-      healthLabels[j] = jsonHealthLabels.get(j).getAsString();
+      healthLabels.add(jsonHealthLabels.get(j).getAsString());
     }
 
     JsonElement ingredientsArray = jsonObject.get("ingredients"); //get the json for the array of ingredients
