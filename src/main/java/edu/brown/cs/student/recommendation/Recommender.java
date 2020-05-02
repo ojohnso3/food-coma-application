@@ -20,15 +20,14 @@ import edu.brown.cs.student.login.User;
  */
 public class Recommender {
   private KDTree<RecipeNode> recipeTree;
-  private static final int TREE_INIT_SIZE = 50;
   private static final int REC_QUANTITY = 10;
-  private int dim;
-  private User user;
+  private final int dim;
+  private final User user;
 
 
   public Recommender(User user) {
     this.user = user;
-    this.dim = 3; //user.getNutrients().size();
+    this.dim = user.getNutrients().size();
   }
 
   /**
