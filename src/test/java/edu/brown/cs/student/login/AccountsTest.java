@@ -87,9 +87,9 @@ public class AccountsTest {
 
     Accounts.writeLoginInfo(user, pass, salt, PATH_CSV);
 
-    assertEquals(true, Accounts.checkLogin(user, pass, PATH_CSV));
-    assertEquals(false, Accounts.checkLogin("fake user", pass, PATH_CSV));
-    assertEquals(false, Accounts.checkLogin(user, "fake pass", PATH_CSV));
-    assertEquals(false, Accounts.checkLogin("fake user", "fake pass", PATH_CSV));
+    assertTrue(Accounts.checkLogin(user, pass, PATH_CSV));
+    assertFalse(Accounts.checkLogin("fake user", pass, PATH_CSV));
+    assertFalse(Accounts.checkLogin(user, "fake pass", PATH_CSV));
+    assertFalse(Accounts.checkLogin("fake user", "fake pass", PATH_CSV));
   }
 }
