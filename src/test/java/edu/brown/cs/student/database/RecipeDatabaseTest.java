@@ -52,8 +52,9 @@ public class RecipeDatabaseTest {
         "url", 0.0, 0.0, 0.0, 0.0, ingredients, nutrients);
 
     this.testInsertRecipe(uri, num);
-//    this.testGetRecipeFromUri();
-//    this.testQueryAlreadyInDb();
+    this.testGetRecipeFromUri();
+    this.testCheckRecipeInDatabase();
+    this.testQueryAlreadyInDb();
   }
 
   /**
@@ -106,11 +107,10 @@ public class RecipeDatabaseTest {
    */
   public void testGetRecipeFromUri() {
     try {
-      RecipeDatabase.loadDatabase("recipeDatabase.sqlite3");
+      RecipeDatabase.loadDatabase("data/recipeDatabase.sqlite3");
       NutrientInfo.createNutrientsList();
 
       System.out.println("URI 2 " + r2.getUri());
-      System.out.println("IN DATABASE?" + RecipeDatabase.checkRecipeInDatabase(r2.getUri()));
       //Test with regular uris.
       Recipe r2Test = RecipeDatabase.getRecipeFromURI(r2.getUri());
       Recipe r3Test = RecipeDatabase.getRecipeFromURI(r3.getUri());
@@ -150,10 +150,30 @@ public class RecipeDatabaseTest {
     }
   }
 
+  /**
+   * Function to test the checkRecipeInDatabase function in RecipeDatabase.
+   */
+  public void testCheckRecipeInDatabase() {
+    try {
+      RecipeDatabase.loadDatabase("data/recipeDatabase.sqlite3");
+      assertTrue(RecipeDatabase.checkRecipeInDatabase(r2.getUri()));
+      assertTrue(RecipeDatabase.checkRecipeInDatabase(r3.getUri()));
+      assertFalse(RecipeDatabase.checkRecipeInDatabase("x"));
+      assertFalse(RecipeDatabase.checkRecipeInDatabase("12345"));
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    } catch (ClassNotFoundException e) {
+      e.printStackTrace();
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+
+  }
+
 
   public void testQueryAlreadyInDb(){
     try {
-      System.out.println("ALREADY IN DATABASE? " + RecipeDatabase.checkQueryInDatabase("sauce"));
+      System.out.println("ALREADY IN DATABASE? " + RecipeDatabase.checkQueryInDatabase("chicken"));
     } catch (SQLException e) {
       System.out.println("SQLException in testing");
     }
