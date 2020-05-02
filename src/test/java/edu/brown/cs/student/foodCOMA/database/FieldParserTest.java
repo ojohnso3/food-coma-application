@@ -24,6 +24,7 @@ import static org.junit.Assert.*;
  * API queries per minute.
  */
 public class FieldParserTest {
+
   @Test
   public void testGetRecipesFromQuery() {
 //    NutrientInfo.createNutrientsList();
@@ -53,39 +54,15 @@ public class FieldParserTest {
 //    } catch (InterruptedException | APIException e) {
 //      e.printStackTrace();
 //    }
-
-    //Testing queries with dietary restrictions and multiple params.
-//    try {
-//      List<String> dietaryRestrictions = new ArrayList<>();
-//      dietaryRestrictions.add("vegan");
-//      dietaryRestrictions.add("peanut-free");
-//      Map<String, String> paramsMap = new HashMap<>();
-//      paramsMap.put("ingr", "5");
-//      paramsMap.put("diet", "low-fat");
-//      Recipe[] recipes = FieldParser.getRecipesFromQuery("cake", dietaryRestrictions, paramsMap);
-//      assertNotNull(recipes);
-//      for (Recipe r : recipes) {
-//        assertNotNull(r);
-//        assertNotNull(r.getUri());
-//      }
-//    } catch (IOException e) {
-//      e.printStackTrace();
-//    } catch (SQLException e) {
-//      e.printStackTrace();
-//    } catch (InterruptedException e) {
-//      e.printStackTrace();
-//    } catch (APIException e) {
-//      e.printStackTrace();
-//    }
-
+//
 //    //Testing queries with dietary restrictions and multiple params.
 //    try {
 //      List<String> dietaryRestrictions = new ArrayList<>();
 //      dietaryRestrictions.add("vegan");
 //      dietaryRestrictions.add("peanut-free");
-//      Map<String, String> paramsMap = new HashMap<>();
-//      paramsMap.put("ingr", "5");
-//      paramsMap.put("diet", "low-fat");
+//      Map<String, String[]> paramsMap = new HashMap<>();
+//      paramsMap.put("ingr", new String[] {"5"});
+//      paramsMap.put("diet", new String[] {"low-fat"});
 //      Recipe[] recipes = FieldParser.getRecipesFromQuery("cake", dietaryRestrictions, paramsMap);
 //      assertNotNull(recipes);
 //      for (Recipe r : recipes) {
@@ -101,12 +78,60 @@ public class FieldParserTest {
 //    } catch (APIException e) {
 //      e.printStackTrace();
 //    }
-
+//
+//    //Testing queries with dietary restrictions and multiple params.
+//    try {
+//      List<String> dietaryRestrictions = new ArrayList<>();
+//      dietaryRestrictions.add("vegan");
+//      dietaryRestrictions.add("peanut-free");
+//      Map<String, String[]> paramsMap = new HashMap<>();
+//      paramsMap.put("ingr", new String[] {"5"});
+//      paramsMap.put("diet", new String[] {"low-fat"});
+//      Recipe[] recipes = FieldParser.getRecipesFromQuery("cake", dietaryRestrictions, paramsMap);
+//      assertNotNull(recipes);
+//      for (Recipe r : recipes) {
+//        assertNotNull(r);
+//        assertNotNull(r.getUri());
+//      }
+//    } catch (IOException e) {
+//      e.printStackTrace();
+//    } catch (SQLException e) {
+//      e.printStackTrace();
+//    } catch (InterruptedException e) {
+//      e.printStackTrace();
+//    } catch (APIException e) {
+//      e.printStackTrace();
+//    }
+//
 //    //Testing queries with spaces.
 //    try {
 //      List<String> dietaryRestrictions = new ArrayList<>();
-//      Map<String, String> paramsMap = new HashMap<>();
+//      Map<String, String[]> paramsMap = new HashMap<>();
 //      Recipe[] recipes = FieldParser.getRecipesFromQuery("peanut butter", dietaryRestrictions, paramsMap);
+//      assertNotNull(recipes);
+//      for (Recipe r : recipes) {
+//        assertNotNull(r);
+//        assertNotNull(r.getUri());
+//      }
+//    } catch (IOException e) {
+//      e.printStackTrace();
+//    } catch (SQLException e) {
+//      e.printStackTrace();
+//    } catch (InterruptedException e) {
+//      e.printStackTrace();
+//    } catch (APIException e) {
+//      e.printStackTrace();
+//    }
+
+//    //Testing a query that should return no recipes.
+//    try {
+//      List<String> dietaryRestrictions = new ArrayList<>();
+//      dietaryRestrictions.add("vegan");
+//      dietaryRestrictions.add("peanut-free");
+//      Map<String, String[]> paramsMap = new HashMap<>();
+//      paramsMap.put("ingr", new String[] {"5"});
+//      paramsMap.put("diet", new String[] {"low-fat"});
+//      Recipe[] recipes = FieldParser.getRecipesFromQuery("cake", dietaryRestrictions, paramsMap);
 //      assertNotNull(recipes);
 //      for (Recipe r : recipes) {
 //        assertNotNull(r);

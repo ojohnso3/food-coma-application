@@ -170,6 +170,6 @@ public class User {
    * @return rec
    */
   public Recommender getRecommender() {
-    return recommender;
+    return this.recommender;
   }
 }

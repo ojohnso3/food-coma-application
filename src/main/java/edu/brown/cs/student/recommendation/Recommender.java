@@ -36,7 +36,7 @@ public class Recommender {
    * @param input - the input given by the user to query.
    * @param paramsMap - the parameters given by the user to the query.
    */
-  private void initRecipeTree(String input, Map<String, String> paramsMap)
+  private void initRecipeTree(String input, Map<String, String[]> paramsMap)
       throws InterruptedException, APIException, IOException, SQLException {
     List<Recipe> recipesList = Arrays.asList(FieldParser.getRecipesFromQuery(input,
         this.user.getDietaryRestrictions(), paramsMap));
@@ -54,7 +54,7 @@ public class Recommender {
    * @return List of recommended recipes
    * //TODO: don't add every recipe to user's history.
    */
-  public List<Recipe> makeRecommendation(String input, Map<String, String> paramsMap) throws
+  public List<Recipe> makeRecommendation(String input, Map<String, String[]> paramsMap) throws
       RecommendationException, InterruptedException, IOException, APIException, SQLException {
     try {
       this.recipeTree = new KDTree<>(dim);

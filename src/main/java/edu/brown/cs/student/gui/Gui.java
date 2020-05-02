@@ -45,9 +45,11 @@ public class Gui {
   private static final Gson GSON = new Gson();
   public Map<String, Recipe> recipesMap;
   public Set<String> clickedSet;
+  private Set<String> nutrients;
   public Gui() {
     recipesMap = new HashMap<String, Recipe>();
     clickedSet  = new HashSet<String>();
+    nutrients = new HashSet<String>();
 //    fieldParser = fp;
 //    nutrientInfo = nut;
   }
@@ -131,23 +133,51 @@ public class Gui {
     @Override
     public String handle(Request req, Response res){
       QueryParamsMap qm = req.queryMap();
+      HashMap<String, String> healthInfo = new HashMap<String, String>();
+      HashMap<String, String> dietInfo = new HashMap<String, String>();
       String query = qm.value("prefs");
       String username = qm.value("username");
-      
+      String balanced = qm.value("bal");
+      healthInfo.put("vegan",qm.value("vg"));
+      healthInfo.put("vegetarian",qm.value("veg"));
+      healthInfo.put("sugar-conscious",qm.value("sug"));
+      healthInfo.put("peanut-free",qm.value("pf"));
+      healthInfo.put("tree-nut-free",qm.value("tf"));
+      healthInfo.put("alcohol-free",qm.value("af"));
+
+      Set<String> healthKeys = healthInfo.keySet();
+      Set<String> dietKeys = dietInfo.keySet();
+
+
+      for(String dietKey : dietKeys){
+
+      }
+
+
+
       User currUser = Accounts.getUser(username);
+      Map<String, String[]> paramsMap = new HashMap<>();
       // Recommender recommender = currUser.getRecommender(); // use object!
-      
       Recipe[] recipes = new Recipe[0];
       Map<String, String[]> simpleRecipeList = new HashMap<String, String[]>();
       try {
         NutrientInfo.createNutrientsList();
         List<String> restrictions = new ArrayList<>();
-        Map<String, String> paramsMap = new HashMap<>();
+        for(String healthKey : healthKeys){
+          System.out.println("HEALTH KEY IS:" + healthKey + "equals: " + healthInfo.get(healthKey));
+          if(healthInfo.get(healthKey).equals("true")){
+            restrictions.add(healthKey);
+            System.out.println("ADDED: " + healthKey);
+//            paramsMap.put(healthKey, healthInfo.get(healthKey));
+
+          }
+        }
+
         RecipeDatabase.loadDatabase("data/recipeDatabase.sqlite3");
         recipes = FieldParser.getRecipesFromQuery(query, restrictions, paramsMap);
         simpleRecipeList = new HashMap<String, String[]>();
         Pattern load = Pattern.compile("#recipe_(.+)");
-
+        recipesMap.clear();
         for(int i = 0; i < recipes.length; i++){
           recipesMap.put(recipes[i].getUri(), recipes[i]);
           System.out.println(recipes[i].getLabel());
@@ -169,7 +199,7 @@ public class Gui {
       } catch (InterruptedException e) {
         System.out.println("InterruptedException getting recipes from query");
       } catch (APIException | SQLException e) {
-        System.out.println("API Exception getting recipes from query");
+        System.out.println("API Exception getting recipes from query. Message:  " + e.getMessage());
       } catch (ClassNotFoundException e) {
         System.out.println("Database not found when loading during search");
       }
@@ -177,6 +207,7 @@ public class Gui {
       Map<String, Object> variables = ImmutableMap.of("recipes",recipes, "simpleRecipeList", simpleRecipeList);
       return GSON.toJson(variables);
     }
+
   }
   
   /**
@@ -320,11 +351,13 @@ public class Gui {
       QueryParamsMap map = req.queryMap();
       String username = map.value("user");
       
-//      System.out.println(username);
+      System.out.println(username);
       
       User currUser = Accounts.getUser(username);
       
       List<Recipe> prevRecipes = currUser.getPreviousRecipes();
+      
+      System.out.println("SIZE " + prevRecipes.size());
       
       Map<String,String> output = new HashMap<String, String>();
       
@@ -360,7 +393,9 @@ public class Gui {
       String username = qm.value("username");
       
       User currUser = Accounts.getUser(username);
-      // Recommender recommender = currUser.getRecommender(); // use object!
+      Recommender recommender = currUser.getRecommender(); 
+      
+      // TODO: use Recommender object below!
       
       Pattern load = Pattern.compile("localhost:.+\\/recipe\\/(.+)");
       String recipeURI = null;
@@ -417,18 +452,22 @@ public class Gui {
       Map<String, Object> variables = ImmutableMap.of("recipeList", recipePageRecipes, "title", " " + actualName, 
           "ingredients", ingredientsList, "image", currRecipe.getImage(), "URL", currRecipe.getUrl());
       return GSON.toJson(variables);
-
     }
   }
 
   private class NutrientHandler implements Route{
 
     @Override
-    public String handle(Request request, Response response) throws Exception {
+    public Object handle(Request request, Response response) throws Exception {
       QueryParamsMap qm = request.queryMap();
       String nutrient = qm.value("nut");
+      if(nutrients.contains(nutrient)){
+        nutrients.remove(nutrient);
+      } else {
+        nutrients.add(nutrient);
+      }
       System.out.println(nutrient);
-      return "Success";
+      return null;
     }
   }
   /**
