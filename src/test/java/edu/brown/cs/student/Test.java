@@ -1,4 +1,4 @@
-package edu.brown.cs.student.foodCOMA;
+package edu.brown.cs.student;
 
 
 

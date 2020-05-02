@@ -1,4 +1,4 @@
-package edu.brown.cs.student.foodCOMA.kdtree;
+package edu.brown.cs.student.kdtree;
 
 import edu.brown.cs.student.kdtree.BaseKDNode;
 import edu.brown.cs.student.kdtree.KDTree;
