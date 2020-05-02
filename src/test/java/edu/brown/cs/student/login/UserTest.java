@@ -8,7 +8,7 @@ import static org.junit.Assert.*;
  * test User.
  */
 public class UserTest {
-  private static final String PATH_CSV = "src/test/java/edu/brown/cs/student/foodCOMA/login/test.csv";
+  private static final String PATH_CSV = "src/test/java/edu/brown/cs/student/login/test.csv";
 
   @Test
   public void constructorTest() throws AccountException {

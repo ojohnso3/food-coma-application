@@ -61,9 +61,7 @@ public class User {
     Accounts.writeLoginInfo(username, password, path);
     // create a personal recommender
     this.recommender = new Recommender(this);
-    // add to current user map
-    Accounts.addUserMap(this);
-    // don't add test users to user database
+    // don't add test users to map or user database
   }
 
   /**
