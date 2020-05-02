@@ -40,7 +40,7 @@ public class Accounts {
 
   protected static void addUserMap(User user) throws AccountException {
     if (nameUserMap == null) {
-      throw new AccountException("name-user map not initialized");
+      throw new AccountException("ERROR: name-user map not initialized");
     } else {
       nameUserMap.put(user.getUsername(), user);
     }

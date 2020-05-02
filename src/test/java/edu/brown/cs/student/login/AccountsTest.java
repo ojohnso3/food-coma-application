@@ -10,7 +10,7 @@ import java.io.*;
 import static org.junit.Assert.*;
 
 public class AccountsTest {
-  private static final String PATH_CSV = "src/test/java/edu/brown/cs/student/foodCOMA/login/test.csv";
+  private static final String PATH_CSV = "src/test/java/edu/brown/cs/student/login/test.csv";
 
   @Test
   public void readHeaderTest() throws AccountException {
