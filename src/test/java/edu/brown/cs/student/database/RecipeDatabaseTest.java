@@ -53,7 +53,7 @@ public class RecipeDatabaseTest {
 //
 //    this.testInsertRecipe(uri, num);
 //    this.testGetRecipeFromUri();
-    this.testQueryAlreadyInDb();
+//    this.testQueryAlreadyInDb();
   }
 
   /**
