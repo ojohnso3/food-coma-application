@@ -2,7 +2,6 @@ package edu.brown.cs.student.login;
 
 import edu.brown.cs.student.database.APIException;
 import edu.brown.cs.student.database.RecipeDatabase;
-import edu.brown.cs.student.food.Ingredient;
 
 import edu.brown.cs.student.food.Recipe;
 import edu.brown.cs.student.recommendation.Recommender;
@@ -24,9 +23,9 @@ public class User {
    * dietaryRestrictions - a list of health labels.
    * nutrients - a list of nutrient codes that the user has specified.
    */
-  private String username;
+  private final String username;
   private List<Recipe> previousRecipes;
-  private List<String> dietaryRestrictions;
+  private final List<String> dietaryRestrictions;
   private List<String> nutrients;
   private Recommender recommender;
 
@@ -51,8 +50,10 @@ public class User {
       throw new AccountException(e.getMessage());
     }
   }
-  // testing constructor
-  public User(String username, String password, String path) throws AccountException {
+  /*
+   * testing constructor
+   */
+  protected User(String username, String password, String path) throws AccountException {
     this.username = username;
     this.previousRecipes = new ArrayList<>();
     this.dietaryRestrictions = new ArrayList<>();
@@ -66,8 +67,11 @@ public class User {
   }
 
   /**
-   * Constructor for recreating a User from data files.
+   * Constructor for recreating a User from the UserDatabase.
    * @param username - name
+   * @param previousRecipes - list
+   * @param dietaryRestrictions - list
+   * @param nutrients - list
    */
   public User(String username, List<Recipe> previousRecipes, List<String> dietaryRestrictions,
               List<String> nutrients) {
@@ -76,8 +80,10 @@ public class User {
     this.dietaryRestrictions = dietaryRestrictions;
     this.nutrients = nutrients;
   }
-
-  public User(String username) {
+  /*
+   * testing
+   */
+  protected User(String username) {
     this.username = username;
     this.previousRecipes = new ArrayList<>();
     this.dietaryRestrictions = new ArrayList<>();
@@ -118,23 +124,6 @@ public class User {
     previousRecipes.add(recipe);
   }
 
-  
-  /**
-   * Comment.
-   * @param allRestrictions
-   */
-  public void setRestrictions(String allRestrictions) {
-    // parse and add to list
-  }
-  
-  /**
-   * Comment.
-   * @param label - the diet or health label to be added to dietaryRestrictions.
-   */
-  public void addToRestrictions(String label) {
-    dietaryRestrictions.add(label);
-  }
-
   /**
    * Function to get the dietary restrictions of a user.
    * @return - the dietaryRestrictions field.
@@ -142,6 +131,22 @@ public class User {
   public List<String> getDietaryRestrictions() {
     //returning defensive copy.
     return new ArrayList<>(this.dietaryRestrictions);
+  }
+
+  /**
+   * setter.
+   * @param newRestrictions - whole new list to replace old restrictions
+   */
+  public void setDietaryRestrictions(List<String> newRestrictions) {
+    this.setDietaryRestrictions(newRestrictions);
+  }
+
+  /**
+   * add to dietary restrictions.
+   * @param label - the diet or health label to be added to dietaryRestrictions.
+   */
+  public void addToRestrictions(String label) {
+    dietaryRestrictions.add(label);
   }
 
   /**
