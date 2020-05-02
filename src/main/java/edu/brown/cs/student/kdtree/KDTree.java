@@ -1,9 +1,6 @@
 package edu.brown.cs.student.kdtree;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.PriorityQueue;
+import java.util.*;
 
 /**
  * KDTree class, stores a root and dimension of coordinates, tree uses Node nodes.
@@ -486,6 +483,38 @@ public class KDTree<N extends KDNode<N>> {
     List<Double> currBound = coordBounds.get(i);
     return currBound.get(0) <= currCoord && currCoord <= currBound.get(1)
             && inBoundsRec(coords, coordBounds, i + 1, dimen);
+  }
+
+  /**
+   * translates each nodes position according to a given list of coordinates.
+   * @param shift - point to set as the new origin of the tree
+   * @throws KDTreeException if no tree or bad length shift
+   */
+  public void translateTree(List<Double> shift) throws KDTreeException {
+    if (this.root == null) {
+      throw new KDTreeException("tree not initialized");
+    } else if (shift.size() != this.dim) {
+      throw new KDTreeException("shift coordinates must have length equal to dim: " + this.dim);
+    }
+    // set to be visited
+    LinkedList<N> toVisit = new LinkedList<>();
+    toVisit.add(this.root);
+    // translate each coord of each node
+    while (!toVisit.isEmpty()) {
+      N curr = toVisit.pop();
+      List<Double> coords = curr.getCoords();
+      for (int i = 0; i < this.dim; i++) {
+        // add displacement
+        coords.set(i, coords.get(i) + shift.get(i));
+      }
+      // add the child nodes
+      if (curr.getLeftChild() != null) {
+        toVisit.add(curr.getLeftChild());
+      }
+      if (curr.getRightChild() != null) {
+        toVisit.add(curr.getRightChild());
+      }
+    }
   }
 
   /**

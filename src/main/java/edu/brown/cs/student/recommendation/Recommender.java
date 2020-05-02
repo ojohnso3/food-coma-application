@@ -44,11 +44,8 @@ public class Recommender {
         this.user.getDietaryRestrictions(), paramsMap));
     // normalize the coordinates of every node
     List<RecipeNode> nodes = convertRecipesToRecipeNodes(recipesList);
-    this.recipeTree.normalizeAxes(nodes);
-    // TODO: also normalize user history?
-
-
-
+    this.recipeTree.normalizeAxes(nodes); //weight special axes higher
+    // put them in the tree
     this.recipeTree.initializeTree(nodes);
   }
 
@@ -112,8 +109,10 @@ public class Recommender {
    * @return - a RecipeNode at the coordinates determined by the query and the user's history.
    */
   private RecipeNode getTargetNode(List<Recipe> userHistory) throws RecommendationException {
-    // get nodes for prev recipes and prepare target
+    // get nodes for prev recipes and normalize
     List<RecipeNode> prevRecipeNodes = this.convertRecipesToRecipeNodes(userHistory);
+    this.recipeTree.normalizeAxes(prevRecipeNodes);
+    // prepare target
     List<Double> coords = new ArrayList<>();
     for (int i = 0; i < this.dim; i++) {
       coords.add(Double.NaN);
@@ -133,18 +132,19 @@ public class Recommender {
     List<Recipe> recs = new ArrayList<>();
     // create a target node using the average position of all previous recipes
     RecipeNode target = this.getTargetNode(userHistory);
-
-    // search for the nearest/most relevant recipes
-    List<RecipeNode> recipeNodes;
     try {
-      recipeNodes = recipeTree.nearestSearch(target, REC_QUANTITY);
+      // add the target nodes' coordinates each node in tree to make the origin the target point
+      this.recipeTree.translateTree(target.getCoords());
+
+      // search for the nearest/most relevant recipes
+      List<RecipeNode> recipeNodes = recipeTree.nearestSearch(target, REC_QUANTITY);
+
+      // get the actual recipes from the nodes to compile the recs list
+      for (RecipeNode node : recipeNodes) {
+        recs.add(node.getRecipe());
+      }
     } catch (KDTreeException e) {
       throw new RecommendationException(e.getMessage());
-    }
-
-    // get the actual recipes from the nodes to compile the recs list
-    for (RecipeNode node : recipeNodes) {
-      recs.add(node.getRecipe());
     }
 
     return recs;
