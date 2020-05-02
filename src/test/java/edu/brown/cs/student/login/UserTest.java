@@ -1,4 +1,4 @@
-package edu.brown.cs.student.foodCOMA.login;
+package edu.brown.cs.student.login;
 
 import edu.brown.cs.student.login.AccountException;
 import edu.brown.cs.student.login.Accounts;
