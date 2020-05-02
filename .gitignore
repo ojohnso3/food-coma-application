@@ -11,6 +11,9 @@
 
 foodCOMA.iml
 
+# databases
+
+
 # test files
 src/test/java/edu/brown/cs/student/foodCOMA/login/test.csv
 **/test.csv

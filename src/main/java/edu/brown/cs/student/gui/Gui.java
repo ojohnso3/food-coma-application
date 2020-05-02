@@ -166,7 +166,7 @@ public class Gui {
           }
         }
         //Usage "balanced", "true"
-        Map<String, String> paramsMap = new HashMap<>();
+        Map<String, String[]> paramsMap = new HashMap<>();
 
         RecipeDatabase.loadDatabase("data/recipeDatabase.sqlite3");
         recipes = FieldParser.getRecipesFromQuery(query, restrictions, paramsMap);
