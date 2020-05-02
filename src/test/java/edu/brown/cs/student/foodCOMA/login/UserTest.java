@@ -17,7 +17,7 @@ public class UserTest {
   public void constructorTest() throws AccountException {
     String user = "user";
     String pass = "pass";
-    User u = new User(user, pass, PATH_CSV);
+//    User u = new User(user, pass, PATH_CSV);
 
     assertEquals(user, u.getUsername());
     assertEquals(true, Accounts.checkLogin(u.getUsername(), pass, PATH_CSV));

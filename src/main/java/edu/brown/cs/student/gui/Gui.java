@@ -153,7 +153,11 @@ public class Gui {
 
       }
 
-      User currUser = Accounts.getUser(username);
+      try {
+        User currUser = Accounts.getUser(username);
+      } catch (AccountException e) {
+        System.out.println("AccountException when getting user from searchPostHandler: " + e.getMessage());
+      }
       Map<String, String[]> paramsMap = new HashMap<>();
       // Recommender recommender = currUser.getRecommender(); // use object!
       Recipe[] recipes = new Recipe[0];
@@ -233,7 +237,12 @@ public class Gui {
       
       System.out.println("USER " + username);
       System.out.println("FEEDBACK " + feedback);
-      User currUser = Accounts.getUser(username);
+      User currUser = null;
+      try {
+        currUser = Accounts.getUser(username);
+      } catch (AccountException e) {
+        System.out.println("AccountException error: " + e.getMessage());
+      }
 
       List<String> nutrients = new ArrayList<String>();
       
@@ -354,15 +363,22 @@ public class Gui {
       String username = map.value("user");
       
       System.out.println(username);
-      
-      User currUser = Accounts.getUser(username);
-      
+      User currUser = null;
+      try {
+        currUser = Accounts.getUser(username);
+      } catch (AccountException e) {
+        System.out.println("AccountException error: " + e.getMessage());
+      }
+      if(currUser == null){
+        Map<String, Object> noUserVars = ImmutableMap.of("title", "User", "output", new HashMap<String, String>());
+        return GSON.toJson(noUserVars);
+      }
       List<Recipe> prevRecipes = currUser.getPreviousRecipes();
-      
+
       System.out.println("SIZE " + prevRecipes.size());
-      
+
       Map<String,String> output = new HashMap<String, String>();
-      
+
       for (Recipe r : prevRecipes) {
         output.put(r.getUri(), r.getLabel());
       }
@@ -393,8 +409,13 @@ public class Gui {
       QueryParamsMap qm = req.queryMap();
       String url = qm.value("url");
       String username = qm.value("username");
-      
-      User currUser = Accounts.getUser(username);
+
+      User currUser = null;
+      try {
+        currUser = Accounts.getUser(username);
+      } catch (AccountException e) {
+        System.out.println("AccountException getting User in RecipeHandler: " + e.getMessage());
+      }
       Recommender recommender = currUser.getRecommender();
       
       // TODO: use Recommender object below!
