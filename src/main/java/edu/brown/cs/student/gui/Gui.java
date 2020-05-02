@@ -156,7 +156,7 @@ public class Gui {
 
 
       User currUser = Accounts.getUser(username);
-      Map<String, String> paramsMap = new HashMap<>();
+      Map<String, String[]> paramsMap = new HashMap<>();
       // Recommender recommender = currUser.getRecommender(); // use object!
       Recipe[] recipes = new Recipe[0];
       Map<String, String[]> simpleRecipeList = new HashMap<String, String[]>();
@@ -172,17 +172,6 @@ public class Gui {
 
           }
         }
-
-
-//
-//        List<String> dietaryRestrictions = new ArrayList<>();
-//        dietaryRestrictions.add("vegan");
-//        dietaryRestrictions.add("peanut-free");
-//        Map<String, String> paramsMap = new HashMap<>();
-//        paramsMap.put("ingr", "5");
-//        paramsMap.put("diet", "low-fat");
-//        Recipe[] recipes = FieldParser.getRecipesFromQuery("cake", dietaryRestrictions, paramsMap);
-//        //Usage "balanced", "true"
 
         RecipeDatabase.loadDatabase("data/recipeDatabase.sqlite3");
         recipes = FieldParser.getRecipesFromQuery(query, restrictions, paramsMap);
