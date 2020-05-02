@@ -66,6 +66,7 @@ public class RecipeDatabaseTest {
       //Test w/giving all fields to Recipe constructor.
       RecipeDatabase.insertRecipe(r2);
       Recipe rTest2 = RecipeDatabase.getRecipeFromURI(uri);
+      System.out.println("URI 1 " + r2.getUri());
       assertEquals(r2, rTest2);
       assertEquals(r2.getImage(), rTest2.getImage());
       assertEquals(r2.getNutrientVals("CA")[0], rTest2.getNutrientVals("CA")[0], 0.00001);
@@ -107,6 +108,7 @@ public class RecipeDatabaseTest {
       RecipeDatabase.loadDatabase("recipeDatabase.sqlite3");
       NutrientInfo.createNutrientsList();
 
+      System.out.println("URI 2 " + r2.getUri());
       //Test with regular uris.
       Recipe r2Test = RecipeDatabase.getRecipeFromURI(r2.getUri());
       Recipe r3Test = RecipeDatabase.getRecipeFromURI(r3.getUri());
@@ -141,6 +143,8 @@ public class RecipeDatabaseTest {
       e.printStackTrace();
     } catch (NullPointerException npe) {
       npe.printStackTrace();
+    } catch (ArrayIndexOutOfBoundsException aob) {
+      aob.printStackTrace();
     }
   }
 

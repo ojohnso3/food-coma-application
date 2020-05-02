@@ -191,6 +191,7 @@ public final class RecipeDatabase {
   private static Recipe createRecipe(ResultSet recipeSet, ResultSet ingredientSet,
                                      ResultSet nutrientSet, String uri) throws
       SQLException, InterruptedException, IOException, APIException {
+    System.out.println("IN DATABASE? " + recipeSet.next());
     if (recipeSet.next()) {
       String label = recipeSet.getString("label");
       String image = recipeSet.getString("image");

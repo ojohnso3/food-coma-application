@@ -33,6 +33,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * The Main class of our project. This is where execution begins.
@@ -76,8 +80,9 @@ public final class Main {
       gui.runSparkServer((int) options.valueOf("port"));
     } else {
       try {
-        RecipeDatabase.loadDatabase("data/recipeDatabase.sqlite3");
         NutrientInfo.createNutrientsList();
+        RecipeDatabase.loadDatabase("data/recipeDatabase.sqlite3");
+        Recipe r = RecipeDatabase.getRecipeFromURI("1234");
 //        UserDatabase.loadDatabase("data/userDatabase.sqlite3");
 //        UserDatabase.testDatabaseFile();
       } catch (FileNotFoundException e) {
@@ -86,16 +91,24 @@ public final class Main {
         e.printStackTrace();
       } catch (SQLException e) {
         e.printStackTrace();
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      } catch (APIException e) {
+        e.printStackTrace();
+      } catch (IOException e) {
+        e.printStackTrace();
       }
 //      NutrientInfo.createNutrientsList();
 //      try {
-//        Recipe[] recipes = FieldParser.getRecipesFromQuery("chicken");
-//        for (int i = 0; i < recipes.length; i++) {
-//          System.out.println(recipes[i].getUri());
-//        }
+//        List<String> dietaryRestrictions = new ArrayList<>();
+//        Map<String, String[]> paramsMap = new HashMap<>();
+//        paramsMap.put("x", new String[] {"x"});
+////        for (int i = 0; i < recipes.length; i++) {
+////          System.out.println(recipes[i].getUri());
+////        }
 //      } catch (IOException | InterruptedException | APIException | SQLException ie) {
 //        ie.printStackTrace();
-//      }
+//    }
 
     }
 

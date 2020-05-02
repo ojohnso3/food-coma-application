@@ -138,6 +138,11 @@ public final class FieldParser {
     if (recipeArray == null) {
       throw new APIException("API returned malformed JSON");
     }
+
+    //API didn't find any recipes with the given uri.
+    if (recipeArray.length == 0) {
+      return null;
+    }
     return recipeArray[0];
   }
 
@@ -192,11 +197,7 @@ public final class FieldParser {
   public static String apiCall() {
     HttpClient httpClient = HttpClient.newBuilder().build();
     HttpRequest httpRequest = HttpRequest.newBuilder().GET()
-        .uri(URI.create("https://api.edamam.com/search?" +
-            "q=chicken" +
-            "&app_id=2a676518"
-            + "&app_key=" +
-            "158f55a83eee58aff1544072b788784f")).build();
+        .uri(URI.create("https://api.edamam.com/search?")).build();
 
     try {
       HttpResponse<String> response = httpClient.send(httpRequest,
