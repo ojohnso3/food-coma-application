@@ -163,12 +163,9 @@ public final class FieldParser {
     HttpClient httpClient = HttpClient.newBuilder().build();
     String queryUri = handleParamsAndRestrictions(dietaryRestrictions, paramsMap);
 
-    System.out.println("PARAMS " + queryUri);
-    System.out.println("URI " + "https://api.edamam.com/search?q=" + query
-        + "&app_id=" + APP_ID + "&app_key=" + APP_KEY + queryUri);
     HttpRequest httpRequest = HttpRequest.newBuilder().GET()
         .uri(URI.create("https://api.edamam.com/search?q=" + query
-            + "&app_id=" + APP_ID + "&app_key=" + APP_KEY + queryUri)).build();
+            + "&app_id=" + APP_ID + "&app_key=" + APP_KEY + "&to=99" + queryUri)).build();
 
     HttpResponse<String> response = httpClient.send(httpRequest,
         HttpResponse.BodyHandlers.ofString());

@@ -79,37 +79,39 @@ public final class Main {
       Gui gui = new Gui();
       gui.runSparkServer((int) options.valueOf("port"));
     } else {
-      try {
-        NutrientInfo.createNutrientsList();
-        RecipeDatabase.loadDatabase("data/recipeDatabase.sqlite3");
-        RecipeDatabase.testDatabaseFile();
-//        Recipe r = RecipeDatabase.getRecipeFromURI("1234");
-//        UserDatabase.loadDatabase("data/userDatabase.sqlite3");
-//        UserDatabase.testDatabaseFile();
-      } catch (FileNotFoundException e) {
-        e.printStackTrace();
-      } catch (ClassNotFoundException e) {
-        e.printStackTrace();
-      } catch (SQLException e) {
-        e.printStackTrace();
-//      } catch (InterruptedException e) {
-////        e.printStackTrace();
-////      } catch (APIException e) {
-////        e.printStackTrace();
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-//      NutrientInfo.createNutrientsList();
 //      try {
-//        List<String> dietaryRestrictions = new ArrayList<>();
-//        Map<String, String[]> paramsMap = new HashMap<>();
-//        paramsMap.put("x", new String[] {"x"});
-////        for (int i = 0; i < recipes.length; i++) {
-////          System.out.println(recipes[i].getUri());
-////        }
-//      } catch (IOException | InterruptedException | APIException | SQLException ie) {
-//        ie.printStackTrace();
-//    }
+////        NutrientInfo.createNutrientsList();
+////        RecipeDatabase.loadDatabase("data/recipeDatabase.sqlite3");
+////        RecipeDatabase.testDatabaseFile();
+////        Recipe r = RecipeDatabase.getRecipeFromURI("1234");
+////        UserDatabase.loadDatabase("data/userDatabase.sqlite3");
+////        UserDatabase.testDatabaseFile();
+//      } catch (FileNotFoundException e) {
+//        e.printStackTrace();
+//      } catch (ClassNotFoundException e) {
+//        e.printStackTrace();
+//      } catch (SQLException e) {
+//        e.printStackTrace();
+////      } catch (InterruptedException e) {
+//////        e.printStackTrace();
+//////      } catch (APIException e) {
+//////        e.printStackTrace();
+//      } catch (IOException e) {
+//        e.printStackTrace();
+//      }
+      try {
+        RecipeDatabase.loadDatabase("data/recipeDatabase.sqlite3");
+        NutrientInfo.createNutrientsList();
+        List<String> dietaryRestrictions = new ArrayList<>();
+        Map<String, String[]> paramsMap = new HashMap<>();
+        paramsMap.put("x", new String[] {"x"});
+        Recipe[] recipes = FieldParser.getRecipesFromQuery("pasta", dietaryRestrictions, paramsMap);
+        for (int i = 0; i < recipes.length; i++) {
+          System.out.println(recipes[i].getUri());
+        }
+      } catch (IOException | InterruptedException | APIException | SQLException | ClassNotFoundException ie) {
+        ie.printStackTrace();
+    }
 
     }
 
