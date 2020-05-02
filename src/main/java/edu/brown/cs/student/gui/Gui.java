@@ -153,7 +153,10 @@ public class Gui {
 
       }
 
+
+
       User currUser = Accounts.getUser(username);
+      Map<String, String[]> paramsMap = new HashMap<>();
       // Recommender recommender = currUser.getRecommender(); // use object!
       Recipe[] recipes = new Recipe[0];
       Map<String, String[]> simpleRecipeList = new HashMap<String, String[]>();
@@ -161,12 +164,14 @@ public class Gui {
         NutrientInfo.createNutrientsList();
         List<String> restrictions = new ArrayList<>();
         for(String healthKey : healthKeys){
-          if(healthInfo.get(healthKey).equals(true)){
+          System.out.println("HEALTH KEY IS:" + healthKey + "equals: " + healthInfo.get(healthKey));
+          if(healthInfo.get(healthKey).equals("true")){
             restrictions.add(healthKey);
+            System.out.println("ADDED: " + healthKey);
+//            paramsMap.put(healthKey, healthInfo.get(healthKey));
+
           }
         }
-        //Usage "balanced", "true"
-        Map<String, String[]> paramsMap = new HashMap<>();
 
         RecipeDatabase.loadDatabase("data/recipeDatabase.sqlite3");
         recipes = FieldParser.getRecipesFromQuery(query, restrictions, paramsMap);
@@ -194,7 +199,7 @@ public class Gui {
       } catch (InterruptedException e) {
         System.out.println("InterruptedException getting recipes from query");
       } catch (APIException | SQLException e) {
-        System.out.println("API Exception getting recipes from query");
+        System.out.println("API Exception getting recipes from query. Message:  " + e.getMessage());
       } catch (ClassNotFoundException e) {
         System.out.println("Database not found when loading during search");
       }
@@ -443,7 +448,6 @@ public class Gui {
       Map<String, Object> variables = ImmutableMap.of("recipeList", recipePageRecipes, "title", " " + actualName, 
           "ingredients", ingredientsList, "image", currRecipe.getImage(), "URL", currRecipe.getUrl());
       return GSON.toJson(variables);
-
     }
   }
 
