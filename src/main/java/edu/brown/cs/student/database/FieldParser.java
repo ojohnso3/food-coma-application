@@ -137,6 +137,11 @@ public final class FieldParser {
     if (recipeArray == null) {
       throw new APIException("API returned malformed JSON");
     }
+
+    //API didn't find any recipes with the given uri.
+    if (recipeArray.length == 0) {
+      throw new APIException("No recipes correspond to the given uri.");
+    }
     return recipeArray[0];
   }
 
@@ -158,12 +163,9 @@ public final class FieldParser {
     HttpClient httpClient = HttpClient.newBuilder().build();
     String queryUri = handleParamsAndRestrictions(dietaryRestrictions, paramsMap);
 
-    System.out.println("PARAMS " + queryUri);
-    System.out.println("URI " + "https://api.edamam.com/search?q=" + query
-        + "&app_id=" + APP_ID + "&app_key=" + APP_KEY + queryUri);
     HttpRequest httpRequest = HttpRequest.newBuilder().GET()
         .uri(URI.create("https://api.edamam.com/search?q=" + query
-            + "&app_id=" + APP_ID + "&app_key=" + APP_KEY + queryUri)).build();
+            + "&app_id=" + APP_ID + "&app_key=" + APP_KEY + "&to=99" + queryUri)).build();
 
     HttpResponse<String> response = httpClient.send(httpRequest,
         HttpResponse.BodyHandlers.ofString());
@@ -193,11 +195,7 @@ public final class FieldParser {
   public static String apiCall() {
     HttpClient httpClient = HttpClient.newBuilder().build();
     HttpRequest httpRequest = HttpRequest.newBuilder().GET()
-        .uri(URI.create("https://api.edamam.com/search?" +
-            "q=chicken" +
-            "&app_id=2a676518"
-            + "&app_key=" +
-            "158f55a83eee58aff1544072b788784f")).build();
+        .uri(URI.create("https://api.edamam.com/search?")).build();
 
     try {
       HttpResponse<String> response = httpClient.send(httpRequest,

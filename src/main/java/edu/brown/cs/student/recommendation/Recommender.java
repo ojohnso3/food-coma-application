@@ -74,10 +74,6 @@ public class Recommender {
     if (recs.isEmpty()) {
       throw new RecommendationException("no recipes found for " + input);
     }
-
-    for (Recipe r : recs) { //maybe only want to save recent history??????????????????????????????
-      this.user.addToPreviousRecipes(r); // figure out order and backwards?
-    }
     return recs;
   }
 

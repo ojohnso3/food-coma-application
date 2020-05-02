@@ -361,7 +361,7 @@ public class Gui {
     public String handle(Request req, Response res) {
       QueryParamsMap map = req.queryMap();
       String username = map.value("user");
-      
+
       System.out.println(username);
       User currUser = null;
       try {
