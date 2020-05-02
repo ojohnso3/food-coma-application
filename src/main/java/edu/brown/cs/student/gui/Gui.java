@@ -45,9 +45,11 @@ public class Gui {
   private static final Gson GSON = new Gson();
   public Map<String, Recipe> recipesMap;
   public Set<String> clickedSet;
+  private Set<String> nutrients;
   public Gui() {
     recipesMap = new HashMap<String, Recipe>();
     clickedSet  = new HashSet<String>();
+    nutrients = new HashSet<String>();
 //    fieldParser = fp;
 //    nutrientInfo = nut;
   }
@@ -91,6 +93,9 @@ public class Gui {
     Spark.post("/saved", new SavedHandler());
     Spark.post("/survey_post", new SurveyHandler());
     Spark.post("/recipe/recipeuri", new RecipeHandler(this));
+    Spark.post("/toggleNutrient", new NutrientHandler());
+
+
 
     // OLD Routes
 //    Spark.get("/results", new SubmitHandler(), freeMarker);
@@ -128,23 +133,46 @@ public class Gui {
     @Override
     public String handle(Request req, Response res){
       QueryParamsMap qm = req.queryMap();
+      HashMap<String, String> healthInfo = new HashMap<String, String>();
+      HashMap<String, String> dietInfo = new HashMap<String, String>();
       String query = qm.value("prefs");
       String username = qm.value("username");
-      
+      String balanced = qm.value("bal");
+      healthInfo.put("vegan",qm.value("vg"));
+      healthInfo.put("vegetarian",qm.value("veg"));
+      healthInfo.put("sugar-conscious",qm.value("sug"));
+      healthInfo.put("peanut-free",qm.value("pf"));
+      healthInfo.put("tree-nut-free",qm.value("tf"));
+      healthInfo.put("alcohol-free",qm.value("af"));
+
+      Set<String> healthKeys = healthInfo.keySet();
+      Set<String> dietKeys = dietInfo.keySet();
+
+
+      for(String dietKey : dietKeys){
+
+      }
+
       User currUser = Accounts.getUser(username);
       // Recommender recommender = currUser.getRecommender(); // use object!
-      
       Recipe[] recipes = new Recipe[0];
       Map<String, String[]> simpleRecipeList = new HashMap<String, String[]>();
       try {
         NutrientInfo.createNutrientsList();
         List<String> restrictions = new ArrayList<>();
+        for(String healthKey : healthKeys){
+          if(healthInfo.get(healthKey).equals(true)){
+            restrictions.add(healthKey);
+          }
+        }
+        //Usage "balanced", "true"
         Map<String, String> paramsMap = new HashMap<>();
+
         RecipeDatabase.loadDatabase("data/recipeDatabase.sqlite3");
         recipes = FieldParser.getRecipesFromQuery(query, restrictions, paramsMap);
         simpleRecipeList = new HashMap<String, String[]>();
         Pattern load = Pattern.compile("#recipe_(.+)");
-
+        recipesMap.clear();
         for(int i = 0; i < recipes.length; i++){
           recipesMap.put(recipes[i].getUri(), recipes[i]);
           System.out.println(recipes[i].getLabel());
@@ -174,6 +202,7 @@ public class Gui {
       Map<String, Object> variables = ImmutableMap.of("recipes",recipes, "simpleRecipeList", simpleRecipeList);
       return GSON.toJson(variables);
     }
+
   }
   
   /**
@@ -201,8 +230,6 @@ public class Gui {
       
       List<String> nutrients = new ArrayList<String>();
       
-      // TODO: CHOOSE NUTRIENTS & ADD FUNCTIONALITY TO THOSE
-
       for (String nutrient: nutrientsMap.keySet()) {
         String currNu = map.value(nutrient);
         if (currNu.equals("true")) {
@@ -213,6 +240,8 @@ public class Gui {
       String output = "Invalid Survey: Please try again.";
       
       if (nutrients.size() > 2) {
+        System.out.println(nutrients);
+        System.out.println(currUser);
         currUser.setNutrients(nutrients);
         output = "Valid Survey!";
       } else {
@@ -325,12 +354,14 @@ public class Gui {
       
       Map<String,String> output = new HashMap<String, String>();
       
-//      for (Recipe r : prevRecipes) {
-//        output.put(r.getUri(), r.getLabel());
-//      }
-      output.put("URI1", "NAME1");
-      output.put("URI2", "NAME2");
-      output.put("URI3", "NAME3");
+      for (Recipe r : prevRecipes) {
+        output.put(r.getUri(), r.getLabel());
+      }
+      
+      System.out.println("MAP SIZE " + output.size());
+//      output.put("URI1", "NAME1");
+//      output.put("URI2", "NAME2");
+//      output.put("URI3", "NAME3");
 
       Map<String, Object> variables = ImmutableMap.of("title", "User", "output", output);
   
@@ -415,90 +446,22 @@ public class Gui {
 
     }
   }
-  
-  
-  
-  
-  
-  
-  
-//  /**
-//   * Handle requests to the front page of our Stars website.
-//   *
-//   */
-//  private static class SearchHandler implements TemplateViewRoute {
-//    @Override
-//    public ModelAndView handle(Request req, Response res) {
-//
-//      List<Recipe> recipeList = new ArrayList<Recipe>();
-//      Map<String, Object> variables = ImmutableMap.of("title",
-//          "Recipe Search", "recipeList", recipeList);
-//      return new ModelAndView(variables, "search.ftl");
-//    }
-//  }
-  
-//try {
-//NutrientInfo.createNutrientsList();
-//recipes = FieldParser.getRecipesFromQuery(query);
-//simpleRecipeList = new HashMap<String, String[]>();
-//Pattern load = Pattern.compile("#recipe_(.+)");
-//
-//for(int i = 0; i < recipes.length; i++){
-//  System.out.println(recipes[i].getLabel());
-//  String[] fields = new String[2];
-//  fields[0] = recipes[i].getUrl();
-//  fields[1] = recipes[i].getUri();
-//  Matcher matchUri = load.matcher(recipes[i].getUri());
-//  if(matchUri.find()){
-//    fields[1] = matchUri.group(1);
-//    System.out.println("URI Found: " + matchUri.group(1));
-//  } else {
-//    fields[1] = "";
-//  }
-//  simpleRecipeList.put(recipes[i].getLabel(), fields);
-//}
-//} catch (IOException e) {
-//System.out.println("IOException getting recipes from query");
-//} catch (InterruptedException e) {
-//System.out.println("InterruptedException getting recipes from query");
-//} catch (APIException e) {
-//System.out.println("API Exception getting recipes from query");
-//}
 
+  private class NutrientHandler implements Route{
 
-//  /**
-//   * Handles the functionality of printing out the result of the Stars algorithms.
-//   *
-//   */
-//  private static class SubmitHandler implements TemplateViewRoute {
-//
-//    SubmitHandler() {
-//    }
-//
-//    @Override
-//    public ModelAndView handle(Request req, Response res) {
-//      QueryParamsMap qm = req.queryMap();
-//      String textFromTextField = qm.value("text");
-//      List<Recipe> recipeList = new ArrayList<Recipe>();
-//      String valFromMap = qm.value("x1");
-//
-//
-//      Recipe tempRecp = new Recipe("9999");
-//      Recipe tempRecpO = new Recipe("9999");
-//      Recipe tempRecpT = new Recipe("9990");
-//
-//      recipeList.add(tempRecp);
-//      recipeList.add(tempRecpO);
-//      recipeList.add(tempRecpT);
-//
-//      // replace default with new String output
-//      Map<String, Object> variables = ImmutableMap.of("title", "foodCOMA Query", "recipeList", recipeList);
-//      return new ModelAndView(variables, "search.ftl");
-//    }
-//  }
-
-
-
+    @Override
+    public Object handle(Request request, Response response) throws Exception {
+      QueryParamsMap qm = request.queryMap();
+      String nutrient = qm.value("nut");
+      if(nutrients.contains(nutrient)){
+        nutrients.remove(nutrient);
+      } else {
+        nutrients.add(nutrient);
+      }
+      System.out.println(nutrient);
+      return null;
+    }
+  }
   /**
    * Display an error page when an exception occurs in the server.
    *

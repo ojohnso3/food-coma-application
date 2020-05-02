@@ -88,7 +88,7 @@ public class KDTree<N extends KDNode<N>> {
     if (this.root != null) {
       nodes.add(this.root);
     }
-
+    assert (root != null);
     getNodesRec(this.root.getLeftChild(), nodes);
     getNodesRec(this.root.getRightChild(), nodes);
     return nodes;
