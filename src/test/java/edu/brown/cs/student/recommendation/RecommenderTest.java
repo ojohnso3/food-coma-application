@@ -1,4 +1,4 @@
-package edu.brown.cs.student.foodCOMA.recommendation;
+package edu.brown.cs.student.recommendation;
 
 import org.junit.After;
 import org.junit.Before;

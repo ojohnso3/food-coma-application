@@ -1,4 +1,4 @@
-package edu.brown.cs.student.foodCOMA.database;
+package edu.brown.cs.student.database;
 
 import edu.brown.cs.student.database.APIException;
 import edu.brown.cs.student.database.RecipeDatabase;

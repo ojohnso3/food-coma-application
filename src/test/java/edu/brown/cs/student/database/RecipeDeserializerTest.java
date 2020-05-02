@@ -1,4 +1,4 @@
-package edu.brown.cs.student.foodCOMA.database;
+package edu.brown.cs.student.database;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
