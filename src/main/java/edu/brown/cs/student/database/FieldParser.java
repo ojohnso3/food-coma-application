@@ -140,7 +140,7 @@ public final class FieldParser {
 
     //API didn't find any recipes with the given uri.
     if (recipeArray.length == 0) {
-      return null;
+      throw new APIException("No recipes correspond to the given uri.");
     }
     return recipeArray[0];
   }

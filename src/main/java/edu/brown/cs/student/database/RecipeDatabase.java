@@ -183,8 +183,11 @@ public final class RecipeDatabase {
   private static Recipe loadFromApi(String uri) throws SQLException, InterruptedException,
     APIException, IOException {
     Recipe recipe = FieldParser.getRecipeFromURI(uri);
-    insertRecipe(recipe);
-    return recipe;
+    if (recipe != null) {
+      insertRecipe(recipe);
+      return recipe;
+    }
+    throw new APIException("No recipes correspond to the given uri.");
   }
 
 
@@ -328,18 +331,18 @@ public final class RecipeDatabase {
    * Database test function.
    */
   public static void testDatabaseFile() {
-    try {
-      Recipe r = getRecipeFromURI("http%3A%2F%2Fwww.edamam.com%2Fontologies%2Fedamam.owl%23recipe_9b5945e03f05acbf9d69625138385408");
-      System.out.println("URI: " + r.getUri());
-    } catch (SQLException e) {
-      e.printStackTrace();
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    } catch (APIException e) {
-      e.printStackTrace();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+//    try {
+//      Recipe r = getRecipeFromURI("http%3A%2F%2Fwww.edamam.com%2Fontologies%2Fedamam.owl%23recipe_9b5945e03f05acbf9d69625138385408");
+//      System.out.println("URI: " + r.getUri());
+//    } catch (SQLException e) {
+//      e.printStackTrace();
+//    } catch (InterruptedException e) {
+//      e.printStackTrace();
+//    } catch (APIException e) {
+//      e.printStackTrace();
+//    } catch (IOException e) {
+//      e.printStackTrace();
+//    }
   }
 }
 
