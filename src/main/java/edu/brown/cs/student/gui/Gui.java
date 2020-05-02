@@ -399,6 +399,7 @@ public class Gui {
           recipeURI = matchURL.group(1);
           String fullUri = "http://www.edamam.com/ontologies/edamam.owl#recipe_" + recipeURI;
           clickedSet.add(fullUri);
+
           System.out.println("The Recipe URI is " + recipeURI);
         }
       }

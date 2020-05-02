@@ -25,10 +25,10 @@ import com.google.common.io.Files;
  */
 
 public final class RecipeDatabase {
-  
+
   private static Connection conn;
 
-  public RecipeDatabase() {
+  private RecipeDatabase() {
 
   }
 
@@ -94,11 +94,12 @@ public final class RecipeDatabase {
       + "FOREIGN KEY (recipe_uri) REFERENCES recipe(uri));";
     stat.executeUpdate(sql);
 
-    sql = "CREATE TABLE IF NOT EXISTS nutrient_info("
+    sql = "CREATE TABLE IF NOT EXISTS queries("
             + "query TEXT,"
             + "recipe_uri TEXT,"
             + "FOREIGN KEY (recipe_uri) REFERENCES recipe(uri));";
     stat.executeUpdate(sql);
+    stat.close();
   }
 
 
@@ -137,6 +138,7 @@ public final class RecipeDatabase {
         prep.executeUpdate();
       }
     }
+    prep.close();
   }
 
   public static void insertQuery(String query, String[] uriList){
@@ -241,8 +243,13 @@ public final class RecipeDatabase {
     prep.setString(1, uri);
     ResultSet nutrientSet = prep.executeQuery();
 
-    System.out.println("got here");
-    return createRecipe(recipeSet, ingredientSet, nutrientSet, uri);
+    Recipe r = createRecipe(recipeSet, ingredientSet, nutrientSet, uri);
+    prep.close();
+    recipeSet.close();
+    ingredientSet.close();
+    nutrientSet.close();
+
+    return r;
   }
 
 
@@ -268,7 +275,10 @@ public final class RecipeDatabase {
     PreparedStatement prep = conn.prepareStatement("SELECT * FROM recipe WHERE uri = ?");
     prep.setString(1, uri);
     ResultSet recipeSet = prep.executeQuery();
-    return recipeSet.next();
+    boolean retVal = recipeSet.next();
+    prep.close();
+    recipeSet.close();
+    return retVal;
   }
 
   /**
@@ -277,7 +287,7 @@ public final class RecipeDatabase {
    * @return - boolean representing whether the given uri is in the database.
    */
   public static boolean checkQueryInDatabase(String query) throws SQLException {
-    PreparedStatement prep = conn.prepareStatement("SELECT * FROM recipe WHERE query = ?"); //////////////// recipe?
+    PreparedStatement prep = conn.prepareStatement("SELECT * FROM queries WHERE query = ?");
     prep.setString(1, query);
     ResultSet recipeSet = prep.executeQuery();
     return recipeSet.next();
