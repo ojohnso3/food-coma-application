@@ -121,4 +121,19 @@ public class Recipe {
   public int hashCode() {
     return this.uri.hashCode();
   }
+
+  public boolean containsLabel(String label){
+    boolean ret = false;
+    for(String item : healthLabels){
+      if (item.equals(label)){
+        ret = true;
+      }
+    }
+    for(String item : dietLabels){
+      if(item.equals(label)){
+        ret = true;
+      }
+    }
+    return ret;
+  }
 }

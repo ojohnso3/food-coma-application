@@ -149,30 +149,8 @@ public final class RecipeDatabase {
       PreparedStatement prep = conn.prepareStatement("INSERT INTO queries VALUES("
               +"\"" + query + "\" , \"" + uri + "\");");
       prep.executeUpdate();
+      prep.close();
     }
-
-//
-//    for (Ingredient ingredient : recipe.getIngredients()) {
-//      String line = "\"" + recipe.getUri() + "\",\"" + ingredient.getText() + "\","
-//              + ingredient.getWeight();
-//
-//      prep = conn.prepareStatement("INSERT INTO ingredient VALUES("
-//              + line + ");");
-//      prep.executeUpdate();
-//    }
-//
-//    for (String code : NutrientInfo.nutrients.keySet()) {
-//      double[] currVals = recipe.getNutrientVals(code);
-//
-//      if (currVals != null) {
-//        String line = "\"" + code + "\",\"" + recipe.getUri() + "\"," + currVals[0] + "," + currVals[1];
-//
-//        prep = conn.prepareStatement("INSERT INTO nutrient_info VALUES("
-//                + line + ")");
-//        prep.executeUpdate();
-//      }
-//    }
-//    prep.close();
   }
 
   /**
@@ -317,28 +295,48 @@ public final class RecipeDatabase {
    * @return - boolean representing whether the given uri is in the database.
    */
   public static boolean checkQueryInDatabase(String query) throws SQLException {
-    PreparedStatement prep = conn.prepareStatement("SELECT * FROM queries WHERE query = ?");
+
+    System.out.println("REQUESTED QUERY IS " + query);
+    PreparedStatement prep = conn.prepareStatement("SELECT query FROM queries WHERE query = ?");
     prep.setString(1, query);
     ResultSet recipeSet = prep.executeQuery();
-    return recipeSet.next();
+    boolean retVal = recipeSet.next();
+    prep.close();
+    recipeSet.close();
+    return retVal;
   }
 
   public static List<String> getQueryURIListFromDatabase(String query) throws SQLException{
-    PreparedStatement prep = conn.prepareStatement("SELECT recipe_uri as r FROM queries WHERE query = ?");
+    PreparedStatement prep = conn.prepareStatement("SELECT recipe_uri FROM queries WHERE query = ?");
     prep.setString(1, query);
     ResultSet recipeSet = prep.executeQuery();
-    prep.close();
     List<String> recipesFromExactQuery = new ArrayList<String>();
     while(recipeSet.next()){
       String uri = recipeSet.getString("recipe_uri");
       recipesFromExactQuery.add(uri);
     }
+    prep.close();
+    recipeSet.close();
     return recipesFromExactQuery;
   }
 
-  /**
-   * Database test function.
-   */
+  public static List<String> getSimilar(String query) throws SQLException{
+    String q = "%" + query + "%";
+    PreparedStatement prep = conn.prepareStatement("SELECT uri FROM recipe WHERE label LIKE ?");
+    prep.setString(1,q);
+    List<String> recipesFromSimilarQuery = new ArrayList<String>();
+    ResultSet recipeSet = prep.executeQuery();
+    while(recipeSet.next()){
+      recipesFromSimilarQuery.add(recipeSet.getString("uri"));
+    }
+    return recipesFromSimilarQuery;
+  }
+
+
+
+    /**
+     * Database test function.
+     */
   public static void testDatabaseFile() {
     try {
       Recipe r = getRecipeFromURI("http%3A%2F%2Fwww.edamam.com%2Fontologies%2Fedamam.owl%23recipe_9b5945e03f05acbf9d69625138385408");

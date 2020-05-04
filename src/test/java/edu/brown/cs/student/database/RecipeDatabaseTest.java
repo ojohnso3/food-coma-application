@@ -53,7 +53,7 @@ public class RecipeDatabaseTest {
 //
 //    this.testInsertRecipe(uri, num);
 //    this.testGetRecipeFromUri();
-//    this.testQueryAlreadyInDb();
+    this.testQueryAlreadyInDb();
   }
 
   /**
@@ -146,13 +146,19 @@ public class RecipeDatabaseTest {
   }
 
 
-  public void testQueryAlreadyInDb(){
+  public void testQueryAlreadyInDb() {
     try {
-      System.out.println("ALREADY IN DATABASE? " + RecipeDatabase.checkQueryInDatabase("sauce"));
+      RecipeDatabase.loadDatabase("data/recipeDatabase.sqlite3");
+      NutrientInfo.createNutrientsList();
+      assertTrue(RecipeDatabase.checkQueryInDatabase("sauce"));
     } catch (SQLException e) {
       System.out.println("SQLException in testing");
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    } catch (ClassNotFoundException e) {
+      e.printStackTrace();
+    } catch (IOException e) {
+      e.printStackTrace();
     }
   }
-
-
 }

@@ -181,7 +181,10 @@ public class Gui {
         for(int i = 0; i < recipes.length; i++){
           recipesForDb[i] = recipes[i].getUri();
         }
-        RecipeDatabase.insertQuery(query, recipesForDb);
+        System.out.println("QUERY IN DB????? : " + RecipeDatabase.checkQueryInDatabase(query));
+        if(!RecipeDatabase.checkQueryInDatabase(query)){
+          RecipeDatabase.insertQuery(query, recipesForDb);
+        }
         simpleRecipeList = new HashMap<String, String[]>();
         Pattern load = Pattern.compile("#recipe_(.+)");
         recipesMap.clear();
@@ -205,10 +208,12 @@ public class Gui {
         System.out.println("IOException getting recipes from query: " + e.getMessage());
       } catch (InterruptedException e) {
         System.out.println("InterruptedException getting recipes from query");
-      } catch (APIException | SQLException e) {
+      } catch (APIException e) {
         System.out.println("API Exception getting recipes from query. Message:  " + e.getMessage());
       } catch (ClassNotFoundException e) {
         System.out.println("Database not found when loading during search");
+      } catch (SQLException e){
+        System.out.println("SQLException in getting recipes from database: " + e.getMessage());
       }
 
       Map<String, Object> variables = ImmutableMap.of("recipes",recipes, "simpleRecipeList", simpleRecipeList);
