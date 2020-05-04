@@ -293,7 +293,7 @@ public final class RecipeDatabase {
 
 
       return new Recipe(uri, label, image, source, url, yield, calories, totalWeight, totalTime,
-          ingredients, dietLabels, healthLabels, nutrients);
+          ingredients, nutrients, healthLabels, dietLabels);
     }
 
     return loadFromApi(uri);
