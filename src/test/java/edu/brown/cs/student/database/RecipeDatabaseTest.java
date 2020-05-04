@@ -42,19 +42,22 @@ public class RecipeDatabaseTest {
     testVal[1] = 2.0;
     nutrients.put("CA", testVal);
 
+    List<String> labels = new ArrayList<>();
+    labels.add("a");
+
     Random rand = new Random();
     String uri = rand.nextInt(1000) + "";
     this.r2 = new Recipe(uri, "label", "image", "source", "url", 0.0,
-        0.0, 0.0, 0.0, ingredients, nutrients);
+        0.0, 0.0, 0.0, ingredients, nutrients, labels, labels);
 
     int num = rand.nextInt(1000);
     this.r3 = new Recipe("http://edamam.api.com/Ontology#" + num, "label", "image" , "source",
-        "url", 0.0, 0.0, 0.0, 0.0, ingredients, nutrients);
+        "url", 0.0, 0.0, 0.0, 0.0, ingredients, nutrients, labels, labels);
 
-    //this.testInsertRecipe(uri, num);
-    //this.testGetRecipeFromUri();
-    //this.testCheckRecipeInDatabase();
-    //this.testQueryAlreadyInDb();
+    this.testInsertRecipe(uri, num);
+    this.testGetRecipeFromUri();
+    this.testCheckRecipeInDatabase();
+    this.testQueryAlreadyInDb();
   }
 
   /**
