@@ -108,23 +108,25 @@ public final class UserDatabase {
         + "\"" + user.getUsername() + "\");");
     prep.executeUpdate();
 
-    for (String s : user.getDietaryRestrictions()) {
-      prep = conn.prepareStatement("INSERT INTO restriction VALUES(\"" + user.getUsername()
-          + "\",\"" + s + "\");");
-      prep.executeUpdate();
-    }
 
+//    for (String s : user.getDietaryRestrictions()) {
+//      prep = conn.prepareStatement("INSERT INTO restriction VALUES(\"" + user.getUsername()
+//          + "\",\"" + s + "\");");
+//      prep.executeUpdate();
+//    }
+//
+//
 //    for (String s : user.getNutrients()) {
 //      prep = conn.prepareStatement("INSERT INTO nutrient VALUES(\"" + user.getUsername()
 //          + "\",\"" + s + "\");");
 //      prep.executeUpdate();
 //    }
-
-    for (Recipe r : user.getPreviousRecipes()) {
-      prep = conn.prepareStatement("INSERT INTO prev_recipe VALUES(\"" + user.getUsername()
-          + "\",\"" + r.getUri() + "\");");
-      prep.executeUpdate();
-    }
+//
+//    for (Recipe r : user.getPreviousRecipes()) {
+//      prep = conn.prepareStatement("INSERT INTO prev_recipe VALUES(\"" + user.getUsername()
+//          + "\",\"" + r.getUri() + "\");");
+//      prep.executeUpdate();
+//    }
   }
 
   /**

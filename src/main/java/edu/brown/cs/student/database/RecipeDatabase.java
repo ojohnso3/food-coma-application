@@ -128,8 +128,10 @@ public final class RecipeDatabase {
     PreparedStatement prep = conn.prepareStatement("INSERT INTO recipe VALUES("
         + recipe.prepareForInsert() + ");");
     prep.executeUpdate();
+
     for (Ingredient ingredient : recipe.getIngredients()) {
-      String line = "\"" + recipe.getUri() + "\",\"" + ingredient.getText() + "\","
+      String text = ingredient.getText().replace("\"", "");
+      String line = "\"" + recipe.getUri() + "\",\"" + text + "\","
           + ingredient.getWeight();
 
       prep = conn.prepareStatement("INSERT INTO ingredient VALUES("
@@ -374,13 +376,13 @@ public final class RecipeDatabase {
     return recipesFromExactQuery;
   }
 
-  public static List<String> getSimilar(String query) throws SQLException{
+  public static List<String> getSimilar(String query) throws SQLException {
     String q = "%" + query + "%";
     PreparedStatement prep = conn.prepareStatement("SELECT uri FROM recipe WHERE label LIKE ?");
-    prep.setString(1,q);
-    List<String> recipesFromSimilarQuery = new ArrayList<String>();
+    prep.setString(1, q);
+    List<String> recipesFromSimilarQuery = new ArrayList<>();
     ResultSet recipeSet = prep.executeQuery();
-    while(recipeSet.next()){
+    while (recipeSet.next()) {
       recipesFromSimilarQuery.add(recipeSet.getString("uri"));
     }
     return recipesFromSimilarQuery;

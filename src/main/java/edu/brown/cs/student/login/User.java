@@ -113,6 +113,7 @@ public class User {
   public void addToPreviousRecipesByURI(String uri) throws InterruptedException, SQLException,
       APIException, IOException {
     Recipe r = RecipeDatabase.getRecipeFromURI(uri);
+    UserDatabase.insertToPrevRecipe(this.username, uri);
     this.previousRecipes.add(r);
   }
 
@@ -120,7 +121,8 @@ public class User {
    * Function to add to the previousRecipes field.
    * @param recipe
    */
-  public void addToPreviousRecipes(Recipe recipe) {
+  public void addToPreviousRecipes(Recipe recipe) throws SQLException {
+    UserDatabase.insertToPrevRecipe(this.username, recipe.getUri());
     previousRecipes.add(recipe);
   }
 
@@ -137,7 +139,10 @@ public class User {
    * setter.
    * @param newRestrictions - whole new list to replace old restrictions
    */
-  public void setDietaryRestrictions(List<String> newRestrictions) {
+  public void setDietaryRestrictions(List<String> newRestrictions) throws SQLException {
+    for (String label : newRestrictions) {
+      UserDatabase.insertToRestriction(this.username, label);
+    }
     this.setDietaryRestrictions(newRestrictions);
   }
 
@@ -145,7 +150,8 @@ public class User {
    * add to dietary restrictions.
    * @param label - the diet or health label to be added to dietaryRestrictions.
    */
-  public void addToRestrictions(String label) {
+  public void addToRestrictions(String label) throws SQLException {
+    UserDatabase.insertToRestriction(this.username, label);
     dietaryRestrictions.add(label);
   }
 

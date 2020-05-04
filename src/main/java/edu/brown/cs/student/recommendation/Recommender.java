@@ -10,6 +10,7 @@ import java.util.Map;
 
 import edu.brown.cs.student.database.APIException;
 import edu.brown.cs.student.database.FieldParser;
+import edu.brown.cs.student.food.NutrientInfo;
 import edu.brown.cs.student.food.Recipe;
 import edu.brown.cs.student.kdtree.KDTree;
 import edu.brown.cs.student.kdtree.KDTreeException;
@@ -44,7 +45,12 @@ public class Recommender {
         this.user.getDietaryRestrictions(), paramsMap));
     // normalize the coordinates of every node
     List<RecipeNode> nodes = convertRecipesToRecipeNodes(recipesList);
-    this.recipeTree.normalizeAxes(nodes); //weight special axes higher
+
+    List<Integer> weightedAxes = new ArrayList<>();
+    for (String code : user.getNutrients()) {
+      weightedAxes.add(NutrientInfo.nutrientCodes.indexOf(code));
+    }
+    this.recipeTree.normalizeAxes(nodes, weightedAxes); //weight special axes higher
     // put them in the tree
     this.recipeTree.initializeTree(nodes);
   }
@@ -54,7 +60,6 @@ public class Recommender {
    * @param input Search input of user
    * @param paramsMap - parameters for the query the user has entered.
    * @return List of recommended recipes
-   * //TODO: don't add every recipe to user's history.
    */
   public List<Recipe> makeRecommendation(String input, Map<String, String[]> paramsMap) throws
       RecommendationException, InterruptedException, IOException, APIException, SQLException {
@@ -79,9 +84,8 @@ public class Recommender {
    * @param r - the RecipeNode to find the coordinates of.
    */
   private void addRecipeNodeCoords(RecipeNode r) {
-    List<String> nutrientPreferences = user.getNutrients();
     List<Double> coords = new ArrayList<>();
-    for (String code : nutrientPreferences) {
+    for (String code : NutrientInfo.nutrientCodes) {
       coords.add(r.getRecipe().getNutrientVals(code)[0]);
     }
 
@@ -95,7 +99,7 @@ public class Recommender {
    */
   private List<RecipeNode> convertRecipesToRecipeNodes(List<Recipe> recipes) {
     List<RecipeNode> nodes = new ArrayList<>();
-    for (Recipe recipe: recipes) {
+    for (Recipe recipe : recipes) {
       RecipeNode r = new RecipeNode(recipe);
       this.addRecipeNodeCoords(r);
       nodes.add(r);
@@ -111,7 +115,8 @@ public class Recommender {
   private RecipeNode getTargetNode(List<Recipe> userHistory) throws RecommendationException {
     // get nodes for prev recipes and normalize
     List<RecipeNode> prevRecipeNodes = this.convertRecipesToRecipeNodes(userHistory);
-    this.recipeTree.normalizeAxes(prevRecipeNodes);
+
+    this.recipeTree.normalizeAxes(prevRecipeNodes, new ArrayList<>());
     // prepare target
     List<Double> coords = new ArrayList<>();
     for (int i = 0; i < this.dim; i++) {
