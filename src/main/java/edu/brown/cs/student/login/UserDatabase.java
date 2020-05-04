@@ -107,14 +107,12 @@ public final class UserDatabase {
     PreparedStatement prep = conn.prepareStatement("INSERT INTO account VALUES("
         + "\"" + user.getUsername() + "\");");
     prep.executeUpdate();
-
-
+    
 //    for (String s : user.getDietaryRestrictions()) {
 //      prep = conn.prepareStatement("INSERT INTO restriction VALUES(\"" + user.getUsername()
 //          + "\",\"" + s + "\");");
 //      prep.executeUpdate();
 //    }
-//
 //
 //    for (String s : user.getNutrients()) {
 //      prep = conn.prepareStatement("INSERT INTO nutrient VALUES(\"" + user.getUsername()
@@ -185,6 +183,7 @@ public final class UserDatabase {
       IOException, APIException, AccountException {
 
     if (!checkUsername(username)) {
+      System.out.println("USER GONE");
       throw new AccountException("Cannot retrieve user: user does not exist");
     }
 

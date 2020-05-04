@@ -263,7 +263,11 @@ public class Gui {
       if (nutrients.size() > 2) {
         System.out.println(nutrients);
         System.out.println(currUser);
-        currUser.setNutrients(nutrients);
+        try {
+          currUser.setNutrients(nutrients);
+        } catch (SQLException e) {
+          e.getMessage();
+        }
         output = "Valid Survey!";
       } else {
         output = "Invalid Survey: Please select at least three nutrients.";
