@@ -161,7 +161,10 @@ public class User {
    * setter.
    * @param n - nutrients
    */
-  public void setNutrients(List<String> n) {
+  public void setNutrients(List<String> n) throws SQLException {
+    for (String nutrient : n) {
+      UserDatabase.insertToNutrients(this.username, nutrient);
+    }
     this.nutrients = n;
   }
 
