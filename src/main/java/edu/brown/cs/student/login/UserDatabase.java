@@ -114,11 +114,11 @@ public final class UserDatabase {
       prep.executeUpdate();
     }
 
-    for (String s : user.getNutrients()) {
-      prep = conn.prepareStatement("INSERT INTO nutrient VALUES(\"" + user.getUsername()
-          + "\",\"" + s + "\");");
-      prep.executeUpdate();
-    }
+//    for (String s : user.getNutrients()) {
+//      prep = conn.prepareStatement("INSERT INTO nutrient VALUES(\"" + user.getUsername()
+//          + "\",\"" + s + "\");");
+//      prep.executeUpdate();
+//    }
 
     for (Recipe r : user.getPreviousRecipes()) {
       prep = conn.prepareStatement("INSERT INTO prev_recipe VALUES(\"" + user.getUsername()
