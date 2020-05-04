@@ -14,10 +14,8 @@ public class UserTest {
   public void constructorTest() throws AccountException {
 //    String user = "user";
 //    String pass = "pass";
-<<<<<<< HEAD
-=======
+
 //    Accounts.initializeMap(PATH_CSV);
->>>>>>> 6964ed95f5ac9b5dc98150dd408325eb77e72dfb
 //    User u = new User(user, pass, PATH_CSV);
 //
 //    assertEquals(user, u.getUsername());
@@ -25,10 +23,7 @@ public class UserTest {
 //    assertEquals(false, Accounts.checkLogin("fake user", pass, PATH_CSV));
 //    assertEquals(false, Accounts.checkLogin(user, "fake pass", PATH_CSV));
 //    assertEquals(false, Accounts.checkLogin("fake user", "fake pass", PATH_CSV));
-<<<<<<< HEAD
 
-=======
->>>>>>> 6964ed95f5ac9b5dc98150dd408325eb77e72dfb
   }
 }
 
