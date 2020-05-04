@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -51,7 +52,10 @@ public class Accounts {
    * to be called at the start of running application.
    * @throws AccountException on file UserDatabase failure
    */
-  public static void initializeMap() throws AccountException {
+  public static void initializeMap() throws AccountException, 
+      FileNotFoundException, ClassNotFoundException, SQLException {
+    
+    UserDatabase.loadDatabase("data/userDatabase.sqlite3");
     initializeMap(LOGIN_INFO_PATH);
   }
   /*
@@ -62,6 +66,7 @@ public class Accounts {
     // create users from info files and databases
     try (Scanner loginInfo = new Scanner(new FileReader(path))) {
       // create each user
+      System.out.println("GETS HERE");
       while (loginInfo.hasNext()) {
         String[] login = loginInfo.nextLine().split(",");
         String username = login[0];
@@ -242,6 +247,8 @@ public class Accounts {
    * @throws UserCreationException if false
    */
   private static boolean userExists(String user) throws UserCreationException {
+    System.out.println("USER EXISTS " + nameUserMap.containsKey(user));
+    System.out.println("USER VAL " + nameUserMap.get(user));
     if (!nameUserMap.containsKey(user)) {
       return true;
     } else {
