@@ -155,10 +155,16 @@ public final class FieldParser {
    */
   public static Recipe[] getRecipesFromQuery(String query, List<String> dietaryRestrictions,
                                              Map<String, String[]> paramsMap)
-      throws IOException, InterruptedException, APIException, SQLException {
+          throws IOException, InterruptedException, SQLException, APIException {
+    System.out.println("PREV QUERY??? from FieldParse " + RecipeDatabase.checkQueryInDatabase(query));
     if(RecipeDatabase.checkQueryInDatabase(query)){
-
+      Recipe[] prevRecipesRes = pullPrevRecipes(query, dietaryRestrictions,paramsMap);
+      if(prevRecipesRes.length > 9) {
+        return prevRecipesRes;
+      }
     }
+
+    System.out.println("BEYOND check prev x2 ---------------");
     query = query.replace(" ", "+");
     HttpClient httpClient = HttpClient.newBuilder().build();
     String queryUri = handleParamsAndRestrictions(dietaryRestrictions, paramsMap);
@@ -171,6 +177,10 @@ public final class FieldParser {
         HttpResponse.BodyHandlers.ofString());
 
     if (response.statusCode() != 200) {
+      Recipe[] similar = pullSimilar(query, dietaryRestrictions, paramsMap);
+      if(similar.length > 10){
+        return similar;
+      }
       throw new APIException("API returned error " + response.statusCode());
     }
 
@@ -178,13 +188,16 @@ public final class FieldParser {
     if (recipes == null) {
       throw new APIException("API returned malformed JSON");
     }
-
     for (Recipe r : recipes) {
       //recipe uris in recipe database must be unique.
       if (!RecipeDatabase.checkRecipeInDatabase(r.getUri())) {
         RecipeDatabase.insertRecipe(r);
+
       }
     }
+
+
+
 
     return recipes;
   }
@@ -220,5 +233,43 @@ public final class FieldParser {
       System.out.println(recipes[i].getNutrientVals("FE")[0]);
     }
     return recipes[0];
+  }
+
+  /**
+   * This function retrieves recipes that correspond to the given query in the api.
+   * @param query - the desired query to search for in the api.
+   * @param dietaryRestrictions - the diet and health labels to include in the query.
+   * @param paramsMap - the map of constraints for the query -- see comment in InputMatcher for
+   * more details.
+   * @return - an array of recipes that correspond to the given query in the api.
+   */
+  public static Recipe[] pullPrevRecipes(String query, List<String> dietaryRestrictions,
+                                             Map<String, String[]> paramsMap)
+          throws IOException, InterruptedException, APIException, SQLException {
+    List<String> uris = RecipeDatabase.getQueryURIListFromDatabase(query);
+    Recipe[] recipesForRet = new Recipe[uris.size()];
+    for(int i = 0; i < uris.size(); i++){
+      Recipe currRec = RecipeDatabase.getRecipeFromURI(uris.get(i));
+      recipesForRet[i] = currRec;
+    }
+    return recipesForRet;
+  }
+
+  /**
+   * This function retrieves recipes that correspond to the given query in the api.
+   * @param query - the desired query to search for in the api.
+   * @param dietaryRestrictions - the diet and health labels to include in the query.
+   * @param paramsMap - the map of constraints for the query -- see comment in InputMatcher for
+   * more details.
+   * @return - an array of recipes that correspond to the given query in the api.
+   */
+  public static Recipe[] pullSimilar(String query, List<String> dietaryRestrictions,
+                                         Map<String, String[]> paramsMap) throws SQLException, InterruptedException, IOException, APIException {
+    List<String> uris = RecipeDatabase.getSimilar(query);
+    Recipe[] recipeList = new Recipe[uris.size()];
+    for(int i = 0; i < uris.size(); i++){
+      recipeList[i] = RecipeDatabase.getRecipeFromURI(uris.get(i));
+    }
+    return recipeList;
   }
 }

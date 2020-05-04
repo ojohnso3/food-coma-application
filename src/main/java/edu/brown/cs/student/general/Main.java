@@ -7,8 +7,6 @@ package edu.brown.cs.student.general;
 //
 //import java.util.Map;
 
-import com.google.common.collect.ImmutableMap;
-
 import edu.brown.cs.student.database.APIException;
 import edu.brown.cs.student.database.FieldParser;
 import edu.brown.cs.student.database.RecipeDatabase;
@@ -17,21 +15,10 @@ import edu.brown.cs.student.food.Recipe;
 import edu.brown.cs.student.gui.Gui;
 import edu.brown.cs.student.login.AccountException;
 import edu.brown.cs.student.login.Accounts;
-import edu.brown.cs.student.login.UserDatabase;
-import freemarker.template.Configuration;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
-import spark.ExceptionHandler;
-import spark.ModelAndView;
-import spark.Request;
-import spark.Response;
-import spark.Spark;
-import spark.TemplateViewRoute;
-import spark.template.freemarker.FreeMarkerEngine;
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -65,7 +52,7 @@ public final class Main {
     // initialize users maps
     try {
       Accounts.initializeMap();
-    } catch (AccountException e) {
+    } catch (AccountException | FileNotFoundException | ClassNotFoundException | SQLException e) {
       e.printStackTrace();
     }
 
