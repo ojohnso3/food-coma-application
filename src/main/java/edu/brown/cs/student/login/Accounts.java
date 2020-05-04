@@ -252,7 +252,7 @@ public class Accounts {
   /**
    * checks if username is taken.
    * @param user - username
-   * @return bool
+   * @return bool - true when the username is not in the database and valid.
    * @throws UserCreationException if false
    */
   private static boolean userExists(String user) throws UserCreationException {
