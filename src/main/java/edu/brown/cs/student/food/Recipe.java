@@ -28,15 +28,15 @@ public class Recipe {
   private double totalWeight;
   private double totalTime;
   private List<Ingredient> ingredients;
-  private String[] dietLabels;
-  private String[] healthLabels;
+  private List<String> dietLabels;
+  private List<String> healthLabels;
   private Map<String, double[]> nutrients = new HashMap<>();
 
 
   public Recipe(String uri, String label, String image, String source, String url, double yield,
                 double calories, double totalWeight, double totalTime, List<Ingredient> ingredients,
-                Map<String, double[]> nutrients, String[] dietLabels,
-                String[] healthLabels) {
+                Map<String, double[]> nutrients, List<String> dietLabels,
+                List<String> healthLabels) {
     this.uri = uri;
     this.label = label;
     this.image = image;
@@ -107,6 +107,14 @@ public class Recipe {
     } else {
       return "";
     }
+  }
+
+  public List<String> getDietLabels() {
+    return dietLabels;
+  }
+
+  public List<String> getHealthLabels() {
+    return healthLabels;
   }
 
   @Override

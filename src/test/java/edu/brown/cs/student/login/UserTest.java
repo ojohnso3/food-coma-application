@@ -1,22 +1,23 @@
 package edu.brown.cs.student.login;
 
-import edu.brown.cs.student.login.AccountException;
-import edu.brown.cs.student.login.Accounts;
-import edu.brown.cs.student.login.User;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 /**
  * test User.
  */
 public class UserTest {
-  private static final String PATH_CSV = "src/test/java/edu/brown/cs/student/foodCOMA/login/test.csv";
+  private static final String PATH_CSV = "src/test/java/edu/brown/cs/student/login/test.csv";
 
   @Test
   public void constructorTest() throws AccountException {
 //    String user = "user";
 //    String pass = "pass";
+<<<<<<< HEAD
+=======
+//    Accounts.initializeMap(PATH_CSV);
+>>>>>>> 6964ed95f5ac9b5dc98150dd408325eb77e72dfb
 //    User u = new User(user, pass, PATH_CSV);
 //
 //    assertEquals(user, u.getUsername());
@@ -24,7 +25,10 @@ public class UserTest {
 //    assertEquals(false, Accounts.checkLogin("fake user", pass, PATH_CSV));
 //    assertEquals(false, Accounts.checkLogin(user, "fake pass", PATH_CSV));
 //    assertEquals(false, Accounts.checkLogin("fake user", "fake pass", PATH_CSV));
+<<<<<<< HEAD
 
+=======
+>>>>>>> 6964ed95f5ac9b5dc98150dd408325eb77e72dfb
   }
 }
 

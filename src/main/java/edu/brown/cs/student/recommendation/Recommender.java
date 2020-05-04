@@ -20,15 +20,17 @@ import edu.brown.cs.student.login.User;
  */
 public class Recommender {
   private KDTree<RecipeNode> recipeTree;
-  private static final int TREE_INIT_SIZE = 50;
   private static final int REC_QUANTITY = 10;
-  private int dim;
-  private User user;
+  private final int dim;
+  private final User user;
 
-
+  /**
+   * constructor; should be called on initial survey or on user recreation.
+   * @param user - user
+   */
   public Recommender(User user) {
     this.user = user;
-    this.dim = 3; //user.getNutrients().size();
+    this.dim = user.getNutrients().size();
   }
 
   /**
@@ -42,8 +44,8 @@ public class Recommender {
         this.user.getDietaryRestrictions(), paramsMap));
     // normalize the coordinates of every node
     List<RecipeNode> nodes = convertRecipesToRecipeNodes(recipesList);
-    this.recipeTree.normalizeAxes(nodes);
-    // also normalize user history?
+    this.recipeTree.normalizeAxes(nodes); //weight special axes higher
+    // put them in the tree
     this.recipeTree.initializeTree(nodes);
   }
 
@@ -68,10 +70,6 @@ public class Recommender {
     // TODO: correct place/way to handle this?
     if (recs.isEmpty()) {
       throw new RecommendationException("no recipes found for " + input);
-    }
-
-    for (Recipe r : recs) { //maybe only want to save recent history??????????????????????????????
-      this.user.addToPreviousRecipes(r); // figure out order and backwards?
     }
     return recs;
   }
@@ -110,31 +108,23 @@ public class Recommender {
    * @param userHistory - the previous recipes that the user has accessed.
    * @return - a RecipeNode at the coordinates determined by the query and the user's history.
    */
-  private RecipeNode getTargetNode(List<Recipe> userHistory) {
-    // get nodes for prev recipes and prepare a list to sum their coords in
+  private RecipeNode getTargetNode(List<Recipe> userHistory) throws RecommendationException {
+    // get nodes for prev recipes and normalize
     List<RecipeNode> prevRecipeNodes = this.convertRecipesToRecipeNodes(userHistory);
-    List<Double> coordsSum = new ArrayList<>();
+    this.recipeTree.normalizeAxes(prevRecipeNodes);
+    // prepare target
+    List<Double> coords = new ArrayList<>();
     for (int i = 0; i < this.dim; i++) {
-      coordsSum.add(0.);
+      coords.add(Double.NaN);
     }
-
-    // accumulate the sum of each dimension
-    for (RecipeNode r: prevRecipeNodes) {
-      List<Double> coords = r.getCoords();
-      for (int i = 0; i < coordsSum.size(); i++) {
-        double currSum = coordsSum.get(i);
-        currSum += coords.get(i);
-        coordsSum.set(i, currSum);
-      }
+    RecipeNode target = new RecipeNode(coords);
+    // set the coords to be the midpoint
+    try {
+      recipeTree.makeAverageNode(target, prevRecipeNodes);
+    } catch (KDTreeException e) {
+      throw new RecommendationException(e.getMessage());
     }
-
-    // find the average for each coord by dividing by the total # of recipes
-    List<Double> targetCoords = new ArrayList<>();
-    for (double sum : coordsSum) {
-      targetCoords.add(sum / prevRecipeNodes.size());
-    }
-
-    return new RecipeNode(targetCoords);
+    return target;
   }
 
   private List<Recipe> getRecommendedRecipes(List<Recipe> userHistory)
@@ -142,18 +132,19 @@ public class Recommender {
     List<Recipe> recs = new ArrayList<>();
     // create a target node using the average position of all previous recipes
     RecipeNode target = this.getTargetNode(userHistory);
-
-    // search for the nearest/most relevant recipes
-    List<RecipeNode> recipeNodes;
     try {
-      recipeNodes = recipeTree.nearestSearch(target, REC_QUANTITY);
+      // add the target nodes' coordinates each node in tree to make the origin the target point
+      this.recipeTree.translateTree(target.getCoords());
+
+      // search for the nearest/most relevant recipes
+      List<RecipeNode> recipeNodes = recipeTree.nearestSearch(target, REC_QUANTITY);
+
+      // get the actual recipes from the nodes to compile the recs list
+      for (RecipeNode node : recipeNodes) {
+        recs.add(node.getRecipe());
+      }
     } catch (KDTreeException e) {
       throw new RecommendationException(e.getMessage());
-    }
-
-    // get the actual recipes from the nodes to compile the recs list
-    for (RecipeNode node : recipeNodes) {
-      recs.add(node.getRecipe());
     }
 
     return recs;

@@ -94,6 +94,18 @@ public final class RecipeDatabase {
       + "FOREIGN KEY (recipe_uri) REFERENCES recipe(uri));";
     stat.executeUpdate(sql);
 
+    sql = "CREATE TABLE IF NOT EXISTS diet_label("
+        + "recipe_uri TEXT,"
+        + "label TEXT,"
+        + "FOREIGN KEY (recipe_uri) REFERENCES recipe(uri));";
+    stat.executeUpdate(sql);
+
+    sql = "CREATE TABLE IF NOT EXISTS health_label("
+        + "recipe_uri TEXT,"
+        + "label TEXT,"
+        + "FOREIGN KEY (recipe_uri) REFERENCES recipe(uri));";
+    stat.executeUpdate(sql);
+
     sql = "CREATE TABLE IF NOT EXISTS queries("
             + "query TEXT,"
             + "recipe_uri TEXT,"
@@ -106,7 +118,6 @@ public final class RecipeDatabase {
   /**
    * Function to insert a recipe into the sqlite database.
    * @param recipe - the Recipe object to be inserted.
-   * @return - a boolean representing whether insertion was successful.
    */
   public static void insertRecipe(Recipe recipe) throws SQLException {
 
@@ -137,6 +148,23 @@ public final class RecipeDatabase {
         prep.executeUpdate();
       }
     }
+
+    for (String label : recipe.getDietLabels()) {
+      String line = "\"" + recipe.getUri() + "\",\"" + label + "\"";
+
+      prep = conn.prepareStatement("INSERT INTO diet_label VALUES("
+          + line + ")");
+      prep.executeUpdate();
+    }
+
+    for (String label : recipe.getHealthLabels()) {
+      String line = "\"" + recipe.getUri() + "\",\"" + label + "\"";
+
+      prep = conn.prepareStatement("INSERT INTO health_label VALUES("
+          + line + ")");
+      prep.executeUpdate();
+    }
+
     prep.close();
   }
 
@@ -161,8 +189,24 @@ public final class RecipeDatabase {
   private static Recipe loadFromApi(String uri) throws SQLException, InterruptedException,
     APIException, IOException {
     Recipe recipe = FieldParser.getRecipeFromURI(uri);
-    insertRecipe(recipe);
-    return recipe;
+    if (recipe != null) {
+      insertRecipe(recipe);
+      return recipe;
+    }
+    throw new APIException("No recipes correspond to the given uri.");
+  }
+
+  /**
+   * Function to create a list of diet or health labels from a given ResultSet
+   * @param labelSet - the ResultSet with data from a table.
+   * @return - a list of the labels.
+   */
+  private static List<String> createLabel(ResultSet labelSet) throws SQLException {
+    List<String> labels = new ArrayList<>();
+    while (labelSet.next()) {
+      labels.add(labelSet.getString("label"));
+    }
+    return labels;
   }
 
 
@@ -207,7 +251,8 @@ public final class RecipeDatabase {
    * @return - a Recipe object containing all of the given data.
    */
   private static Recipe createRecipe(ResultSet recipeSet, ResultSet ingredientSet,
-                                     ResultSet nutrientSet, String uri) throws
+                                     ResultSet nutrientSet, ResultSet dietSet,
+                                     ResultSet healthSet, String uri) throws
       SQLException, InterruptedException, IOException, APIException {
     if (recipeSet.next()) {
       String label = recipeSet.getString("label");
@@ -218,14 +263,15 @@ public final class RecipeDatabase {
       double calories = recipeSet.getDouble("calories");
       double totalWeight = recipeSet.getDouble("total_weight");
       double totalTime = recipeSet.getDouble("total_time");
-      System.out.println("all primitives passed");
+
+      List<String> dietLabels = createLabel(dietSet);
+      List<String> healthLabels = createLabel(healthSet);
       List<Ingredient> ingredients = createIngredients(ingredientSet);
-      System.out.println("after ingredients");
       Map<String, double[]> nutrients = createNutrients(nutrientSet);
-      System.out.println("after nutrients");
+
 
       return new Recipe(uri, label, image, source, url, yield, calories, totalWeight, totalTime,
-          ingredients, nutrients);
+          ingredients, nutrients, healthLabels, dietLabels);
     }
 
     return loadFromApi(uri);
@@ -251,7 +297,15 @@ public final class RecipeDatabase {
     prep.setString(1, uri);
     ResultSet nutrientSet = prep.executeQuery();
 
-    Recipe r = createRecipe(recipeSet, ingredientSet, nutrientSet, uri);
+    prep = conn.prepareStatement("SELECT * FROM diet_label WHERE recipe_uri = ?");
+    prep.setString(1, uri);
+    ResultSet dietSet = prep.executeQuery();
+
+    prep = conn.prepareStatement("SELECT * FROM health_label WHERE recipe_uri = ?");
+    prep.setString(1, uri);
+    ResultSet healthSet = prep.executeQuery();
+
+    Recipe r = createRecipe(recipeSet, ingredientSet, nutrientSet, dietSet, healthSet, uri);
     prep.close();
     recipeSet.close();
     ingredientSet.close();
@@ -339,16 +393,18 @@ public final class RecipeDatabase {
      */
   public static void testDatabaseFile() {
     try {
-      Recipe r = getRecipeFromURI("http%3A%2F%2Fwww.edamam.com%2Fontologies%2Fedamam.owl%23recipe_9b5945e03f05acbf9d69625138385408");
-      System.out.println("URI: " + r.getUri());
+      String[] uriList = new String[1];
+      uriList[0] = "http://www.edamam.com/ontologies/edamam.owl#recipe_b79327d05b8e5b838ad6cfd9576b30b6";
+      insertQuery("x", uriList);
+//      System.out.println("URI: " + r.getUri());
     } catch (SQLException e) {
       e.printStackTrace();
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    } catch (APIException e) {
-      e.printStackTrace();
-    } catch (IOException e) {
-      e.printStackTrace();
+//    } catch (InterruptedException e) {
+//      e.printStackTrace();
+//    } catch (APIException e) {
+//      e.printStackTrace();
+//    } catch (IOException e) {
+//      e.printStackTrace();
     }
   }
 }

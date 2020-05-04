@@ -1,8 +1,5 @@
 package edu.brown.cs.student.kdtree;
 
-import edu.brown.cs.student.kdtree.BaseKDNode;
-import edu.brown.cs.student.kdtree.KDTree;
-import edu.brown.cs.student.kdtree.KDTreeException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -61,8 +58,8 @@ public class KDTreeTest {
     }
 
     try {
-      KDTree<BaseKDNode> bkdt = new KDTree<>(0);
-      KDTree<BaseKDNode> b3kdt = new KDTree<>(-3);
+      new KDTree<>(0);
+      new KDTree<>(-3);
     } catch (KDTreeException e) {
       assertEquals("dim must be a positive integer", e.getMessage());
     }
@@ -189,7 +186,7 @@ public class KDTreeTest {
   @Test
   public void radiusSearchTest() throws KDTreeException {
     setUp();
-    List<BaseKDNode> ls = new ArrayList<BaseKDNode>();
+    List<BaseKDNode> ls = new ArrayList<>();
     ls.add(n00);
     ls.add(n01);
     ls.add(n10);
@@ -222,7 +219,7 @@ public class KDTreeTest {
   @Test
   public void boxSearchTest() throws KDTreeException {
     setUp();
-    List<BaseKDNode> ls = new ArrayList<BaseKDNode>();
+    List<BaseKDNode> ls = new ArrayList<>();
     ls.add(n00);
     ls.add(n01);
     ls.add(n10);
@@ -232,7 +229,7 @@ public class KDTreeTest {
     kdt.initializeTree(ls);
 
     List<List<Double>> bounds = List.of(List.of(0., 0.), List.of(0., 0.));
-    assertTrue(kdt.boxSearch(bounds).get(0).equals(n00));
+    assertEquals(kdt.boxSearch(bounds).get(0), n00);
     // get all nodes for k >= size
     assertTrue(kdt.boxSearch(List.of(List.of(-2., 2.), List.of(-2., 2.))).containsAll(ls));
     assertTrue(ls.containsAll(kdt.boxSearch(List.of(List.of(-2., 2.), List.of(-2., 2.)))));
@@ -320,5 +317,36 @@ public class KDTreeTest {
 
   private double norm(double in, double min, double max) {
     return (in - min) / (max - min);
+  }
+
+  @Test
+  public void makeAverageNodeTest() throws KDTreeException {
+    setUp();
+    List<Double> ls = new ArrayList<>();
+    ls.add(-1234.);
+    ls.add(-1234323234.);
+    BaseKDNode t = new BaseKDNode("-1", ls);
+    // null and empty error
+    try {
+      kdt.makeAverageNode(t, null);
+      kdt.makeAverageNode(t, new ArrayList<>());
+      kdt.makeAverageNode(null, List.of(n00));
+    } catch (KDTreeException e) {
+      assertTrue(e.getMessage().startsWith("ERROR: "));
+    }
+
+    // singleton set to self
+    kdt.makeAverageNode(t, List.of(n00));
+    assertEquals(n00.getCoords(), t.getCoords());
+
+    // avg -1,-1 ; 1,1 -> 0,0
+    kdt.makeAverageNode(t, List.of(neg11, n11));
+    assertEquals(List.of(0., 0.), t.getCoords());
+
+    // all the nodes
+    kdt.makeAverageNode(t, List.of(neg11, n00, n01, n10, n11));
+
+    assertEquals(List.of(.2, .2), t.getCoords());
+    tearDown();
   }
 }
