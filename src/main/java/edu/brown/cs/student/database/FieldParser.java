@@ -155,14 +155,14 @@ public final class FieldParser {
    */
   public static Recipe[] getRecipesFromQuery(String query, List<String> dietaryRestrictions,
                                              Map<String, String[]> paramsMap)
-          throws IOException, InterruptedException, SQLException, APIException {
-    System.out.println("PREV QUERY??? from FieldParse " + RecipeDatabase.checkQueryInDatabase(query));
-    if(RecipeDatabase.checkQueryInDatabase(query)){
-      Recipe[] prevRecipesRes = pullPrevRecipes(query, dietaryRestrictions,paramsMap);
-      if(prevRecipesRes.length > 9) {
-        return prevRecipesRes;
-      }
-    }
+          throws IOException, InterruptedException, APIException {
+//    System.out.println("PREV QUERY??? from FieldParse " + RecipeDatabase.checkQueryInDatabase(query));
+//    if(RecipeDatabase.checkQueryInDatabase(query)){
+//      Recipe[] prevRecipesRes = pullPrevRecipes(query, dietaryRestrictions,paramsMap);
+//      if(prevRecipesRes.length > 9) {
+//        return prevRecipesRes;
+//      }
+//    }
 
     System.out.println("BEYOND check prev x2 ---------------");
     query = query.replace(" ", "+");
@@ -177,10 +177,10 @@ public final class FieldParser {
         HttpResponse.BodyHandlers.ofString());
 
     if (response.statusCode() != 200) {
-      Recipe[] similar = pullSimilar(query, dietaryRestrictions, paramsMap);
-      if(similar.length > 10){
-        return similar;
-      }
+//      Recipe[] similar = pullSimilar(query, dietaryRestrictions, paramsMap);
+//      if(similar.length > 10){
+//        return similar;
+//      }
       throw new APIException("API returned error " + response.statusCode());
     }
 
@@ -189,7 +189,7 @@ public final class FieldParser {
       throw new APIException("API returned malformed JSON");
     }
     for (Recipe r : recipes) {
-      //recipe uris in recipe database must be unique.
+//      recipe uris in recipe database must be unique.
       if (!RecipeDatabase.checkRecipeInDatabase(r.getUri())) {
         RecipeDatabase.insertRecipe(r);
 

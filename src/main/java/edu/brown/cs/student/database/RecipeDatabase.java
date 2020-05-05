@@ -119,53 +119,57 @@ public final class RecipeDatabase {
    * Function to insert a recipe into the sqlite database.
    * @param recipe - the Recipe object to be inserted.
    */
-  public static void insertRecipe(Recipe recipe) throws SQLException {
+  public static void insertRecipe(Recipe recipe) {
 
     if (checkRecipeInDatabase(recipe.getUri())) {
-      throw new SQLException("duplicate");
+//      throw new SQLException("duplicate");
     }
-
-    PreparedStatement prep = conn.prepareStatement("INSERT INTO recipe VALUES("
-        + recipe.prepareForInsert() + ");");
+    System.out.println(recipe.prepareForInsert());
+try {
+  PreparedStatement prep = conn.prepareStatement("INSERT INTO recipe VALUES("
+          + recipe.prepareForInsert() + ");");
+  prep.executeUpdate();
+  for (Ingredient ingredient : recipe.getIngredients()) {
+    String line = "\"" + recipe.getUri() + "\",\"" + ingredient.getText() + "\","
+            + ingredient.getWeight();
+    System.out.println(line);
+    prep = conn.prepareStatement("INSERT INTO ingredient VALUES("
+            + line + ");");
     prep.executeUpdate();
-    for (Ingredient ingredient : recipe.getIngredients()) {
-      String line = "\"" + recipe.getUri() + "\",\"" + ingredient.getText() + "\","
-          + ingredient.getWeight();
+  }
 
-      prep = conn.prepareStatement("INSERT INTO ingredient VALUES("
-          + line + ");");
+  for (String code : NutrientInfo.nutrients.keySet()) {
+    double[] currVals = recipe.getNutrientVals(code);
+
+    if (currVals != null) {
+      String line = "\"" + code + "\",\"" + recipe.getUri() + "\"," + currVals[0] + "," + currVals[1];
+
+      prep = conn.prepareStatement("INSERT INTO nutrient_info VALUES("
+              + line + ")");
       prep.executeUpdate();
     }
+  }
 
-    for (String code : NutrientInfo.nutrients.keySet()) {
-      double[] currVals = recipe.getNutrientVals(code);
+  for (String label : recipe.getDietLabels()) {
+    String line = "\"" + recipe.getUri() + "\",\"" + label + "\"";
 
-      if (currVals != null) {
-        String line = "\"" + code + "\",\"" + recipe.getUri() + "\"," + currVals[0] + "," + currVals[1];
-
-        prep = conn.prepareStatement("INSERT INTO nutrient_info VALUES("
+    prep = conn.prepareStatement("INSERT INTO diet_label VALUES("
             + line + ")");
-        prep.executeUpdate();
-      }
-    }
+    prep.executeUpdate();
+  }
 
-    for (String label : recipe.getDietLabels()) {
-      String line = "\"" + recipe.getUri() + "\",\"" + label + "\"";
+  for (String label : recipe.getHealthLabels()) {
+    String line = "\"" + recipe.getUri() + "\",\"" + label + "\"";
 
-      prep = conn.prepareStatement("INSERT INTO diet_label VALUES("
-          + line + ")");
-      prep.executeUpdate();
-    }
+    prep = conn.prepareStatement("INSERT INTO health_label VALUES("
+            + line + ")");
+    prep.executeUpdate();
+  }
 
-    for (String label : recipe.getHealthLabels()) {
-      String line = "\"" + recipe.getUri() + "\",\"" + label + "\"";
-
-      prep = conn.prepareStatement("INSERT INTO health_label VALUES("
-          + line + ")");
-      prep.executeUpdate();
-    }
-
-    prep.close();
+  prep.close();
+} catch (SQLException e){
+  e.printStackTrace();
+}
   }
 
   public static void insertQuery(String query, String[] uriList) throws SQLException {
@@ -333,13 +337,19 @@ public final class RecipeDatabase {
    * @param uri - String uri of a recipe.
    * @return - boolean representing whether the given uri is in the database.
    */
-  public static boolean checkRecipeInDatabase(String uri) throws SQLException {
-    PreparedStatement prep = conn.prepareStatement("SELECT * FROM recipe WHERE uri = ?");
-    prep.setString(1, uri);
-    ResultSet recipeSet = prep.executeQuery();
-    boolean retVal = recipeSet.next();
-    prep.close();
-    recipeSet.close();
+  public static boolean checkRecipeInDatabase(String uri) {
+    boolean retVal = false;
+    try{
+      PreparedStatement prep = conn.prepareStatement("SELECT * FROM recipe WHERE uri = ?");
+      prep.setString(1, uri);
+      ResultSet recipeSet = prep.executeQuery();
+      retVal = recipeSet.next();
+      prep.close();
+      recipeSet.close();
+    } catch (SQLException e){
+      e.printStackTrace();
+    }
+
     return retVal;
   }
 
@@ -348,41 +358,61 @@ public final class RecipeDatabase {
    * @param query - String uri of a recipe.
    * @return - boolean representing whether the given uri is in the database.
    */
-  public static boolean checkQueryInDatabase(String query) throws SQLException {
+  public static boolean checkQueryInDatabase(String query){
 
     System.out.println("REQUESTED QUERY IS " + query);
-    PreparedStatement prep = conn.prepareStatement("SELECT query FROM queries WHERE query = ?");
-    prep.setString(1, query);
-    ResultSet recipeSet = prep.executeQuery();
-    boolean retVal = recipeSet.next();
-    prep.close();
-    recipeSet.close();
+    boolean retVal = false;
+    try {
+      PreparedStatement prep = conn.prepareStatement("SELECT query FROM queries WHERE query = ?");
+      prep.setString(1, query);
+      ResultSet recipeSet = prep.executeQuery();
+      retVal = recipeSet.next();
+      prep.close();
+      recipeSet.close();
+    } catch (SQLException e){
+      e.printStackTrace();
+    }
+
     return retVal;
   }
 
-  public static List<String> getQueryURIListFromDatabase(String query) throws SQLException{
-    PreparedStatement prep = conn.prepareStatement("SELECT recipe_uri FROM queries WHERE query = ?");
-    prep.setString(1, query);
-    ResultSet recipeSet = prep.executeQuery();
+  public static List<String> getQueryURIListFromDatabase(String query){
     List<String> recipesFromExactQuery = new ArrayList<String>();
-    while(recipeSet.next()){
-      String uri = recipeSet.getString("recipe_uri");
-      recipesFromExactQuery.add(uri);
+
+    try{
+      PreparedStatement prep = conn.prepareStatement("SELECT recipe_uri FROM queries WHERE query = ?");
+      prep.setString(1, query);
+      ResultSet recipeSet = prep.executeQuery();
+      while(recipeSet.next()){
+        String uri = recipeSet.getString("recipe_uri");
+        recipesFromExactQuery.add(uri);
+      }
+      prep.close();
+      recipeSet.close();
+    } catch (SQLException e){
+      e.printStackTrace();
     }
-    prep.close();
-    recipeSet.close();
+
     return recipesFromExactQuery;
   }
 
-  public static List<String> getSimilar(String query) throws SQLException{
-    String q = "%" + query + "%";
-    PreparedStatement prep = conn.prepareStatement("SELECT uri FROM recipe WHERE label LIKE ?");
-    prep.setString(1,q);
+  public static List<String> getSimilar(String query){
+
     List<String> recipesFromSimilarQuery = new ArrayList<String>();
-    ResultSet recipeSet = prep.executeQuery();
-    while(recipeSet.next()){
-      recipesFromSimilarQuery.add(recipeSet.getString("uri"));
+    try{
+      String q = "%" + query + "%";
+      PreparedStatement prep = conn.prepareStatement("SELECT uri FROM recipe WHERE label LIKE ?");
+      prep.setString(1,q);
+      ResultSet recipeSet = prep.executeQuery();
+      while(recipeSet.next()){
+        recipesFromSimilarQuery.add(recipeSet.getString("uri"));
+      }
+      recipeSet.close();
+      prep.close();
+    } catch (SQLException e){
+      e.printStackTrace();
     }
+
     return recipesFromSimilarQuery;
   }
 
