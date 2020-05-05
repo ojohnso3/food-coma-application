@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Class for a User, storing username, hashed password, and salt used for hashing to raw password
@@ -181,4 +182,20 @@ public class User {
   public Recommender getRecommender() {
     return this.recommender;
   }
+
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof User)) return false;
+    User user = (User) o;
+    return Objects.equals(username, user.username);
+  }
+
+  @Override
+  public int hashCode() {
+    return this.username.hashCode();
+  }
 }
+
+

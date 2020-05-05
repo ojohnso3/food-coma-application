@@ -1,10 +1,14 @@
 package edu.brown.cs.student.login;
 
 import edu.brown.cs.student.database.APIException;
+import edu.brown.cs.student.database.RecipeDatabase;
+import edu.brown.cs.student.food.NutrientInfo;
 import org.junit.Test;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Random;
 
 import static org.junit.Assert.*;
 
@@ -23,9 +27,27 @@ public class UserDatabaseTest {
   @Test
   public void testAll() {
     try {
-      this.user1 = new User("username", "password", PATH_CSV);
-      this.user2 = new User("username 2", "password", PATH_CSV);
+      UserDatabase.loadDatabase("data/userDatabase.sqlite3");
+      RecipeDatabase.loadDatabase("data/recipeDatabase.sqlite3");
+      NutrientInfo.createNutrientsList();
+      Random rand = new Random();
+      String user1name = rand.nextInt(1000) + "";
+      String user2name = rand.nextInt(1000) + "";
+      this.user1 = new User(user1name, "password", PATH_CSV);
+      this.user2 = new User(user2name, "password", PATH_CSV);
+
+      this.testInsertUser();
+      this.testCheckUsername();
+      this.testInsertToRestriction();
+      this.testInsertToPrevRecipe();
+      this.testInsertToNutrient();
     } catch (AccountException e) {
+      e.printStackTrace();
+    } catch (SQLException e) {
+      e.printStackTrace();
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    } catch (ClassNotFoundException e) {
       e.printStackTrace();
     }
 
@@ -58,7 +80,7 @@ public class UserDatabaseTest {
       User user2Test = UserDatabase.getUser(this.user2.getUsername());
       assertEquals(this.user2, user2Test);
 
-      assertThrows(SQLException.class, () -> {UserDatabase.insertUser(this.user2);});
+      assertThrows(AccountException.class, () -> {UserDatabase.insertUser(this.user2);});
     } catch (SQLException e) {
       e.printStackTrace();
     } catch (AccountException e) {
@@ -69,7 +91,87 @@ public class UserDatabaseTest {
       e.printStackTrace();
     } catch (IOException e) {
       e.printStackTrace();
+    } catch (NullPointerException npe) {
+      npe.printStackTrace();
     }
 
+  }
+
+  /**
+   * Function to test the insertToRestriction method in UserDatabase.
+   */
+  public void testInsertToRestriction() {
+    try {
+      UserDatabase.insertToRestriction(this.user1.getUsername(), "peanut-free");
+      User user1Test = UserDatabase.getUser(this.user1.getUsername());
+      assertEquals("peanut-free", user1Test.getDietaryRestrictions().get(0));
+
+      UserDatabase.insertToRestriction(this.user2.getUsername(), "a");
+      User user2Test = UserDatabase.getUser(this.user2.getUsername());
+      assertEquals("a", user2Test.getDietaryRestrictions().get(0));
+
+    } catch (SQLException e) {
+      e.printStackTrace();
+    } catch (IOException e) {
+      e.printStackTrace();
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    } catch (APIException e) {
+      e.printStackTrace();
+    } catch (AccountException e) {
+      e.printStackTrace();
+    }
+  }
+
+  /**
+   * Function to test the insertToPrevRecipe method in UserDatabase.
+   */
+  public void testInsertToPrevRecipe() {
+//    try {
+//      UserDatabase.insertToPrevRecipe(this.user1.getUsername(), "987");
+//      User user1Test = UserDatabase.getUser(this.user1.getUsername());
+//      assertEquals("987", user1Test.getPreviousRecipes().get(1));
+//
+//      UserDatabase.insertToPrevRecipe(this.user2.getUsername(), "http://edamam.api.com/Ontology#752");
+//      User user2Test = UserDatabase.getUser(this.user2.getUsername());
+//      assertEquals("http://edamam.api.com/Ontology#752", user2Test.getPreviousRecipes().get(0));
+//
+//    } catch (SQLException e) {
+//      e.printStackTrace();
+//    } catch (IOException e) {
+//      e.printStackTrace();
+//    } catch (InterruptedException e) {
+//      e.printStackTrace();
+//    } catch (APIException e) {
+//      e.printStackTrace();
+//    } catch (AccountException e) {
+//      e.printStackTrace();
+//    }
+  }
+
+  /**
+   * Function to test the insertToNutrient method in UserDatabase.
+   */
+  public void testInsertToNutrient() {
+    try {
+      UserDatabase.insertToNutrients(this.user1.getUsername(), "peanut-free");
+      User user1Test = UserDatabase.getUser(this.user1.getUsername());
+      assertEquals("peanut-free", user1Test.getNutrients().get(0));
+
+      UserDatabase.insertToNutrients(this.user2.getUsername(), "a");
+      User user2Test = UserDatabase.getUser(this.user2.getUsername());
+      assertEquals("a", user2Test.getNutrients().get(0));
+
+    } catch (SQLException e) {
+      e.printStackTrace();
+    } catch (IOException e) {
+      e.printStackTrace();
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    } catch (APIException e) {
+      e.printStackTrace();
+    } catch (AccountException e) {
+      e.printStackTrace();
+    }
   }
 }

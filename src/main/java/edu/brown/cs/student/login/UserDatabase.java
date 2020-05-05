@@ -87,6 +87,7 @@ public final class UserDatabase {
    * @return - boolean representing whether the username is in the database.
    */
   public static boolean checkUsername(String username) throws SQLException {
+    System.out.println(username);
     PreparedStatement prep = conn.prepareStatement("SELECT * FROM account WHERE username = ?");
     prep.setString(1, username);
     ResultSet userSet = prep.executeQuery();

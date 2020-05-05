@@ -58,7 +58,7 @@ public class Accounts {
    */
   public static void initializeMap() throws AccountException, 
       FileNotFoundException, ClassNotFoundException, SQLException {
-    
+
     UserDatabase.loadDatabase("data/userDatabase.sqlite3");
     initializeMap(LOGIN_INFO_PATH);
   }
@@ -70,17 +70,11 @@ public class Accounts {
     // create users from info files and databases
     try (Scanner loginInfo = new Scanner(new FileReader(path))) {
       // create each user
-      System.out.println("GETS HERE");
       while (loginInfo.hasNext()) {
-        System.out.println("Line 1");
         String[] login = loginInfo.nextLine().split(",");
-        System.out.println("Line 2");
         String username = login[0];
-        System.out.println("Line 3 " + username);
         User user = UserDatabase.getUser(username);
-        System.out.println("Line 4");
         nameUserMap.putIfAbsent(username, user);
-        System.out.println("Line 5");
       }
     } catch (Exception e) {
       throw new AccountException(e.getMessage());
