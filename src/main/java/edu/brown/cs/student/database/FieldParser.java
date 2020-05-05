@@ -156,7 +156,8 @@ public final class FieldParser {
   public static Recipe[] getRecipesFromQuery(String query, List<String> dietaryRestrictions,
                                              Map<String, String[]> paramsMap)
           throws IOException, InterruptedException, APIException {
-//    System.out.println("PREV QUERY??? from FieldParse " + RecipeDatabase.checkQueryInDatabase(query));
+//    System.out.println("PREV QUERY??? from FieldParse "
+//    + RecipeDatabase.checkQueryInDatabase(query));
 //    if(RecipeDatabase.checkQueryInDatabase(query)){
 //      Recipe[] prevRecipesRes = pullPrevRecipes(query, dietaryRestrictions,paramsMap);
 //      if(prevRecipesRes.length > 9) {
@@ -190,25 +191,20 @@ public final class FieldParser {
     }
     for (Recipe r : recipes) {
 //      recipe uris in recipe database must be unique.
-      try{
+      try {
         if (!RecipeDatabase.checkRecipeInDatabase(r.getUri())) {
           RecipeDatabase.insertRecipe(r);
-
         }
-      } catch (SQLException e){
+      } catch (SQLException e) {
         System.out.println("Duplicate recipe attempted to be added to DB");
       }
-
     }
-
-
-
-
     return recipes;
   }
 
   /**
    * Test api function.
+   * @return the response
    */
   public static String apiCall() {
     HttpClient httpClient = HttpClient.newBuilder().build();
@@ -229,13 +225,16 @@ public final class FieldParser {
 
   /**
    * Test Gson function.
+   * @return the recipe
    */
-  public static Recipe parseJSON() throws APIException {
+  public static Recipe parseJSON() {
     String json = apiCall();
+    assert json != null;
     Recipe[] recipes = parseRecipeJSON(json);
-    for (int i = 0; i < recipes.length; i++) {
-      System.out.println(recipes[i].getUri());
-      System.out.println(recipes[i].getNutrientVals("FE")[0]);
+    assert recipes != null;
+    for (Recipe recipe : recipes) {
+      System.out.println(recipe.getUri());
+      System.out.println(recipe.getNutrientVals("FE")[0]);
     }
     return recipes[0];
   }
@@ -253,7 +252,7 @@ public final class FieldParser {
           throws IOException, InterruptedException, APIException, SQLException {
     List<String> uris = RecipeDatabase.getQueryURIListFromDatabase(query);
     Recipe[] recipesForRet = new Recipe[uris.size()];
-    for(int i = 0; i < uris.size(); i++){
+    for (int i = 0; i < uris.size(); i++) {
       Recipe currRec = RecipeDatabase.getRecipeFromURI(uris.get(i));
       recipesForRet[i] = currRec;
     }
@@ -269,10 +268,11 @@ public final class FieldParser {
    * @return - an array of recipes that correspond to the given query in the api.
    */
   public static Recipe[] pullSimilar(String query, List<String> dietaryRestrictions,
-                                         Map<String, String[]> paramsMap) throws SQLException, InterruptedException, IOException, APIException {
+                                         Map<String, String[]> paramsMap) throws SQLException,
+          InterruptedException, IOException, APIException {
     List<String> uris = RecipeDatabase.getSimilar(query);
     Recipe[] recipeList = new Recipe[uris.size()];
-    for(int i = 0; i < uris.size(); i++){
+    for (int i = 0; i < uris.size(); i++) {
       recipeList[i] = RecipeDatabase.getRecipeFromURI(uris.get(i));
     }
     return recipeList;

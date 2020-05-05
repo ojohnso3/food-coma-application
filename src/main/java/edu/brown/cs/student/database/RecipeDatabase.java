@@ -137,7 +137,7 @@ public final class RecipeDatabase {
           + line + ");");
       prep.executeUpdate();
     }
-  for (String code : NutrientInfo.nutrients.keySet()) {
+  for (String code : NutrientInfo.getNutrients().keySet()) {
     double[] currVals = recipe.getNutrientVals(code);
 
     if (currVals != null) {

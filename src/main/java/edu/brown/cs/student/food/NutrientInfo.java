@@ -4,33 +4,57 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public final class NutrientInfo {
-
-  /**
-   * nutrients - hashmap of nutrient codes to an array of nutrient names and units.
-   */
-  public static Map<String, String[]> nutrients;
-  public static Map<String, String> allNutrients;
-  public static List<String> nutrientCodes;
-  public static List<String> mainNutrients; //carbs, sugars, fats, kcal, sugara, protein
-  public static List<String> secondaryNutrients;
+  private static Map<String, String[]> nutrients;
+  private static Map<String, String> allNutrients;
+  private static List<String> nutrientCodes;
+  private static List<String> mainNutrients; //carbs, sugars, fats, kcal, sugara, protein
+  private static List<String> secondaryNutrients;
   //calcium, cholesterol, monof, polyf, tranf, iron, fiber, potas, satf, b12
 
+  private NutrientInfo() { }
+
+  public static Map<String, String[]> getNutrients() {
+    return nutrients;
+  }
+
+  public static List<String> getNutrientCodes() {
+    return nutrientCodes;
+  }
+
+  public static List<String> getMainNutrients() {
+    return mainNutrients;
+  }
+
+  public static List<String> getSecondaryNutrients() {
+    return secondaryNutrients;
+  }
+
+  /**
+   * @return nutrients - hashmap of nutrient codes to an array of nutrient names and units.
+   */
   public static Map<String, String> getNutrientsMap() {
     return allNutrients;
   }
-  
+
   /**
    * This function sets up the hashmap of nutrients that recipes include.
    * This hashmap will be used in recipe parsing.
    */
   public static void createNutrientsList() {
-    nutrients = new HashMap<String, String[]>();
-    nutrientCodes = new ArrayList<String>();
-    allNutrients = new HashMap<String, String>();
+    nutrients = new HashMap<>();
+    allNutrients = new HashMap<>();
+    nutrientCodes = new ArrayList<>();
+    mainNutrients = new ArrayList<>();
+    secondaryNutrients = new ArrayList<>();
 
+    setMainNutrients();
+    setSecondaryNutrients();
+    setOtherNutrients();
+  }
+
+  private static void setMainNutrients() {
     String[] energy = new String[2];
     energy[0] = "Energy";
     energy[1] = "kcal";
@@ -70,9 +94,9 @@ public final class NutrientInfo {
     allNutrients.put("Fat", "FAT");
     nutrientCodes.add("FAT");
     mainNutrients.add("CHOCDF");
+  }
 
-    // SECONDARY NUTRIENTS ===================
-
+  private static void setSecondaryNutrients() {
     String[] calcium = new String[2];
     calcium[0] = "Calcium";
     calcium[1] = "mg";
@@ -144,13 +168,6 @@ public final class NutrientInfo {
     nutrientCodes.add("K");
     secondaryNutrients.add("K");
 
-    String[] magnesium = new String[2];
-    magnesium[0] = "Magnesium";
-    magnesium[1] = "mg";
-    nutrients.put("MG", magnesium);
-    allNutrients.put("Magnesium", "MG");
-//    nutrientCodes.add("MG");
-
     String[] sodium = new String[2];
     sodium[0] = "Sodium";
     sodium[1] = "mg";
@@ -158,34 +175,6 @@ public final class NutrientInfo {
     allNutrients.put("Sodium", "NA");
     nutrientCodes.add("NA");
     secondaryNutrients.add("NA");
-
-    String[] vitaminb = new String[2];
-    vitaminb[0] = "Vitamin B6";
-    vitaminb[1] = "mg";
-    nutrients.put("VITB6A", vitaminb);
-    allNutrients.put("VitaminB6", "VITB6A");
-//    nutrientCodes.add("VITB6A");
-
-    String[] niacin = new String[2];
-    niacin[0] = "Niacin (B3)";
-    niacin[1] = "mg";
-    nutrients.put("NIA", niacin);
-//    nutrientCodes.add("NIA");
-    // NO
-
-    String[] phosphorus = new String[2];
-    phosphorus[0] = "Phosphorus";
-    phosphorus[1] = "mg";
-    nutrients.put("P", phosphorus);
-//    nutrientCodes.add("P");
-    // NO
-
-    String[] riboflavin = new String[2];
-    riboflavin[0] = "Riboflavin (B2)";
-    riboflavin[1] = "mg";
-    nutrients.put("RIBF", riboflavin);
-//    nutrientCodes.add("RIBF");
-    // NO
 
     String[] sugara = new String[2];
     sugara[0] = "Sugars, added";
@@ -203,20 +192,6 @@ public final class NutrientInfo {
     nutrientCodes.add("FASAT");
     secondaryNutrients.add("FASAT");
 
-    String[] vitamine = new String[2];
-    vitamine[0] = "Vitamin E";
-    vitamine[1] = "mg";
-    nutrients.put("TOCPHA", vitamine);
-    allNutrients.put("VitaminE", "TOCPHA");
-//    nutrientCodes.add("TOCPHA");
-
-    String[] vitamina = new String[2];
-    vitamina[0] = "Vitamin A";
-    vitamina[1] = "aeg";
-    nutrients.put("VITA_RAE", vitamina);
-    allNutrients.put("VitaminA", "VITA_RAE");
-//    nutrientCodes.add("VITA_RAE");
-
     String[] vitaminb12 = new String[2];
     vitaminb12[0] = "Vitamin B12";
     vitaminb12[1] = "aeg";
@@ -225,20 +200,6 @@ public final class NutrientInfo {
     nutrientCodes.add("VITB12");
     secondaryNutrients.add("VITB12");
 
-    String[] folatef = new String[2];
-    folatef[0] = "Folate (food)";
-    folatef[1] = "aeg";
-    nutrients.put("FOLFD", folatef);
-//    nutrientCodes.add("FOLFD");
-    // NO
-
-    String[] vitaminc = new String[2];
-    vitaminc[0] = "Vitamin C";
-    vitaminc[1] = "mg";
-    nutrients.put("VITC", vitaminc);
-    allNutrients.put("VitaminC", "VITC");
-//    nutrientCodes.add("VITC");
-
     String[] vitamind = new String[2];
     vitamind[0] = "Vitamin D";
     vitamind[1] = "aeg";
@@ -246,19 +207,68 @@ public final class NutrientInfo {
     allNutrients.put("VitaminD", "VITD");
     nutrientCodes.add("VITD");
     secondaryNutrients.add("VITD");
+  }
+
+  private static void setOtherNutrients() {
+    String[] magnesium = new String[2];
+    magnesium[0] = "Magnesium";
+    magnesium[1] = "mg";
+    nutrients.put("MG", magnesium);
+    allNutrients.put("Magnesium", "MG");
+
+    String[] vitaminb = new String[2];
+    vitaminb[0] = "Vitamin B6";
+    vitaminb[1] = "mg";
+    nutrients.put("VITB6A", vitaminb);
+    allNutrients.put("VitaminB6", "VITB6A");
+
+    String[] niacin = new String[2];
+    niacin[0] = "Niacin (B3)";
+    niacin[1] = "mg";
+    nutrients.put("NIA", niacin);
+
+    String[] phosphorus = new String[2];
+    phosphorus[0] = "Phosphorus";
+    phosphorus[1] = "mg";
+    nutrients.put("P", phosphorus);
+
+    String[] riboflavin = new String[2];
+    riboflavin[0] = "Riboflavin (B2)";
+    riboflavin[1] = "mg";
+    nutrients.put("RIBF", riboflavin);
+
+    String[] vitamine = new String[2];
+    vitamine[0] = "Vitamin E";
+    vitamine[1] = "mg";
+    nutrients.put("TOCPHA", vitamine);
+    allNutrients.put("VitaminE", "TOCPHA");
+
+    String[] vitamina = new String[2];
+    vitamina[0] = "Vitamin A";
+    vitamina[1] = "aeg";
+    nutrients.put("VITA_RAE", vitamina);
+    allNutrients.put("VitaminA", "VITA_RAE");
+
+    String[] folatef = new String[2];
+    folatef[0] = "Folate (food)";
+    folatef[1] = "aeg";
+    nutrients.put("FOLFD", folatef);
+
+    String[] vitaminc = new String[2];
+    vitaminc[0] = "Vitamin C";
+    vitaminc[1] = "mg";
+    nutrients.put("VITC", vitaminc);
+    allNutrients.put("VitaminC", "VITC");
 
     String[] vitamink = new String[2];
     vitamink[0] = "VitaminK";
     vitamink[1] = "aeg";
     nutrients.put("VITK1", vitamink);
     allNutrients.put("VitaminK", "VITK1");
-//    nutrientCodes.add("VITK1");
 
     String[] thiamin = new String[2];
     thiamin[0] = "Thiamin (B1)";
     thiamin[1] = "mg";
     nutrients.put("THIA", thiamin);
-//    nutrientCodes.add("THIA");
-    // NO
   }
 }

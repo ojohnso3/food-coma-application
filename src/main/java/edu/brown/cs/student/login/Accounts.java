@@ -17,6 +17,7 @@ public class Accounts {
   private static final int MIN_PASS_LENGTH = 6;
   private static final int MAX_LENGTH = 32;
   private static final String LOGIN_INFO_PATH = "src/main/resources/login/account-login-info.csv";
+  private static final String USER_DATABASE_PATH = "data/userDatabase.sqlite3";
 
   private static Map<String, User> nameUserMap;
 
@@ -60,10 +61,9 @@ public class Accounts {
    * to be called at the start of running application.
    * @throws AccountException on file UserDatabase failure
    */
-  public static void initializeMap() throws AccountException, 
-      FileNotFoundException, ClassNotFoundException, SQLException {
-
-    UserDatabase.loadDatabase("data/userDatabase.sqlite3");
+  public static void initializeMap() throws AccountException, FileNotFoundException,
+          ClassNotFoundException, SQLException {
+    UserDatabase.loadDatabase(USER_DATABASE_PATH);
     initializeMap(LOGIN_INFO_PATH);
   }
   /*

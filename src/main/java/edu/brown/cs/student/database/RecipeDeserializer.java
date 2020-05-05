@@ -31,10 +31,11 @@ public class RecipeDeserializer implements JsonDeserializer<Recipe> {
    * @return - A Map with keys as the nutrient code and an array of the daily quantity and the
    * total quantity, as doubles.
    */
-  private Map<String, double[]> makeNutrientMap(JsonObject totalDailyObject, JsonObject totalNutrientsObject) {
+  private Map<String, double[]> makeNutrientMap(JsonObject totalDailyObject, JsonObject
+          totalNutrientsObject) {
     Map<String, double[]> nutrients = new HashMap<>();
 
-    for (String code : NutrientInfo.nutrients.keySet()) {
+    for (String code : NutrientInfo.getNutrients().keySet()) {
       double[] nutrientArray = new double[2];
       if (totalDailyObject.has(code)) {
         JsonElement currDailyNutrient = totalDailyObject.get(code);
@@ -56,8 +57,8 @@ public class RecipeDeserializer implements JsonDeserializer<Recipe> {
   }
 
   @Override
-  public Recipe deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext)
-      throws JsonParseException {
+  public Recipe deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext
+          jsonDeserializationContext) throws JsonParseException {
     GsonBuilder gsonBuilder = new GsonBuilder();
     JsonObject jsonObject = jsonElement.getAsJsonObject();
 
@@ -66,7 +67,7 @@ public class RecipeDeserializer implements JsonDeserializer<Recipe> {
     String image = jsonObject.get("image").getAsString();
     String source = jsonObject.get("source").getAsString();
     String url = jsonObject.get("url").getAsString();
-    String shareAs = jsonObject.get("shareAs").getAsString();
+    jsonObject.get("shareAs").getAsString();
     double yield = jsonObject.get("yield").getAsDouble();
 
     JsonElement dietArray = jsonObject.get("dietLabels");
@@ -83,14 +84,17 @@ public class RecipeDeserializer implements JsonDeserializer<Recipe> {
       healthLabels.add(jsonHealthLabels.get(j).getAsString());
     }
 
-    JsonElement ingredientsArray = jsonObject.get("ingredients"); //get the json for the array of ingredients
+    //get the json for the array of ingredients
+    JsonElement ingredientsArray = jsonObject.get("ingredients");
     JsonArray jsonIngredients = ingredientsArray.getAsJsonArray(); //get the array from the json
     List<Ingredient> ingredients = new ArrayList<>();
-    for (int k = 0; k < jsonIngredients.size(); k++) { //each element of the array should be an ingredient
+    //each element of the array should be an ingredient
+    for (int k = 0; k < jsonIngredients.size(); k++) {
       JsonDeserializer<Ingredient> ingredientDeserializer = new IngredientDeserializer();
       gsonBuilder.registerTypeAdapter(Ingredient.class, ingredientDeserializer);
       Gson customGson = gsonBuilder.create();
-      Ingredient currIngredient = customGson.fromJson(jsonIngredients.get(k), Ingredient.class); //parse ingredients
+      //parse ingredients
+      Ingredient currIngredient = customGson.fromJson(jsonIngredients.get(k), Ingredient.class);
       ingredients.add(currIngredient);
     }
     double calories = jsonObject.get("calories").getAsDouble();
