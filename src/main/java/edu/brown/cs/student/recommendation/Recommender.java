@@ -51,7 +51,7 @@ public class Recommender {
 
       // Nutrients: get the nutrients to weight higher
       //TODO: SET WEIGHTS FOR ALL THE SPECIFIC NUTRIENTS
-      List<Integer> weightedAxes = getNutrientIndices();
+      List<Double> weightedAxes = getNutrientIndices();
 
       // Query Recs: get recipes based on the query and put into a queried recipes tree
       List<Recipe> recipesList = Arrays.asList(FieldParser.getRecipesFromQuery(input,
@@ -91,15 +91,18 @@ public class Recommender {
   /*
    * uses the users important nutrients to return indices to be weighted higher in normalize
    */
-  private List<Integer> getNutrientIndices() {
-    List<Integer> weightedAxes = new ArrayList<>();
-//    for () {
-//
-//    }
-    for (String code : this.user.getNutrients()) {
-      weightedAxes.add(NutrientInfo.nutrientCodes.indexOf(code));
+  private List<Double> getNutrientIndices() {
+    List<Double> axisWeights = new ArrayList<>();
+    for (int i = 0; i < NutrientInfo.mainNutrients.size(); i++) {
+      axisWeights.add(3.);
     }
-    return weightedAxes;
+    for (int i = 0; i < NutrientInfo.secondaryNutrients.size(); i++) {
+      axisWeights.add(1.);
+    }
+    for (String code : this.user.getNutrients()) {
+      axisWeights.set(NutrientInfo.nutrientCodes.indexOf(code), 6.);
+    }
+    return axisWeights;
   }
 
   /*

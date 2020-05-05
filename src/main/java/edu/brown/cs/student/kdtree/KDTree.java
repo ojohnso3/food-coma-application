@@ -529,7 +529,7 @@ public class KDTree<N extends KDNode<N>> {
    * @param nodes - all nodes to be normalized.
    * @param axisWeights - how much each axis should be weights (index i corres. to axis i)
    */
-  public void normalizeAxes(List<N> nodes, List<Integer> axisWeights) throws KDTreeException {
+  public void normalizeAxes(List<N> nodes, List<Double> axisWeights) throws KDTreeException {
     if (axisWeights.size() != this.dim) {
       throw new KDTreeException("ERROR: axis weights must be of length: " + dim);
     }
@@ -567,7 +567,7 @@ public class KDTree<N extends KDNode<N>> {
       int sz2 = axisCoords.size();
       for (int j = 0; j < sz2; j++) { //nodes size
         double n = axisCoords.get(j);
-        int weight = axisWeights.get(i);
+        double weight = axisWeights.get(i);
         double normalized = weight * (n - mins.get(i)) / (maxes.get(i) - mins.get(i));
         // replace coords with their new values
         nodes.get(j).getCoords().set(i, normalized);
