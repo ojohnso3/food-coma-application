@@ -75,7 +75,11 @@ public class Recommender {
     }
   }
 
-  private List<RecipeNode> prepUserHistoryNodes(User user) {
+  /*
+   * returns the users history in a form usable for getTarget:
+   * gets its recipe history, converts it to nodes, normalizes.
+   */
+  private List<RecipeNode> prepUserHistoryNodes() {
     //get, turn into nodes, and normalize user history
     List<Recipe> userHistory = this.user.getPreviousRecipes();
     List<RecipeNode> prevRecipeNodes = this.convertRecipesToRecipeNodes(userHistory);
@@ -83,21 +87,15 @@ public class Recommender {
     return prevRecipeNodes;
   }
 
+  /*
+   * uses the users important nutrients to return indices to be weighted higher in normalize
+   */
   private List<Integer> getNutrientIndices() {
     List<Integer> weightedAxes = new ArrayList<>();
-    for (String code : user.getNutrients()) {
+    for (String code : this.user.getNutrients()) {
       weightedAxes.add(NutrientInfo.nutrientCodes.indexOf(code));
     }
     return weightedAxes;
-  }
-
-  private void prepTree(List<RecipeNode> queryNodes, RecipeNode target, List<Integer> weightedAxes)
-          throws KDTreeException {
-    this.recipeTree.initializeTree(queryNodes);
-    // add the target nodes' coordinates to each node in tree to make the origin the target point
-    this.recipeTree.translateTree(target.getCoords());
-    // normalize the query tree, weighted using the nutrients
-    this.recipeTree.normalizeAxes(queryNodes, weightedAxes); //weight special axes higher
   }
 
   /*
@@ -159,50 +157,4 @@ public class Recommender {
 
     r.setCoords(coords);
   }
-
-  /*
-  /**
-   * Function to initialize the KDTree to be used when recommending recipes to users.
-   * @param input - the input given by the user to query.
-   * @param paramsMap - the parameters given by the user to the query.
-   /
-  private void initRecipeTree(String input, Map<String, String[]> paramsMap)
-          throws InterruptedException, APIException, IOException, SQLException {
-    List<Recipe> recipesList = Arrays.asList(FieldParser.getRecipesFromQuery(input,
-            this.user.getDietaryRestrictions(), paramsMap));
-    // normalize the coordinates of every node
-    List<RecipeNode> nodes = convertRecipesToRecipeNodes(recipesList);
-
-    List<Integer> weightedAxes = new ArrayList<>();
-    for (String code : user.getNutrients()) {
-      weightedAxes.add(NutrientInfo.nutrientCodes.indexOf(code));
-    }
-    this.recipeTree.normalizeAxes(nodes, weightedAxes); //weight special axes higher
-    // put them in the tree
-    this.recipeTree.initializeTree(nodes);
-  }
-
-  private List<Recipe> getRecommendedRecipes(List<Recipe> userHistory)
-      throws RecommendationException {
-    List<Recipe> recs = new ArrayList<>();
-    // create a target node using the average position of all previous recipes
-    RecipeNode target = this.getTargetNode(userHistory);
-    try {
-      // add the target nodes' coordinates each node in tree to make the origin the target point
-      this.recipeTree.translateTree(target.getCoords());
-
-      // search for the nearest/most relevant recipes
-      List<RecipeNode> recipeNodes = recipeTree.nearestSearch(target, REC_QUANTITY);
-
-      // get the actual recipes from the nodes to compile the recs list
-      for (RecipeNode node : recipeNodes) {
-        recs.add(node.getRecipe());
-      }
-    } catch (KDTreeException e) {
-      throw new RecommendationException(e.getMessage());
-    }
-
-    return recs;
-  }
-  */
 }
