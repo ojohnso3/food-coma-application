@@ -33,23 +33,27 @@ public class RecipeDatabaseTest {
   @Test
   public void testAll() {
 
-//    Map<String, double[]> nutrients = new HashMap<>();
-//    double[] testVal = new double[2];
-//    testVal[0] = 1.0;
-//    testVal[1] = 2.0;
-//    nutrients.put("CA", testVal);
-//
-//    List<String> labels = new ArrayList<>();
-//    labels.add("a");
-//
+    Map<String, double[]> nutrients = new HashMap<>();
+    double[] testVal = new double[2];
+    testVal[0] = 1.0;
+    testVal[1] = 2.0;
+    nutrients.put("CA", testVal);
+
+    List<Ingredient> ingredients = new ArrayList<>();
+    Ingredient i = new Ingredient("text", 0.0);
+    ingredients.add(i);
+
+    List<String> labels = new ArrayList<>();
+    labels.add("a");
+
     Random rand = new Random();
     String uri = rand.nextInt(1000) + "";
-//    this.r2 = new Recipe(uri, "label", "image", "source", "url", 0.0,
-//        0.0, 0.0, 0.0, ingredients, nutrients, labels, labels);
-//
+    this.r2 = new Recipe(uri, "label", "image", "source", "url", 0.0,
+        0.0, 0.0, 0.0, ingredients, nutrients, labels, labels);
+
     int num = rand.nextInt(1000);
-//    this.r3 = new Recipe("http://edamam.api.com/Ontology#" + num, "label", "image" , "source",
-//        "url", 0.0, 0.0, 0.0, 0.0, ingredients, nutrients, labels, labels);
+    this.r3 = new Recipe("http://edamam.api.com/Ontology#" + num, "label", "image" , "source",
+        "url", 0.0, 0.0, 0.0, 0.0, ingredients, nutrients, labels, labels);
 
     this.testInsertRecipe(uri, num);
     this.testGetRecipeFromUri();
