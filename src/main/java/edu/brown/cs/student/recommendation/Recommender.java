@@ -45,7 +45,7 @@ public class Recommender {
     try {
       this.recipeTree = new KDTree<>(dim);
       // User History: get, nodify, and normalize previous recipes
-      List<RecipeNode> prevRecipeNodes = prepUserHistoryNodes(user);
+      List<RecipeNode> prevRecipeNodes = prepUserHistoryNodes();
       //generate a target node for an ideal recipe using the history
       RecipeNode target = getTargetNode(prevRecipeNodes);
 
