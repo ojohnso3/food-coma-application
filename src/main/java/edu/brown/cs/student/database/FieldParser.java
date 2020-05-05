@@ -190,10 +190,15 @@ public final class FieldParser {
     }
     for (Recipe r : recipes) {
 //      recipe uris in recipe database must be unique.
-      if (!RecipeDatabase.checkRecipeInDatabase(r.getUri())) {
-        RecipeDatabase.insertRecipe(r);
+      try{
+        if (!RecipeDatabase.checkRecipeInDatabase(r.getUri())) {
+          RecipeDatabase.insertRecipe(r);
 
+        }
+      } catch (SQLException e){
+        System.out.println("Duplicate recipe attempted to be added to DB");
       }
+
     }
 
 

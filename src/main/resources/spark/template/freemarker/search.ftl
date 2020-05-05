@@ -50,6 +50,7 @@
 
   <p class="output">
   <h3>List of recipes:</h3>
+  <h2 id="isEmpty"></h2>
   <div class="bagContainer">
     <div class="shopBag" id="shoppingBag0"><img class="shoppingBag"></div>
     <div class="shopBag" id="shoppingBag1"><img class="shoppingBag"></div>

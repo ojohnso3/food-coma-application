@@ -61,14 +61,18 @@ button.click(event => {
 
             // document.getElementById("container").innerHTML += "Name: " + index + " URL: " + key[0];
             // document.getElementById("container").innerHTML += "HELLO?";
+
             document.getElementById("container").innerHTML += "<h6><a href = \"recipe/" + key[1] + "\">" + index + " </a></h6>";
+            if(i < 10){
+                console.log("shoppingBag" + i);
+                var fullShopBagHtml = "<img src=\"https://i.postimg.cc/FK87G91b/bag-161440-1280.png\" class=\"shoppingBag\"><a class=\"recipeText\" href = \"recipe/" + key[1] + "\">" + index + " </a>"
 
-            console.log("shoppingBag" + i);
-            var fullShopBagHtml = "<img src=\"https://i.postimg.cc/FK87G91b/bag-161440-1280.png\" class=\"shoppingBag\"><a class=\"recipeText\" href = \"recipe/" + key[1] + "\">" + index + " </a>"
+                // document.getElementById("shoppingBag" + i).innerHTML += shoppingBagHtml;
 
-            // document.getElementById("shoppingBag" + i).innerHTML += shoppingBagHtml;
-            document.getElementById("shoppingBag" + i).innerHTML = fullShopBagHtml.toString();
-            // document.getElementById("shoppingBag" + i).innerHTML += "<a class=\"recipeText\" href = \"recipe/" + key[1] + "\">" + "hello??????????????????" + " </a>";
+                document.getElementById("shoppingBag" + i).innerHTML = fullShopBagHtml.toString();
+                // document.getElementById("shoppingBag" + i).innerHTML += "<a class=\"recipeText\" href = \"recipe/" + key[1] + "\">" + "hello??????????????????" + " </a>";
+
+            }
 
             i++;
             // document.getElementById("container").innerHTML += " <h6><a href=\"/recipe/" + key[1] + "\"> " + index + " </a></h6>";
@@ -77,7 +81,19 @@ button.click(event => {
         // for(i = 0; i < output.recipes.length; i++){
         //     console.log(output.recipes[i].getLabel());
         // }
+        console.log("RECIPE SIZE:");
+        console.log(output.recipes.length);
+        if(output.recipes.length == 0){
+            for(let i = 0; i < 10; i++){
+                var fullShopBagHtml = "<img class=\"shoppingBag\"><a class=\"recipeText\" </a>"
+                document.getElementById("shoppingBag" + i).innerHTML = fullShopBagHtml.toString();
+            }
+            document.getElementById("isEmpty").innerHTML = "No search results :(";
+        } else if (output.recipes.length != 0){
+            document.getElementById("isEmpty").innerHTML = "";
+        }
     });
+
 
     var options = [];
 

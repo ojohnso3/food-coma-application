@@ -119,13 +119,12 @@ public final class RecipeDatabase {
    * Function to insert a recipe into the sqlite database.
    * @param recipe - the Recipe object to be inserted.
    */
-  public static void insertRecipe(Recipe recipe) {
+  public static void insertRecipe(Recipe recipe) throws SQLException {
 
     if (checkRecipeInDatabase(recipe.getUri())) {
 //      throw new SQLException("duplicate");
     }
     System.out.println(recipe.prepareForInsert());
-try {
   PreparedStatement prep = conn.prepareStatement("INSERT INTO recipe VALUES("
           + recipe.prepareForInsert() + ");");
   prep.executeUpdate();
@@ -167,9 +166,7 @@ try {
   }
 
   prep.close();
-} catch (SQLException e){
-  e.printStackTrace();
-}
+
   }
 
   public static void insertQuery(String query, String[] uriList) throws SQLException {
@@ -385,6 +382,7 @@ try {
       ResultSet recipeSet = prep.executeQuery();
       while(recipeSet.next()){
         String uri = recipeSet.getString("recipe_uri");
+        System.out.println("CURR URI IS: " + uri);
         recipesFromExactQuery.add(uri);
       }
       prep.close();
@@ -412,6 +410,7 @@ try {
     } catch (SQLException e){
       e.printStackTrace();
     }
+    System.out.println("RECIPES from SIM QUERY size: " + recipesFromSimilarQuery.size());
     return recipesFromSimilarQuery;
   }
 
