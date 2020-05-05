@@ -84,6 +84,7 @@ public class Recipe {
   }
 
   public String prepareForInsert() {
+    label = label.replace("\"", "");
     return "\"" + uri + "\",\"" + label + "\",\"" + image + "\",\"" + source + "\",\"" + url
         + "\"," + yield + "," + calories + "," + totalWeight + "," + totalTime;
   }

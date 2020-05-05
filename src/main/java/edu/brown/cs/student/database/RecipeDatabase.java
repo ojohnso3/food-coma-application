@@ -129,15 +129,15 @@ try {
   PreparedStatement prep = conn.prepareStatement("INSERT INTO recipe VALUES("
           + recipe.prepareForInsert() + ");");
   prep.executeUpdate();
-  for (Ingredient ingredient : recipe.getIngredients()) {
-    String line = "\"" + recipe.getUri() + "\",\"" + ingredient.getText() + "\","
-            + ingredient.getWeight();
-    System.out.println(line);
-    prep = conn.prepareStatement("INSERT INTO ingredient VALUES("
-            + line + ");");
-    prep.executeUpdate();
-  }
+    for (Ingredient ingredient : recipe.getIngredients()) {
+      String text = ingredient.getText().replace("\"", "");
+      String line = "\"" + recipe.getUri() + "\",\"" + text + "\","
+          + ingredient.getWeight();
 
+      prep = conn.prepareStatement("INSERT INTO ingredient VALUES("
+          + line + ");");
+      prep.executeUpdate();
+    }
   for (String code : NutrientInfo.nutrients.keySet()) {
     double[] currVals = recipe.getNutrientVals(code);
 
@@ -412,11 +412,8 @@ try {
     } catch (SQLException e){
       e.printStackTrace();
     }
-
     return recipesFromSimilarQuery;
   }
-
-
 
     /**
      * Database test function.

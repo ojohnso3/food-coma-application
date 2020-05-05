@@ -44,6 +44,10 @@ public class Accounts {
       throw new AccountException("ERROR: name-user map not initialized");
     } else {
       nameUserMap.put(user.getUsername(), user);
+      for (String k : nameUserMap.keySet()) {
+        System.out.println("USER " + k + " done");
+      }
+      System.out.println("ADDING USER " + nameUserMap.get(user.getUsername()) + " finished");
     }
   }
 
@@ -68,10 +72,15 @@ public class Accounts {
       // create each user
       System.out.println("GETS HERE");
       while (loginInfo.hasNext()) {
+        System.out.println("Line 1");
         String[] login = loginInfo.nextLine().split(",");
+        System.out.println("Line 2");
         String username = login[0];
+        System.out.println("Line 3 " + username);
         User user = UserDatabase.getUser(username);
+        System.out.println("Line 4");
         nameUserMap.putIfAbsent(username, user);
+        System.out.println("Line 5");
       }
     } catch (Exception e) {
       throw new AccountException(e.getMessage());
@@ -243,7 +252,7 @@ public class Accounts {
   /**
    * checks if username is taken.
    * @param user - username
-   * @return bool
+   * @return bool - true when the username is not in the database and valid.
    * @throws UserCreationException if false
    */
   private static boolean userExists(String user) throws UserCreationException {

@@ -1,4 +1,5 @@
 username,passwordHash,salt
+<<<<<<< HEAD
 
 <<<<<<< HEAD
 hello,$2a$10$gInZW4WoeKRRhTZGH20b8..dJJW4eQjZ/Fg8LNkz4Iz2XBz9Bk06G,$2a$10$gInZW4WoeKRRhTZGH20b8.
@@ -18,3 +19,14 @@ user111,$2a$10$jSx6lcPNAih6dqSg3v54Judy2NYBychgWg1k64VEshy6G85H4TOYG,$2a$10$jSx6
 super,$2a$10$ky1xbBKqMaEnv2Uj6XHgi.Q6gm.mTufSqPTGNJaTQjtuCW3CiJ9pm,$2a$10$ky1xbBKqMaEnv2Uj6XHgi.
 superman,$2a$10$2enpu4z1z0kNyt0UfmEsJOeC5Z/ePZmaXgJExi5ORozTrA/ODu5Zm,$2a$10$2enpu4z1z0kNyt0UfmEsJO
 superman1111,$2a$10$QJGZe0LIRpPYzX2bZF7zWeQ3ElBAJ9jMuW8GXq7H6FPfkURQwfYaW,$2a$10$QJGZe0LIRpPYzX2bZF7zWe
+=======
+dontfailmenow,$2a$10$CaIFy4TeOZl/Jqu.rVoDh.YR1JtNA/JQSB8VRZlwprU8/Yserv/V2,$2a$10$CaIFy4TeOZl/Jqu.rVoDh.
+bike4u,$2a$10$x1Kp22wQi5UY5woJGll1/ecZTrCTvjI436xsOeUSOL6eIeFQfH8nW,$2a$10$x1Kp22wQi5UY5woJGll1/e
+tryagainyay,$2a$10$1M0DWmeq3/1zGNDYV9yjgetT2YEphpqtO0SlA8rzyDhWD6BQq8jS2,$2a$10$1M0DWmeq3/1zGNDYV9yjge
+popooooool,$2a$10$KJF5Ixz.oZeXdy320K1nVeeajv7U28IjGC.wp2l9ip.j8lQApy9be,$2a$10$KJF5Ixz.oZeXdy320K1nVe
+jalksjdf;lkasjdflkasjdfl,$2a$10$PbKRDDuvQvd38RapQuwmnuKStkb0KnZCeRyKF561XoDcp0.8iHu1a,$2a$10$PbKRDDuvQvd38RapQuwmnu
+helpmeeeee,$2a$10$Q1xDHt5Mwsc/fbwI.lGFTOmszc2BtDZeuhrDo/0bp4T8IMQL30zVO,$2a$10$Q1xDHt5Mwsc/fbwI.lGFTO
+newusernameCAM,$2a$10$BP6W/r2BnCRDChoQu224Y.txYfB.GUtH0IOWdvur53jfhNwrTXbC6,$2a$10$BP6W/r2BnCRDChoQu224Y.
+whyisthisbroken,$2a$10$pU26f.y8jEKU500hP0ciwO7EtmL56Bv.oDQt3w3YTvqgwgu3uhZI2,$2a$10$pU26f.y8jEKU500hP0ciwO
+confusedstudent,$2a$10$Sgw8MxQrK/U4HSf9vxgFZ.u9ZLy3bY.rJqPbh.LmMmtLoVFXUVArW,$2a$10$Sgw8MxQrK/U4HSf9vxgFZ.
+>>>>>>> d556dde7e23525ed6e09129d42085e54cb509b4a
