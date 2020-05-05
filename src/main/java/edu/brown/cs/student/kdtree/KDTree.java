@@ -565,7 +565,7 @@ public class KDTree<N extends KDNode<N>> {
       for (int j = 0; j < sz2; j++) { //nodes size
         double n = axisCoords.get(j);
         int weight = 1;
-        if (weightedAxes.contains(j)) {
+        if (weightedAxes.contains(i)) {
           //set weight these axes more than the others.
           weight = 2;
         }
