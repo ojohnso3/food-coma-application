@@ -36,11 +36,11 @@
     <footer class="footer">
       <a href="https://www.youtube.com/watch?v=astISOttCQ0" target="_blank">Press me!</a>
       <br><br>
-      <a href="#"><i class="fa fa-facebook-official"></i></a>
-      <a href="#"><i class="fa fa-instagram"></i></a>
-      <a href="#"><i class="fa fa-twitter"></i></a>   
-      <a href="#"><i class="fa fa-linkedin"></i></a>
-      <a href="#"><i class="fa fa-pinterest-p"></i></a>   
+      <a target="_blank" href="https://www.facebook.com/bonappetitmag/"><i class="fa fa-facebook-official"></i></a>
+      <a target="_blank" href="https://www.instagram.com/bonappetitmag/?hl=en"><i class="fa fa-instagram"></i></a>
+      <a target="_blank" href="https://twitter.com/bonappetit?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor"><i class="fa fa-twitter"></i></a>   
+      <a target="_blank" href="https://www.linkedin.com/company/bon-appetit/"><i class="fa fa-linkedin"></i></a>
+      <a target="_blank" href="https://www.pinterest.com/bonappetitmag/"><i class="fa fa-pinterest-p"></i></a>   
       <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">edamame FIX</a></p>
     </footer>
 
