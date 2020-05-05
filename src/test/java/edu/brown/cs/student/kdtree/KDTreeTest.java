@@ -268,8 +268,8 @@ public class KDTreeTest {
     ls.add(n_5);
     ls.add(n5);
     ls.add(nten);
-    List<Integer> axisWeights = new ArrayList<>();
-    axisWeights.add(1);
+    List<Double> axisWeights = new ArrayList<>();
+    axisWeights.add(1.);
     tree.normalizeAxes(ls, axisWeights);
     try {
       kdt.normalizeAxes(ls, new ArrayList<>());
@@ -297,9 +297,9 @@ public class KDTreeTest {
     ls2.add(n10);
     ls2.add(n11);
     ls2.add(neg11);
-    List<Integer> axisWeights = new ArrayList<>();
-    axisWeights.add(1);
-    axisWeights.add(1);
+    List<Double> axisWeights = new ArrayList<>();
+    axisWeights.add(1.);
+    axisWeights.add(1.);
     kdt.normalizeAxes(ls2, axisWeights);
 
     double min = -1.;
@@ -331,9 +331,9 @@ public class KDTreeTest {
     ls2.add(n10);
     ls2.add(n11);
     ls2.add(neg11);
-    List<Integer> axisWeights = new ArrayList<>();
-    axisWeights.add(1);
-    axisWeights.add(2);
+    List<Double> axisWeights = new ArrayList<>();
+    axisWeights.add(1.);
+    axisWeights.add(2.);
     kdt.normalizeAxes(ls2, axisWeights);
 
     double min = -1.;
