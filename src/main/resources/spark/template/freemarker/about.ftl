@@ -1,5 +1,6 @@
 <#assign content>
 
+<h1>About</h1>
 
 <img src="css/foodCOMA.png" alt="HELP">
 
@@ -7,20 +8,20 @@
 
 <div class="container">
   <div class="art">
-    <p>Cameron</p>
-    <img src="https://tinyurl.com/ya7urluw" style="width:100%">
+    <p>Cameron Wenzel</p>
+    <img src="https://scontent-lga3-1.xx.fbcdn.net/v/t1.0-9/1513723_273839846118410_1334459865_n.jpg?_nc_cat=104&_nc_sid=7aed08&_nc_ohc=vKLYpNJ1nAUAX92jurX&_nc_ht=scontent-lga3-1.xx&oh=18e1ed3b429e77853cfad9b3dbdecee8&oe=5ED654BB" style="width:100%">
   </div>
   <div class="art">
-    <p>Olivia</p>
-    <img src="https://tinyurl.com/ya7urluw" style="width:100%">
+    <p>Olivia Johnson</p>
+    <img src="https://scontent-lga3-1.xx.fbcdn.net/v/t1.0-9/39210973_657068744650296_5044037101687930880_n.jpg?_nc_cat=102&_nc_sid=85a577&_nc_ohc=duo5fvvUhg0AX-xWv6N&_nc_ht=scontent-lga3-1.xx&oh=49a9a90c30d58291e32deddb1287d359&oe=5ED5E8DB" style="width:100%">
   </div>
   <div class="art">
-    <p>Morgann</p>
-    <img src="https://tinyurl.com/ya7urluw" style="width:100%">
+    <p>Morgann Thain</p>
+    <img src="https://scontent-lga3-1.xx.fbcdn.net/v/t1.0-9/69691711_2478689639074160_98712758077358080_o.jpg?_nc_cat=102&_nc_sid=13bebb&_nc_ohc=6x4ZgCbBKQgAX_wSYU5&_nc_ht=scontent-lga3-1.xx&oh=863513b96e5c4575418f04428d4449e8&oe=5ED83F4F" style="width:100%">
   </div>
     <div class="art">
-    <p>Annabeth</p>
-    <img src="https://tinyurl.com/ya7urluw" style="width:100%">
+    <p>Annabeth Stokely</p>
+    <img src="https://scontent-lga3-1.xx.fbcdn.net/v/t31.0-8/1094691_1406372366242793_1050692470_o.jpg?_nc_cat=104&_nc_sid=85a577&_nc_ohc=SjBP0YojYQoAX_6Z7WA&_nc_ht=scontent-lga3-1.xx&oh=4ee062ddade63bfe5fe4a20b06862b4f&oe=5ED738C4" style="width:100%">
   </div>
 </div> 
 <br>

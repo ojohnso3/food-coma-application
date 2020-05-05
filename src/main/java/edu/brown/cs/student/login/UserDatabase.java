@@ -183,10 +183,14 @@ public final class UserDatabase {
   public static User getUser(String username) throws SQLException, InterruptedException,
       IOException, APIException, AccountException {
 
+    System.out.println("USER: START");
+
     if (!checkUsername(username)) {
       System.out.println("USER GONE");
       throw new AccountException("Cannot retrieve user: user does not exist");
     }
+    
+    System.out.println("USER: PAST IF");
 
     PreparedStatement prep = conn.prepareStatement("SELECT health_label FROM restriction WHERE username = ?");
     prep.setString(1, username);
@@ -209,6 +213,7 @@ public final class UserDatabase {
       prevRecipes.add(r);
     }
 
+    System.out.println("USER: MAKES IT TO END");
     return new User(username, prevRecipes, dietaryRestrictions, nutrients);
   }
 
