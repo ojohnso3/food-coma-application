@@ -74,23 +74,14 @@ public class Accounts {
     nameUserMap = new HashMap<>();
     // create users from info files and databases
     try (Scanner loginInfo = new Scanner(new FileReader(path))) {
+      // get rid of header
+      checkHeader(loginInfo.nextLine());
       // create each user
-<<<<<<< HEAD
-=======
-      System.out.println("GETS HERE");
-      String[] header = loginInfo.nextLine().split(",");
->>>>>>> fb0ba8eb7a9e75f4f4fda299c7a4ab45d1c2db3f
       while (loginInfo.hasNext()) {
         String[] login = loginInfo.nextLine().split(",");
         String username = login[0];
         User user = UserDatabase.getUser(username);
-<<<<<<< HEAD
         nameUserMap.putIfAbsent(username, user);
-=======
-        System.out.println("Line 4 " + user);
-        nameUserMap.putIfAbsent(username, user);
-        System.out.println("Line 5 " + nameUserMap.get(username));
->>>>>>> fb0ba8eb7a9e75f4f4fda299c7a4ab45d1c2db3f
       }
     } catch (Exception e) {
       throw new AccountException(e.getMessage());
@@ -131,7 +122,8 @@ public class Accounts {
    * implementation
    */
   public static void checkHeader(String path) throws AccountException {
-    if (!readHeader(path).equals("username,passwordHash,salt")) {
+    if (!path.equals("username,passwordHash,salt")
+            && !readHeader(path).equals("username,passwordHash,salt")) {
       throw new AccountException("login CSV header malformed");
     }
   }

@@ -93,9 +93,9 @@ public class Recommender {
    */
   private List<Integer> getNutrientIndices() {
     List<Integer> weightedAxes = new ArrayList<>();
-    for () {
-
-    }
+//    for () {
+//
+//    }
     for (String code : this.user.getNutrients()) {
       weightedAxes.add(NutrientInfo.nutrientCodes.indexOf(code));
     }
