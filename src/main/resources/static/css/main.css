@@ -14,7 +14,6 @@ h1 {
     font-family: monospace;
     /* text-shadow: 0 0 3px #FF0000; */
     color: #5e6ac7;
-    background-color: grey;
 
     /* text-shadow: 0 0 3px red, 0 0 5px orange; */
     text-decoration: underline;
@@ -117,7 +116,7 @@ a:hover {
 .art {
     /* display: flex; */
     width: 33.33%;
-    background-color: yellow;
+    background-color: rgb(235, 168, 106);
     border: 3px solid black;
 }
 

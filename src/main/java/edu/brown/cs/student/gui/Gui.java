@@ -15,7 +15,6 @@ import com.google.common.collect.ImmutableMap;
 import edu.brown.cs.student.database.APIException;
 import edu.brown.cs.student.database.FieldParser;
 import edu.brown.cs.student.database.RecipeDatabase;
-import edu.brown.cs.student.food.Ingredient;
 import edu.brown.cs.student.food.NutrientInfo;
 import edu.brown.cs.student.food.Recipe;
 import edu.brown.cs.student.login.AccountException;
@@ -389,7 +388,7 @@ public class Gui {
       Map<String,String> output = new HashMap<String, String>();
 
       for (Recipe r : prevRecipes) {
-        output.put(r.getUri(), r.getLabel());
+        output.put(r.getCompactUri(), r.getLabel());
       }
       
       System.out.println("MAP SIZE " + output.size());
@@ -439,6 +438,7 @@ public class Gui {
           clickedSet.add(fullUri);
           try {
             currUser.addToPreviousRecipesByURI(fullUri);
+            System.out.println("ADDED PREV");
           } catch (InterruptedException e) {
             System.out.println("InterruptedException when adding recipe to previous recipes: " + e.getMessage());
           } catch (SQLException e) {
