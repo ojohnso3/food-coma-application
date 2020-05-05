@@ -1,5 +1,6 @@
 package edu.brown.cs.student.food;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +25,7 @@ public final class NutrientInfo {
    */
   public static void createNutrientsList() {
     nutrients = new HashMap<String, String[]>();
-
+    nutrientCodes = new ArrayList<String>();
     allNutrients = new HashMap<String, String>();
 
     String[] calcium = new String[2];
