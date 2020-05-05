@@ -50,6 +50,7 @@ public class Recommender {
       RecipeNode target = getTargetNode(prevRecipeNodes);
 
       // Nutrients: get the nutrients to weight higher
+      //TODO: SET WEIGHTS FOR ALL THE SPECIFIC NUTRIENTS
       List<Integer> weightedAxes = getNutrientIndices();
 
       // Query Recs: get recipes based on the query and put into a queried recipes tree
@@ -79,7 +80,7 @@ public class Recommender {
    * returns the users history in a form usable for getTarget:
    * gets its recipe history, converts it to nodes, normalizes.
    */
-  private List<RecipeNode> prepUserHistoryNodes() {
+  private List<RecipeNode> prepUserHistoryNodes() throws KDTreeException {
     //get, turn into nodes, and normalize user history
     List<Recipe> userHistory = this.user.getPreviousRecipes();
     List<RecipeNode> prevRecipeNodes = this.convertRecipesToRecipeNodes(userHistory);
@@ -114,7 +115,8 @@ public class Recommender {
    * @param prevRecipeNodes - the previous recipes that the user has accessed as nodes.
    * @return - a RecipeNode at the coordinates determined by the query and the user's history.
    */
-  private RecipeNode getTargetNode(List<RecipeNode> prevRecipeNodes) throws RecommendationException {
+  private RecipeNode getTargetNode(List<RecipeNode> prevRecipeNodes) throws RecommendationException
+  {
     // prepare target
     List<Double> coords = new ArrayList<>();
     for (int i = 0; i < this.dim; i++) {

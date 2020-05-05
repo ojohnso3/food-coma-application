@@ -520,16 +520,19 @@ public class KDTree<N extends KDNode<N>> {
   /**
    * Extra function to normalize the coordinates of a list of nodes.
    */
-  public void normalizeTreeAxes() {
+  public void normalizeTreeAxes() throws KDTreeException {
     normalizeAxes(getNodes(), new ArrayList<>());
   }
 
   /**
    * Function to normalize the coordinates of a list of nodes.
    * @param nodes - all nodes to be normalized.
-   * @param weightedAxes - list of the indices of the axes that should be weighted higher.
+   * @param axisWeights - how much each axis should be weights (index i corres. to axis i)
    */
-  public void normalizeAxes(List<N> nodes, List<Integer> weightedAxes) {
+  public void normalizeAxes(List<N> nodes, List<Integer> axisWeights) throws KDTreeException {
+    if (axisWeights.size() != this.dim) {
+      throw new KDTreeException("ERROR: axis weights must be of length: " + dim);
+    }
     // create lists, maxes, mins for each considered nutrient
     List<List<Double>> axisCoordsLists = new ArrayList<>();
     List<Double> maxes = new ArrayList<>();
@@ -564,11 +567,7 @@ public class KDTree<N extends KDNode<N>> {
       int sz2 = axisCoords.size();
       for (int j = 0; j < sz2; j++) { //nodes size
         double n = axisCoords.get(j);
-        int weight = 1;
-        if (weightedAxes.contains(i)) {
-          //set weight these axes more than the others.
-          weight = 2;
-        }
+        int weight = axisWeights.get(i);
         double normalized = weight * (n - mins.get(i)) / (maxes.get(i) - mins.get(i));
         // replace coords with their new values
         nodes.get(j).getCoords().set(i, normalized);
