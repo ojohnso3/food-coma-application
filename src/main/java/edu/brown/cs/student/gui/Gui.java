@@ -15,7 +15,6 @@ import com.google.common.collect.ImmutableMap;
 import edu.brown.cs.student.database.APIException;
 import edu.brown.cs.student.database.FieldParser;
 import edu.brown.cs.student.database.RecipeDatabase;
-import edu.brown.cs.student.food.Ingredient;
 import edu.brown.cs.student.food.NutrientInfo;
 import edu.brown.cs.student.food.Recipe;
 import edu.brown.cs.student.login.AccountException;
@@ -174,31 +173,41 @@ public class Gui {
 
           }
         }
-
         RecipeDatabase.loadDatabase("data/recipeDatabase.sqlite3");
-        recipes = FieldParser.getRecipesFromQuery(query, restrictions, paramsMap);
-        String[] recipesForDb = new String[recipes.length];
-        for(int i = 0; i < recipes.length; i++){
-          recipesForDb[i] = recipes[i].getUri();
-        }
         System.out.println("QUERY IN DB????? : " + RecipeDatabase.checkQueryInDatabase(query));
-        if(!RecipeDatabase.checkQueryInDatabase(query)){
+        if(RecipeDatabase.checkQueryInDatabase(query)){
+          List<String> uris = RecipeDatabase.getQueryURIListFromDatabase(query);
+          System.out.println("uris size is " + uris.size());
+          recipes = new Recipe[uris.size()];
+          for(int i = 0; i < uris.size(); i++){
+            recipes[i] = RecipeDatabase.getRecipeFromURI(uris.get(i));
+
+          }
+        } else if(!RecipeDatabase.checkQueryInDatabase(query)){
+          System.out.println("MAKING API CALL!!!!!! NOOO!");
+          recipes = FieldParser.getRecipesFromQuery(query, restrictions, paramsMap);
+          String[] recipesForDb = new String[recipes.length];
+          for(int i = 0; i < recipes.length; i++){
+            recipesForDb[i] = recipes[i].getUri();
+          }
           RecipeDatabase.insertQuery(query, recipesForDb);
         }
+
+
+
         simpleRecipeList = new HashMap<String, String[]>();
         Pattern load = Pattern.compile("#recipe_(.+)");
         recipesMap.clear();
+        //HOW LONG DO WE WANT THE RESULTS?? 10??????? .LENGTH????
         for(int i = 0; i < recipes.length; i++){
           recipesMap.put(recipes[i].getUri(), recipes[i]);
-          System.out.println(recipes[i].getLabel());
           String[] fields = new String[2];
           fields[0] = recipes[i].getUrl();
           fields[1] = recipes[i].getUri();
-          System.out.println("Full URI: " + fields[1]);
           Matcher matchUri = load.matcher(recipes[i].getUri());
+
           if(matchUri.find()){
             fields[1] = matchUri.group(1);
-            System.out.println("URI Found: " + matchUri.group(1));
           } else {
             fields[1] = "error";
           }
@@ -389,7 +398,7 @@ public class Gui {
       Map<String,String> output = new HashMap<String, String>();
 
       for (Recipe r : prevRecipes) {
-        output.put(r.getUri(), r.getLabel());
+        output.put(r.getCompactUri(), r.getLabel());
       }
       
       System.out.println("MAP SIZE " + output.size());
@@ -425,7 +434,7 @@ public class Gui {
       } catch (AccountException e) {
         System.out.println("AccountException getting User in RecipeHandler: " + e.getMessage());
       }
-      Recommender recommender = currUser.getRecommender();
+//      Recommender recommender = currUser.getRecommender();
       
       // TODO: use Recommender object below!
       
@@ -439,6 +448,7 @@ public class Gui {
           clickedSet.add(fullUri);
           try {
             currUser.addToPreviousRecipesByURI(fullUri);
+            System.out.println("ADDED PREV");
           } catch (InterruptedException e) {
             System.out.println("InterruptedException when adding recipe to previous recipes: " + e.getMessage());
           } catch (SQLException e) {
@@ -461,17 +471,22 @@ public class Gui {
       }
       if(currRecipe == null){
         try {
-          currRecipe = FieldParser.getRecipeFromURI("http://www.edamam.com/ontologies/edamam.owl#recipe_" + recipeURI);
+
+          currRecipe = RecipeDatabase.getRecipeFromURI("http://www.edamam.com/ontologies/edamam.owl#recipe_" + recipeURI);
 
         } catch (IOException e) {
           System.out.println("IOException in getting recipe from API");
         } catch (InterruptedException e) {
           System.out.println("InterruptedException in getting recipe from API");
-        } catch (APIException e) {
+        } catch (APIException | SQLException e) {
           System.out.println("APIException in getting recipe from API");
           System.out.println("Error message: " + e.getMessage());
         }
       }
+      if(currRecipe == null){
+        System.out.println("EXCEEDED RECIPES LOOKUP!!");
+      }
+
       String actualName = currRecipe.getLabel();
       System.out.println("ACTUAL NAME: " + actualName);
       List<String> ingredientsList = new ArrayList<String>();

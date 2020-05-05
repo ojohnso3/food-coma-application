@@ -31,6 +31,10 @@ public class Accounts {
    * @return the User, null if they don't exist
    */
   public static User getUser(String username) throws AccountException {
+    for (String k : nameUserMap.keySet()) {
+      System.out.println("USER NAME " + k + " done");
+      System.out.println("USER VAL " + nameUserMap.get(username) + " finished");
+    }
     User user = nameUserMap.get(username);
     if (user == null) {
       throw new AccountException("no user found with name " + username);
@@ -44,10 +48,10 @@ public class Accounts {
       throw new AccountException("ERROR: name-user map not initialized");
     } else {
       nameUserMap.put(user.getUsername(), user);
-      for (String k : nameUserMap.keySet()) {
-        System.out.println("USER " + k + " done");
-      }
-      System.out.println("ADDING USER " + nameUserMap.get(user.getUsername()) + " finished");
+//      for (String k : nameUserMap.keySet()) {
+//        System.out.println("USER " + k + " done");
+//      }
+//      System.out.println("ADDING USER " + nameUserMap.get(user.getUsername()) + " finished");
     }
   }
 
@@ -58,7 +62,7 @@ public class Accounts {
    */
   public static void initializeMap() throws AccountException, 
       FileNotFoundException, ClassNotFoundException, SQLException {
-    
+
     UserDatabase.loadDatabase("data/userDatabase.sqlite3");
     initializeMap(LOGIN_INFO_PATH);
   }
@@ -66,21 +70,27 @@ public class Accounts {
    * implementation
    */
   protected static void initializeMap(String path) throws AccountException {
+    System.out.println("START MAP MAKING");
     nameUserMap = new HashMap<>();
     // create users from info files and databases
     try (Scanner loginInfo = new Scanner(new FileReader(path))) {
       // create each user
+<<<<<<< HEAD
+=======
       System.out.println("GETS HERE");
+      String[] header = loginInfo.nextLine().split(",");
+>>>>>>> fb0ba8eb7a9e75f4f4fda299c7a4ab45d1c2db3f
       while (loginInfo.hasNext()) {
-        System.out.println("Line 1");
         String[] login = loginInfo.nextLine().split(",");
-        System.out.println("Line 2");
         String username = login[0];
-        System.out.println("Line 3 " + username);
         User user = UserDatabase.getUser(username);
-        System.out.println("Line 4");
+<<<<<<< HEAD
         nameUserMap.putIfAbsent(username, user);
-        System.out.println("Line 5");
+=======
+        System.out.println("Line 4 " + user);
+        nameUserMap.putIfAbsent(username, user);
+        System.out.println("Line 5 " + nameUserMap.get(username));
+>>>>>>> fb0ba8eb7a9e75f4f4fda299c7a4ab45d1c2db3f
       }
     } catch (Exception e) {
       throw new AccountException(e.getMessage());

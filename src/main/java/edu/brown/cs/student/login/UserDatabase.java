@@ -87,6 +87,7 @@ public final class UserDatabase {
    * @return - boolean representing whether the username is in the database.
    */
   public static boolean checkUsername(String username) throws SQLException {
+    System.out.println(username);
     PreparedStatement prep = conn.prepareStatement("SELECT * FROM account WHERE username = ?");
     prep.setString(1, username);
     ResultSet userSet = prep.executeQuery();
@@ -107,7 +108,6 @@ public final class UserDatabase {
     PreparedStatement prep = conn.prepareStatement("INSERT INTO account VALUES("
         + "\"" + user.getUsername() + "\");");
     prep.executeUpdate();
-    
 //    for (String s : user.getDietaryRestrictions()) {
 //      prep = conn.prepareStatement("INSERT INTO restriction VALUES(\"" + user.getUsername()
 //          + "\",\"" + s + "\");");
@@ -116,9 +116,10 @@ public final class UserDatabase {
 //
 //    for (String s : user.getNutrients()) {
 //      prep = conn.prepareStatement("INSERT INTO nutrient VALUES(\"" + user.getUsername()
-//          + "\",\"" + s + "\");");
+//              + "\",\"" + s + "\");");
 //      prep.executeUpdate();
 //    }
+//
 //
 //    for (Recipe r : user.getPreviousRecipes()) {
 //      prep = conn.prepareStatement("INSERT INTO prev_recipe VALUES(\"" + user.getUsername()
@@ -182,10 +183,14 @@ public final class UserDatabase {
   public static User getUser(String username) throws SQLException, InterruptedException,
       IOException, APIException, AccountException {
 
+    System.out.println("USER: START");
+
     if (!checkUsername(username)) {
       System.out.println("USER GONE");
       throw new AccountException("Cannot retrieve user: user does not exist");
     }
+    
+    System.out.println("USER: PAST IF");
 
     PreparedStatement prep = conn.prepareStatement("SELECT health_label FROM restriction WHERE username = ?");
     prep.setString(1, username);
@@ -208,6 +213,7 @@ public final class UserDatabase {
       prevRecipes.add(r);
     }
 
+    System.out.println("USER: MAKES IT TO END");
     return new User(username, prevRecipes, dietaryRestrictions, nutrients);
   }
 
