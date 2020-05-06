@@ -1,12 +1,5 @@
 package edu.brown.cs.student.general;
 
-//import java.io.File;
-//import java.io.IOException;
-//import java.io.PrintWriter;
-//import java.io.StringWriter;
-//
-//import java.util.Map;
-
 import edu.brown.cs.student.database.APIException;
 import edu.brown.cs.student.database.FieldParser;
 import edu.brown.cs.student.database.RecipeDatabase;
@@ -52,6 +45,7 @@ public final class Main {
     // initialize users maps
     try {
       Accounts.initializeMap();
+      NutrientInfo.createNutrientsList();
     } catch (AccountException | FileNotFoundException | ClassNotFoundException | SQLException e) {
       e.printStackTrace();
     }
