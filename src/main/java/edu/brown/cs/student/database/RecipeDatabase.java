@@ -124,7 +124,7 @@ public final class RecipeDatabase {
     if (checkRecipeInDatabase(recipe.getUri())) {
 //      throw new SQLException("duplicate");
     }
-    System.out.println(recipe.prepareForInsert());
+//    System.out.println(recipe.prepareForInsert());
   PreparedStatement prep = conn.prepareStatement("INSERT INTO recipe VALUES("
           + recipe.prepareForInsert() + ");");
   prep.executeUpdate();
@@ -382,7 +382,7 @@ public final class RecipeDatabase {
       ResultSet recipeSet = prep.executeQuery();
       while(recipeSet.next()){
         String uri = recipeSet.getString("recipe_uri");
-        System.out.println("CURR URI IS: " + uri);
+//        System.out.println("CURR URI IS: " + uri);
         recipesFromExactQuery.add(uri);
       }
       prep.close();
