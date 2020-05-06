@@ -526,6 +526,7 @@ public class Gui {
       }
       if(currRecipe == null){
         try {
+          System.out.println("RECIPE URI LOOKUP" + recipeURI);
           currRecipe = RecipeDatabase.getRecipeFromURI("http://www.edamam.com/ontologies/edamam.owl#recipe_" + recipeURI);
         } catch (IOException e) {
           System.out.println("IOException in getting recipe from API");

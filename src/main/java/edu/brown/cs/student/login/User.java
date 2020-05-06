@@ -78,7 +78,7 @@ public class User {
     this.previousRecipes = previousRecipes;
     this.dietaryRestrictions = dietaryRestrictions;
     this.nutrients = nutrients;
-    this.recommender = new Recommender(this);
+    this.recommender = null;
   }
   /*
    * testing
