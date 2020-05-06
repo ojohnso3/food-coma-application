@@ -1,1 +1,3 @@
 username,passwordHash,salt
+banana,$2a$10$L4P0EwjbSWHdaHG6PutKGe9TpbWdU8MN3B4rIiMvmgZRd.oVMxSRy,$2a$10$L4P0EwjbSWHdaHG6PutKGe
+cookie,$2a$10$nva6SHbDWorQrxHcMpNe1.gzcXi23BZNhS8AaLHIb3KYcK9YgHH6.,$2a$10$nva6SHbDWorQrxHcMpNe1.

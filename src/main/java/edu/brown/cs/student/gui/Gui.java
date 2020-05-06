@@ -559,8 +559,7 @@ public class Gui {
         System.out.println("User: " + currUser);
         recommendations = recommender.makeRecommendation(prevQuery, new HashMap<>(),
                 prevRestrictions);
-      } catch (RecommendationException | InterruptedException | IOException | APIException
-              | SQLException e) {
+      } catch (RecommendationException | InterruptedException | IOException | APIException e) {
         e.printStackTrace();
       }
 
