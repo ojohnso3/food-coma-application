@@ -44,6 +44,8 @@ public final class Main {
   private void run() {
     // initialize users maps
     try {
+      NutrientInfo.createNutrientsList();
+      RecipeDatabase.loadDatabase("data/recipeDatabase.sqlite3");
       Accounts.initializeMap();
       NutrientInfo.createNutrientsList();
     } catch (AccountException | FileNotFoundException | ClassNotFoundException | SQLException e) {

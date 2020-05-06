@@ -1,7 +1,6 @@
 package edu.brown.cs.student.recommendation;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -20,8 +19,11 @@ import edu.brown.cs.student.login.User;
  */
 public class Recommender {
   private KDTree<RecipeNode> recipeTree;
-  private static final int REC_QUANTITY = 10;
+  private static final int REC_QUANTITY = 100;
   private final int dim = NutrientInfo.getNutrientCodes().size();
+  private static final double USER_PREF_WEIGHT = 6.;
+  private static final double MAIN_NUT_WEIGHT = 3.;
+  private static final double SEC_NUT_WEIGHT = 3.;
   private final User user;
 
   /**
@@ -29,6 +31,7 @@ public class Recommender {
    * @param user - user
    */
   public Recommender(User user) {
+    System.out.println(user.getUsername());
     this.user = user;
   }
 
@@ -41,7 +44,7 @@ public class Recommender {
    */
   public List<Recipe> makeRecommendation(String input, Map<String, String[]> paramsMap,
                                          List<String> restrictions) throws
-          RecommendationException, InterruptedException, IOException, APIException, SQLException {
+          RecommendationException, InterruptedException, IOException, APIException {
     try {
       this.recipeTree = new KDTree<>(dim);
       // User History: get, nodify, and normalize previous recipes
@@ -93,17 +96,18 @@ public class Recommender {
   private List<Double> getNutrientIndices() {
     List<Double> axisWeights = new ArrayList<>();
     for (int i = 0; i < NutrientInfo.getMainNutrients().size(); i++) {
-      axisWeights.add(3.);
+      axisWeights.add(MAIN_NUT_WEIGHT);
     }
     for (int i = 0; i < NutrientInfo.getSecondaryNutrients().size(); i++) {
-      axisWeights.add(1.);
+      axisWeights.add(SEC_NUT_WEIGHT);
     }
     for (String code : this.user.getNutrients()) {
       int i = NutrientInfo.getNutrientCodes().indexOf(code);
       if (i >= 0 && i < axisWeights.size()) {
-        axisWeights.set(i, 6.);
+        axisWeights.set(i, USER_PREF_WEIGHT);
       }
     }
+
     return axisWeights;
   }
 
@@ -127,8 +131,12 @@ public class Recommender {
           RecommendationException {
     // prepare target
     List<Double> coords = new ArrayList<>();
-    for (int i = 0; i < this.dim; i++) {
-      coords.add(Double.NaN);
+    // default values
+    for (int i = 0; i < NutrientInfo.getMainNutrients().size(); i++) {
+      coords.add(MAIN_NUT_WEIGHT / 2);
+    }
+    for (int i = 0; i < NutrientInfo.getSecondaryNutrients().size(); i++) {
+      coords.add(SEC_NUT_WEIGHT / 2);
     }
     RecipeNode target = new RecipeNode(coords);
     // set the coords to be the midpoint

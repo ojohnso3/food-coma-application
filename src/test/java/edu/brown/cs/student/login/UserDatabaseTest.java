@@ -3,6 +3,7 @@
 //import edu.brown.cs.student.database.APIException;
 //import edu.brown.cs.student.database.RecipeDatabase;
 //import edu.brown.cs.student.food.NutrientInfo;
+//import edu.brown.cs.student.food.Recipe;
 //import org.junit.Test;
 //
 //import java.io.FileNotFoundException;
@@ -130,26 +131,30 @@
 //   * Function to test the insertToPrevRecipe method in UserDatabase.
 //   */
 //  public void testInsertToPrevRecipe() {
-////    try {
-////      UserDatabase.insertToPrevRecipe(this.user1.getUsername(), "987");
-////      User user1Test = UserDatabase.getUser(this.user1.getUsername());
-////      assertEquals("987", user1Test.getPreviousRecipes().get(1));
-////
-////      UserDatabase.insertToPrevRecipe(this.user2.getUsername(), "http://edamam.api.com/Ontology#752");
-////      User user2Test = UserDatabase.getUser(this.user2.getUsername());
-////      assertEquals("http://edamam.api.com/Ontology#752", user2Test.getPreviousRecipes().get(0));
-////
-////    } catch (SQLException e) {
-////      e.printStackTrace();
-////    } catch (IOException e) {
-////      e.printStackTrace();
-////    } catch (InterruptedException e) {
-////      e.printStackTrace();
-////    } catch (APIException e) {
-////      e.printStackTrace();
-////    } catch (AccountException e) {
-////      e.printStackTrace();
-////    }
+//    try {
+//      Recipe r1 = RecipeDatabase.getRecipeFromURI("684");
+//      UserDatabase.insertToPrevRecipe(this.user1.getUsername(), r1.getUri());
+//      User user1Test = UserDatabase.getUser(this.user1.getUsername());
+//      assertEquals(r1, user1Test.getPreviousRecipes().get(0));
+//
+//      Recipe r2 = RecipeDatabase.getRecipeFromURI("295");
+//      UserDatabase.insertToPrevRecipe(this.user2.getUsername(), r2.getUri());
+//      User user2Test = UserDatabase.getUser(this.user2.getUsername());
+//      assertEquals(r2, user2Test.getPreviousRecipes().get(0));
+//
+//    } catch (SQLException e) {
+//      e.printStackTrace();
+//    } catch (IOException e) {
+//      e.printStackTrace();
+//    } catch (InterruptedException e) {
+//      e.printStackTrace();
+//    } catch (APIException e) {
+//      e.printStackTrace();
+//    } catch (AccountException e) {
+//      e.printStackTrace();
+//    } catch (IndexOutOfBoundsException e) {
+//      e.printStackTrace();
+//    }
 //  }
 //
 //  /**

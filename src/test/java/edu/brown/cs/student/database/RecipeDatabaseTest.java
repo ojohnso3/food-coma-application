@@ -59,6 +59,14 @@ public class RecipeDatabaseTest {
     this.testGetRecipeFromUri();
     this.testCheckRecipeInDatabase();
     this.testQueryAlreadyInDb();
+
+    try {
+      RecipeDatabase.deleteUser(r2.getUri());
+      RecipeDatabase.deleteUser(r3.getUri());
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+
   }
 
   /**

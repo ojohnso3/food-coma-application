@@ -1,35 +1,36 @@
 body {
-    background-color: #fee6c2;
+    background-color: #fff7eb;
     font-size: 18px;
     font-family: monospace;
-    color: #8aa1e6;
+    /* color: #77e7e7; */
+    color: black;
     text-align: center;
-    /* background-image: url('light-stars.jpg');
-    background-size: cover; */
-    margin-top: 120px;
+    margin-top: 130px;
+    overflow-x: hidden;
 }
 
 h1 {
     font-size: 60px;
     font-family: monospace;
     /* text-shadow: 0 0 3px #FF0000; */
-    color: #5e6ac7;
-
+    /* color: #5e6ac7; */
+    color: black;
     /* text-shadow: 0 0 3px red, 0 0 5px orange; */
-    text-decoration: underline;
+    /* text-decoration: underline; */
+    margin-top: 140px;
 }
 
 .dropdown-content{
     float:left;
 }
 
-.border {
+/* .border {
 	background: #8aa1e6;
     position: fixed;
     top: 0; 
     bottom: 0;
 	width: 20px;
-}
+} */
 
 #left {
     left: 0px;
@@ -40,11 +41,11 @@ h1 {
 }
 
 .navigation_bar {
-    background-color: #8aa1e6;
+    background: linear-gradient(#e77777, #e7af77);
     color: #fee6c2;
     /* color: #fee6c2; */
     padding: 30px;
-    /* margin: 10px; */
+    /* margin: 10px; #8aa1e6; ; */
     text-decoration: none;
     position: fixed;
  /* display: inline-flexbox;  */
@@ -52,7 +53,7 @@ h1 {
     top: 0px;
     left: 0px;
     width: 100%;
-    height: 40px;
+    height: 70px;
     border-bottom: 3px solid black;
 }
 
@@ -84,12 +85,13 @@ a:hover {
 }
 
 .home_slides {
-    border: dotted;
-    height: 500px;
-    width: 1000px;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 0;
+    border: solid 3px black;
+    height: 650px;
+    width: 100%;
+    display: cover;
+    /* margin-left: auto;
+    margin-right: auto; */
 }
 
 #recipes {
@@ -97,26 +99,27 @@ a:hover {
 }
 
 .details {
-    width: 600px;
-    background-color: #5e6ac7;
-    color: #fee6c2;
+    width: 800px;
+    background-color: #AFD275;
+     /* #5e6ac7; */
+    /* color: #fee6c2; */
     margin-left: auto;
     margin-right: auto;
-    padding: 5px;
+    padding: 20px;
     margin-bottom: 20px;
+    border: solid 5px black;
 }
 
 .container {
     display: flex;
     width: 100%;
-    background-color: black;
-    color: white;
+    color: black;
 }
 
 .art {
     /* display: flex; */
     width: 33.33%;
-    background-color: rgb(235, 168, 106);
+    background-color: #e7af77;
     border: 3px solid black;
 }
 
@@ -129,21 +132,23 @@ a:hover {
     /*display: flexbox;*/
     margin-top: 20px;
     padding: 10px;
-    /* width: 100%; */
-    background-color: #f09393;
-    border: 2px solid #f8c75d;
+    /* width: 100%; f09393*/
+    /* background-color: #AFD275; */
+    background: linear-gradient(#e77777, #e7af77);
+    border: 2px solid #e7af77;
+     /* #f8c75d; */
     bottom: 0px;
     left: 0px;
     right: 0px;
 }
 
-.user_header {
+/* .user_header {
     background-color: #8de0b7;
     width: 50%;
     margin-left: auto;
     margin-right: auto;
     padding: 20px;
-}
+} */
 
 /* #fc_logo {
     background-image: url('foodCOMA.png');
@@ -161,11 +166,13 @@ a:hover {
     justify-content: center;
     vertical-align: center;
     text-align: center;
-    border: 10px solid #8aa1e6;
+    /* border: 10px solid #8aa1e6; */
+    border: 10px solid #C2CAD0;
     border-radius: 5px;
     padding: 15px;
     margin: 20px;
-    background-color: #8de0b7;
+    /* background-color: #8de0b7; */
+    background-color: #AFD275;
 }
 
 .queryBox {
@@ -187,10 +194,31 @@ input[type="submit"] {
     font-size: 18px;
     width: 80%;
     text-transform: uppercase;
-    background-color: #FEE58C;
+    /* background-color: #FEE58C; */
+    background-color: #E7E777;
     padding: 10px;
     margin: 5px;
     align-self: center;
+}
+
+input[type="text"], input[type="password"] {
+    background-color: #C2CAD0;
+    /* cursor: pointer;
+    border-radius: 5px;
+    border: 0px;
+    font-size: 18px;
+    width: 80%;
+    text-transform: uppercase;
+    /* background-color: #FEE58C;
+    background-color: #E7E777;
+    padding: 10px;
+    margin: 5px;
+    align-self: center; */
+}
+
+.buttonBox, .dropdown {
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 #saved_recipes {
@@ -415,7 +443,7 @@ input[type="submit"].survey_button {
 
 /* Dropdown Button */
 .dropbtn {
-    background-color: #4CAF50;
+    background-color: #77e777;
     color: white;
     padding: 16px;
     font-size: 16px;
@@ -454,4 +482,9 @@ input[type="submit"].survey_button {
 .dropdown:hover .dropdown-content {display: block;}
 
 /* Change the background color of the dropdown button when the dropdown content is shown */
-.dropdown:hover .dropbtn {background-color: #3e8e41;}
+.dropdown:hover .dropbtn {background-color: #77e7af;}
+
+.portrait {
+    width: 100%;
+    height: 300px;
+}

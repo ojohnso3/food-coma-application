@@ -123,12 +123,13 @@ public final class RecipeDatabase {
   public static void insertRecipe(Recipe recipe) throws SQLException {
 
     if (checkRecipeInDatabase(recipe.getUri())) {
-//      throw new SQLException("duplicate");
+      throw new SQLException("duplicate");
     }
-//    System.out.println(recipe.prepareForInsert());
-  PreparedStatement prep = conn.prepareStatement("INSERT INTO recipe VALUES("
-          + recipe.prepareForInsert() + ");");
-  prep.executeUpdate();
+    System.out.println(recipe.prepareForInsert());
+    PreparedStatement prep = conn.prepareStatement("INSERT INTO recipe VALUES("
+            + recipe.prepareForInsert() + ");");
+    prep.executeUpdate();
+
     for (Ingredient ingredient : recipe.getIngredients()) {
       String text = ingredient.getText().replace("\"", "");
       String line = "\"" + recipe.getUri() + "\",\"" + text + "\","
@@ -138,38 +139,44 @@ public final class RecipeDatabase {
           + line + ");");
       prep.executeUpdate();
     }
-  for (String code : NutrientInfo.getNutrients().keySet()) {
-    double[] currVals = recipe.getNutrientVals(code);
 
-    if (currVals != null) {
-      String line = "\"" + code + "\",\"" + recipe.getUri() + "\"," + currVals[0] + "," + currVals[1];
+    for (String code : NutrientInfo.getNutrients().keySet()) {
+      double[] currVals = recipe.getNutrientVals(code);
 
-      prep = conn.prepareStatement("INSERT INTO nutrient_info VALUES("
+      if (currVals != null) {
+        String line = "\"" + code + "\",\"" + recipe.getUri() + "\"," + currVals[0] + ","
+            + currVals[1];
+
+        prep = conn.prepareStatement("INSERT INTO nutrient_info VALUES("
+            + line + ")");
+        prep.executeUpdate();
+      }
+    }
+
+    for (String label : recipe.getDietLabels()) {
+      String line = "\"" + recipe.getUri() + "\",\"" + label + "\"";
+
+      prep = conn.prepareStatement("INSERT INTO diet_label VALUES("
               + line + ")");
       prep.executeUpdate();
     }
-  }
 
-  for (String label : recipe.getDietLabels()) {
-    String line = "\"" + recipe.getUri() + "\",\"" + label + "\"";
+    for (String label : recipe.getHealthLabels()) {
+      String line = "\"" + recipe.getUri() + "\",\"" + label + "\"";
 
-    prep = conn.prepareStatement("INSERT INTO diet_label VALUES("
-            + line + ")");
-    prep.executeUpdate();
-  }
+      prep = conn.prepareStatement("INSERT INTO health_label VALUES("
+              + line + ")");
+      prep.executeUpdate();
+    }
 
-  for (String label : recipe.getHealthLabels()) {
-    String line = "\"" + recipe.getUri() + "\",\"" + label + "\"";
-
-    prep = conn.prepareStatement("INSERT INTO health_label VALUES("
-            + line + ")");
-    prep.executeUpdate();
-  }
-
-  prep.close();
+    prep.close();
 
   }
-
+  /**
+   * Function to insert a query into the query table of the database.
+   * @param query - the query that corresponds to the given recipes.
+   * @param uriList -  a list of recipes that conform to the given query.
+   */
   public static void insertQuery(String query, String[] uriList, List<String> restrictions, Map<String, String[]> paramsMap) throws SQLException {
 //    if (checkQueryInDatabase(query)) {
 //      throw new SQLException("duplicate");
@@ -200,7 +207,7 @@ public final class RecipeDatabase {
   }
 
   /**
-   * Function to create a list of diet or health labels from a given ResultSet
+   * Function to create a list of diet or health labels from a given ResultSet.
    * @param labelSet - the ResultSet with data from a table.
    * @return - a list of the labels.
    */
@@ -339,14 +346,14 @@ public final class RecipeDatabase {
   public static boolean checkRecipeInDatabase(String uri) {
 
     boolean retVal = false;
-    try{
+    try {
       PreparedStatement prep = conn.prepareStatement("SELECT * FROM recipe WHERE uri = ?");
       prep.setString(1, uri);
       ResultSet recipeSet = prep.executeQuery();
       retVal = recipeSet.next();
       prep.close();
       recipeSet.close();
-    } catch (SQLException e){
+    } catch (SQLException e) {
       e.printStackTrace();
     }
 
@@ -369,7 +376,7 @@ public final class RecipeDatabase {
       retVal = recipeSet.next();
       prep.close();
       recipeSet.close();
-    } catch (SQLException e){
+    } catch (SQLException e) {
       e.printStackTrace();
     }
     System.out.println("QUERY IN DB : " + retVal);
@@ -398,7 +405,11 @@ public final class RecipeDatabase {
     }
     return insertThis;
   }
-
+      /**
+       * Function to retrieve the list of uris that correspond to the given query.
+       * @param query - the query to find recipes for.
+       * @return - a list of the recipes that correspond to the given query.
+       */
   public static List<String> getQueryURIListFromDatabase(String query, List<String> restrictions, Map<String, String[]> paramsMap) {
     List<String> recipesFromExactQuery = new ArrayList<String>();
 
@@ -427,10 +438,14 @@ public final class RecipeDatabase {
 
     return recipesFromExactQuery;
   }
-
+      /**
+       * Function to find recipes whose labels are similar to the given query.
+       * @param query - the query to search on.
+       * @return - a list of recipe uris that correspond to the given query.
+       */
   public static List<String> getSimilar(String query, List<String> dietaryRestrictions, Map<String, String[]> paramsMap) {
 
-    List<String> recipesFromSimilarQuery = new ArrayList<String>();
+    List<String> recipesFromSimilarQuery = new ArrayList<>();
     try {
       String q = "%" + query + "%";
       PreparedStatement prep = conn.prepareStatement("SELECT uri FROM recipe WHERE label LIKE ?");
@@ -455,24 +470,31 @@ public final class RecipeDatabase {
     return recipesFromSimilarQuery;
   }
 
-    /**
-     * Database test function.
-     */
-  public static void testDatabaseFile() {
-//    try {
-//      String[] uriList = new String[1];
-//      uriList[0] = "http://www.edamam.com/ontologies/edamam.owl#recipe_b79327d05b8e5b838ad6cfd9576b30b6";
-//      insertQuery("x", uriList);
-//      System.out.println("URI: " + r.getUri());
-//    } catch (SQLException e) {
-//      e.printStackTrace();
-//    } catch (InterruptedException e) {
-//      e.printStackTrace();
-//    } catch (APIException e) {
-//      e.printStackTrace();
-//    } catch (IOException e) {
-//      e.printStackTrace();
-//    }
+  /**
+   * Function to delete a recipe from the database. Used during testing.
+   * @param uri - the uri of the recipe to delete.
+   * @throws SQLException - thrown if there is a database error.
+   */
+  public static void deleteUser(String uri) throws SQLException {
+    PreparedStatement prep = conn.prepareStatement("DELETE FROM diet_label WHERE recipe_uri = ?");
+    prep.setString(1, uri);
+    prep.executeUpdate();
+
+    prep = conn.prepareStatement("DELETE FROM health_label WHERE recipe_uri = ?");
+    prep.setString(1, uri);
+    prep.executeUpdate();
+
+    prep = conn.prepareStatement("DELETE FROM ingredient WHERE recipe_uri = ?");
+    prep.setString(1, uri);
+    prep.executeUpdate();
+
+    prep = conn.prepareStatement("DELETE FROM nutrient_info WHERE recipe_uri = ?");
+    prep.setString(1, uri);
+    prep.executeUpdate();
+
+    prep = conn.prepareStatement("DELETE FROM recipe WHERE uri = ?");
+    prep.setString(1, uri);
+    prep.executeUpdate();
   }
 }
 

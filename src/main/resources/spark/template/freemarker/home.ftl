@@ -1,13 +1,13 @@
 <#assign content>
 
-<h1>Home</h1>
-
 <div class="images">
   <img class="home_slides" src="https://tinyurl.com/ya7urluw">
   <img class="home_slides" src="https://tinyurl.com/y86lsznl">
 </div>
 
+<#--  <h1>Home</h1>  -->
 
+<br>
 <div>
   <h2>OUR MISSION</h2>
 </div> 
@@ -21,6 +21,7 @@
   desired dish, previous searches, and preferred nutrients/dietary restrictions.
   </p>
 </div> 
+<br>
 
 <div>
   <h2>OUR RESPONSE TO COVID-19</h2>
@@ -35,8 +36,9 @@
   and eat well!
   </p>
 </div> 
+<br>
 
-<h2>FEATURED RECIPES</h2>
+<h2>TODAY'S FEATURED RECIPES</h2>
 <div class="container">
   <div class="art">
     <p>The Ultimate Chocolate Cake</p>

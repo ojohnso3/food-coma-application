@@ -128,7 +128,10 @@ button.click(event => {
 });
 
 
-function makeQuery(){
+function makeQuery() {
+    
+    document.getElementById("search_label").innerHTML = "Your Search: " + preferences.val();
+
     const balanced = $("#balanced").is(":checked");
     const lowfat = $("#low-fat").is(":checked");
     const lowcarb = $("#low-carb").is(":checked");

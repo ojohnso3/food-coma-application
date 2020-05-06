@@ -157,14 +157,14 @@ public final class FieldParser {
    */
   public static Recipe[] getRecipesFromQuery(String query, List<String> dietaryRestrictions,
                                              Map<String, String[]> paramsMap)
-      throws IOException, InterruptedException, APIException, SQLException {
+      throws IOException, InterruptedException, APIException {
     query = query.replace(" ", "+");
     HttpClient httpClient = HttpClient.newBuilder().build();
     String queryUri = handleParamsAndRestrictions(dietaryRestrictions, paramsMap);
 
     HttpRequest httpRequest = HttpRequest.newBuilder().GET()
         .uri(URI.create("https://api.edamam.com/search?q=" + query
-            + "&app_id=" + APP_ID + "&app_key=" + APP_KEY + "&to=99" + queryUri)).build();
+            + "&app_id=" + APP_ID + "&app_key=" + APP_KEY + "&to=50" + queryUri)).build();
 
     HttpResponse<String> response = httpClient.send(httpRequest,
         HttpResponse.BodyHandlers.ofString());
@@ -189,43 +189,6 @@ public final class FieldParser {
     }
 
     return recipes;
-  }
-
-  /**
-   * Test api function.
-   * @return the response
-   */
-  public static String apiCall() {
-    HttpClient httpClient = HttpClient.newBuilder().build();
-    HttpRequest httpRequest = HttpRequest.newBuilder().GET()
-        .uri(URI.create("https://api.edamam.com/search?")).build();
-
-    try {
-      HttpResponse<String> response = httpClient.send(httpRequest,
-          HttpResponse.BodyHandlers.ofString());
-      System.out.println(response.statusCode());
-//      System.out.println(response.body());
-      return response.body();
-    } catch (IOException | InterruptedException ioe) {
-      ioe.printStackTrace();
-      return null;
-    }
-  }
-
-  /**
-   * Test Gson function.
-   * @return the recipe
-   */
-  public static Recipe parseJSON() {
-    String json = apiCall();
-    assert json != null;
-    Recipe[] recipes = parseRecipeJSON(json);
-    assert recipes != null;
-    for (Recipe recipe : recipes) {
-      System.out.println(recipe.getUri());
-      System.out.println(recipe.getNutrientVals("FE")[0]);
-    }
-    return recipes[0];
   }
 
   /**
