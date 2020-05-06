@@ -3,10 +3,8 @@ package edu.brown.cs.student.food;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 
 /**
  * 
@@ -18,19 +16,19 @@ public class Recipe {
    * nutrients -  Map from a nutrient code to an array of the total daily value and the total
    * nutrient value of the Recipe.
    */
-  private String uri;
+  private final String uri;
   private String label;
-  private String image;
-  private String source;
-  private String url;
-  private double yield;
-  private double calories;
-  private double totalWeight;
-  private double totalTime;
-  private List<Ingredient> ingredients;
+  private final String image;
+  private final String source;
+  private final String url;
+  private final double yield;
+  private final double calories;
+  private final double totalWeight;
+  private final double totalTime;
+  private final List<Ingredient> ingredients;
   private List<String> dietLabels;
   private List<String> healthLabels;
-  private Map<String, double[]> nutrients = new HashMap<>();
+  private final Map<String, double[]> nutrients;
 
 
   public Recipe(String uri, String label, String image, String source, String url, double yield,
@@ -93,15 +91,15 @@ public class Recipe {
         + "\"," + yield + "," + calories + "," + totalWeight + "," + totalTime;
   }
 
-  public String getLabel(){
+  public String getLabel() {
     return label;
   }
 
-  public String getImage(){
+  public String getImage() {
     return image;
   }
 
-  public String getUrl(){
+  public String getUrl() {
     return url;
   }
   public String getCompactUri() {
@@ -124,8 +122,12 @@ public class Recipe {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (!(o instanceof Recipe)) return false;
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof Recipe)) {
+      return false;
+    }
     Recipe recipe = (Recipe) o;
     return uri.equals(recipe.uri);
   }
@@ -135,16 +137,18 @@ public class Recipe {
     return this.uri.hashCode();
   }
 
-  public boolean containsLabel(String label){
+  public boolean containsLabel(String lab) {
     boolean ret = false;
-    for(String item : healthLabels){
-      if (item.equals(label)){
+    for (String item : healthLabels) {
+      if (item.equals(lab)) {
         ret = true;
+        break;
       }
     }
-    for(String item : dietLabels){
-      if(item.equals(label)){
+    for (String item : dietLabels) {
+      if (item.equals(lab)) {
         ret = true;
+        break;
       }
     }
     return ret;

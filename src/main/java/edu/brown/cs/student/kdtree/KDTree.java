@@ -1,6 +1,9 @@
 package edu.brown.cs.student.kdtree;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.PriorityQueue;
 
 /**
  * KDTree class, stores a root and dimension of coordinates, tree uses Node nodes.
@@ -450,42 +453,6 @@ public class KDTree<N extends KDNode<N>> {
   }
 
   /**
-   * takes a point in our dim space then checks if its in the given closed bounding box,
-   * a dim (hyper) cube to search within.
-   *
-   * @param coords      point
-   * @param coordBounds a dim-length list of pair-list of bounds
-   * @return true if in box (inclusive), false else.
-   * @throws KDTreeException if the bounds are out of order
-   */
-  public static boolean inBounds(List<Double> coords, List<List<Double>> coordBounds)
-          throws KDTreeException {
-    for (List<Double> bound : coordBounds) {
-      double b1 = bound.get(0);
-      double b2 = bound.get(0);
-      if (b1 > b2) {
-        throw new KDTreeException("ERROR: lower bound " + b1 + " greater than upper bound " + b2);
-      }
-    }
-
-    return inBoundsRec(coords, coordBounds, 0, coords.size());
-  }
-  /*
-   * recursively checks if the point is in each pair of bounds.
-   */
-  private static boolean inBoundsRec(List<Double> coords, List<List<Double>> coordBounds,
-                                     int i, int dimen) {
-    if (i >= dimen) {
-      return true;
-    }
-    // check bounds, recur
-    double currCoord = coords.get(i);
-    List<Double> currBound = coordBounds.get(i);
-    return currBound.get(0) <= currCoord && currCoord <= currBound.get(1)
-            && inBoundsRec(coords, coordBounds, i + 1, dimen);
-  }
-
-  /**
    * translates each nodes position according to a given list of coordinates.
    * @param shift - point to set as the new origin of the tree
    * @throws KDTreeException if no tree or bad length shift
@@ -518,18 +485,20 @@ public class KDTree<N extends KDNode<N>> {
   }
 
   /**
-   * Extra function to normalize the coordinates of a list of nodes.
-   */
-  public void normalizeTreeAxes() {
-    normalizeAxes(getNodes(), new ArrayList<>());
-  }
-
-  /**
    * Function to normalize the coordinates of a list of nodes.
    * @param nodes - all nodes to be normalized.
-   * @param weightedAxes - list of the indices of the axes that should be weighted higher.
+   * @param axisWeights - how much each axis should be weights (index i corres. to axis i), null for
+   *                    default.
    */
-  public void normalizeAxes(List<N> nodes, List<Integer> weightedAxes) {
+  public void normalizeAxes(List<N> nodes, List<Double> axisWeights) throws KDTreeException {
+    if (axisWeights == null) {
+      axisWeights = new ArrayList<>();
+      for (int i = 0; i < this.dim; i++) {
+        axisWeights.add(1.);
+      }
+    } else if (axisWeights.size() != this.dim) {
+      throw new KDTreeException("ERROR: axis weights must be of length: " + dim);
+    }
     // create lists, maxes, mins for each considered nutrient
     List<List<Double>> axisCoordsLists = new ArrayList<>();
     List<Double> maxes = new ArrayList<>();
@@ -564,11 +533,7 @@ public class KDTree<N extends KDNode<N>> {
       int sz2 = axisCoords.size();
       for (int j = 0; j < sz2; j++) { //nodes size
         double n = axisCoords.get(j);
-        int weight = 1;
-        if (weightedAxes.contains(i)) {
-          //set weight these axes more than the others.
-          weight = 2;
-        }
+        double weight = axisWeights.get(i);
         double normalized = weight * (n - mins.get(i)) / (maxes.get(i) - mins.get(i));
         // replace coords with their new values
         nodes.get(j).getCoords().set(i, normalized);

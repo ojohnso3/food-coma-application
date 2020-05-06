@@ -48,7 +48,6 @@ public class Gui {
   private String prevQuery;
   private ArrayList<String> prevRestrictions;
   public Gui() {
-    recipesMap = new HashMap<String, Recipe>();
     clickedSet  = new HashSet<String>();
     nutrients = new HashSet<String>();
    prevRestrictions = new ArrayList<String>();
@@ -190,12 +189,11 @@ public class Gui {
           recipes = new Recipe[uris.size()];
           for(int i = 0; i < uris.size(); i++){
             recipes[i] = RecipeDatabase.getRecipeFromURI(uris.get(i));
-
-          simpleRecipeList = Gui.this.setUpRecipesList(recipes);
-
           }
+          simpleRecipeList = Gui.this.setUpRecipesList(recipes);
         } else if(!RecipeDatabase.checkQueryInDatabase(query)){
           System.out.println("MAKING API CALL");
+
           recipes = FieldParser.getRecipesFromQuery(query, restrictions, paramsMap);
           String[] recipesForDb = new String[recipes.length];
           for(int i = 0; i < recipes.length; i++){
@@ -254,9 +252,10 @@ public class Gui {
   private HashMap<String, String[]> setUpRecipesList(Recipe[] recipes){
     HashMap<String, String[]> simpleRecipeList = new HashMap<String, String[]>();
     Pattern load = Pattern.compile("#recipe_(.+)");
-    recipesMap.clear();
+
     //HOW LONG DO WE WANT THE RESULTS?? 10??????? .LENGTH????
     for(int i = 0; i < recipes.length; i++){
+      recipesMap = new HashMap<String, Recipe>();
       recipesMap.put(recipes[i].getUri(), recipes[i]);
       String[] fields = new String[2];
       fields[0] = recipes[i].getUrl();

@@ -237,7 +237,7 @@ public class KDTreeTest {
   }
 
   @Test
-  public void normalize1DTest() {
+  public void normalize1DTest() throws KDTreeException {
     //1D EXAMPLE
     List<Double> l0 = new ArrayList<>();
     List<Double> l1 = new ArrayList<>();
@@ -260,18 +260,21 @@ public class KDTreeTest {
     BaseKDNode n5 = new BaseKDNode("4", l5);
     BaseKDNode nten = new BaseKDNode("5", l10);
 
+    KDTree<BaseKDNode> tree = new KDTree<>(1);
+    List<BaseKDNode> ls = new ArrayList<>();
+    ls.add(n0);
+    ls.add(n1);
+    ls.add(n2);
+    ls.add(n_5);
+    ls.add(n5);
+    ls.add(nten);
+    List<Double> axisWeights = new ArrayList<>();
+    axisWeights.add(1.);
+    tree.normalizeAxes(ls, axisWeights);
     try {
-      KDTree<BaseKDNode> tree = new KDTree<>(1);
-      List<BaseKDNode> ls = new ArrayList<>();
-      ls.add(n0);
-      ls.add(n1);
-      ls.add(n2);
-      ls.add(n_5);
-      ls.add(n5);
-      ls.add(nten);
-      tree.normalizeAxes(ls, new ArrayList<>());
+      kdt.normalizeAxes(ls, new ArrayList<>());
     } catch (KDTreeException e) {
-      System.err.println(e.getMessage());
+      assertTrue(e.getMessage().startsWith("ERROR: "));
     }
 
     double min = 0.;
@@ -285,7 +288,7 @@ public class KDTreeTest {
   }
 
   @Test
-  public void normalize2DTest() {
+  public void normalize2DTest() throws KDTreeException {
     // 2D EXAMPLE
     setUp();
     List<BaseKDNode> ls2 = new ArrayList<>();
@@ -294,7 +297,10 @@ public class KDTreeTest {
     ls2.add(n10);
     ls2.add(n11);
     ls2.add(neg11);
-    kdt.normalizeAxes(ls2, new ArrayList<>());
+    List<Double> axisWeights = new ArrayList<>();
+    axisWeights.add(1.);
+    axisWeights.add(1.);
+    kdt.normalizeAxes(ls2, axisWeights);
 
     double min = -1.;
     double max = 1.;
@@ -315,8 +321,46 @@ public class KDTreeTest {
     tearDown();
   }
 
+  @Test
+  public void normalize2DWeightedTest() throws KDTreeException {
+    // 2D EXAMPLE
+    setUp();
+    List<BaseKDNode> ls2 = new ArrayList<>();
+    ls2.add(n00);
+    ls2.add(n01);
+    ls2.add(n10);
+    ls2.add(n11);
+    ls2.add(neg11);
+    List<Double> axisWeights = new ArrayList<>();
+    axisWeights.add(1.);
+    axisWeights.add(2.);
+    kdt.normalizeAxes(ls2, axisWeights);
+
+    double min = -1.;
+    double max = 1.;
+    assertEquals(weightedNorm(0., min, max, 1), n00.getCoords().get(0), D);
+    assertEquals(weightedNorm(0., min, max, 2), n00.getCoords().get(1), D);
+
+    assertEquals(weightedNorm(0., min, max, 1), n01.getCoords().get(0), D);
+    assertEquals(weightedNorm(1., min, max, 2), n01.getCoords().get(1), D);
+
+    assertEquals(weightedNorm(1., min, max, 1), n10.getCoords().get(0), D);
+    assertEquals(weightedNorm(0., min, max, 2), n10.getCoords().get(1), D);
+
+    assertEquals(weightedNorm(1., min, max, 1), n11.getCoords().get(0), D);
+    assertEquals(weightedNorm(1., min, max, 2), n11.getCoords().get(1), D);
+
+    assertEquals(weightedNorm(-1., min, max, 1), neg11.getCoords().get(0), D);
+    assertEquals(weightedNorm(-1., min, max, 2), neg11.getCoords().get(1), D);
+    tearDown();
+  }
+
   private double norm(double in, double min, double max) {
     return (in - min) / (max - min);
+  }
+
+  private double weightedNorm(double in, double min, double max, int weight) {
+    return weight * (in - min) / (max - min);
   }
 
   @Test

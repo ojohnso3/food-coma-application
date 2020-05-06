@@ -12,7 +12,8 @@
 foodCOMA.iml
 
 # databases
-
+./data/userDatabase.sqlite3
+./src/main/resources/login/account-login-info.csv
 
 # test files
 src/test/java/edu/brown/cs/student/foodCOMA/login/test.csv
