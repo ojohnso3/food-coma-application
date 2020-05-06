@@ -2,7 +2,7 @@ package edu.brown.cs.student.food;
 
 /**
  *
- * Class comment.
+ * Ingredient class for storing query info.
  *
  */
 public class Ingredient {

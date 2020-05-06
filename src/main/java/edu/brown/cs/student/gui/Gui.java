@@ -102,32 +102,27 @@ public class Gui {
     Spark.post("/survey_post", new SurveyHandler());
     Spark.post("/recipe/recipeuri", new RecipeHandler(this));
     Spark.post("/toggleNutrient", new NutrientHandler());
-
-
-
     // OLD Routes
 //    Spark.get("/results", new SubmitHandler(), freeMarker);
 //    Spark.get("/recipe/:recipeuri", new RecipeHandler());
 
   }
-
   // handlers for gui that interact w/html and javascript
-
   /**
    * Handle GET requests.
    *
    */
   private static class SetupHandler implements TemplateViewRoute {
-    private String page;
-    private String title;
-    private Object output;
-    
-    public SetupHandler(String p, String t, Object o) {
+    private final String page;
+    private final String title;
+    private final Object output;
+
+    SetupHandler(String p, String t, Object o) {
       page = p;
       title = t;
       output = o;
     }
-    
+
     @Override
     public ModelAndView handle(Request req, Response res) {
       Map<String, Object> variables = ImmutableMap.of("title",
@@ -136,23 +131,22 @@ public class Gui {
     }
   }
   
-  
   private class SearchPostHandler implements Route {
     @Override
-    public String handle(Request req, Response res){
+    public String handle(Request req, Response res) {
       QueryParamsMap qm = req.queryMap();
-      HashMap<String, String> healthInfo = new HashMap<String, String>();
-      HashMap<String, String> dietInfo = new HashMap<String, String>();
+      HashMap<String, String> healthInfo = new HashMap<>();
+      HashMap<String, String> dietInfo = new HashMap<>();
       String query = qm.value("prefs");
       prevQuery = query;
       String username = qm.value("username");
       String balanced = qm.value("bal");
-      healthInfo.put("vegan",qm.value("vg"));
-      healthInfo.put("vegetarian",qm.value("veg"));
-      healthInfo.put("sugar-conscious",qm.value("sug"));
-      healthInfo.put("peanut-free",qm.value("pf"));
-      healthInfo.put("tree-nut-free",qm.value("tf"));
-      healthInfo.put("alcohol-free",qm.value("af"));
+      healthInfo.put("vegan", qm.value("vg"));
+      healthInfo.put("vegetarian", qm.value("veg"));
+      healthInfo.put("sugar-conscious", qm.value("sug"));
+      healthInfo.put("peanut-free", qm.value("pf"));
+      healthInfo.put("tree-nut-free", qm.value("tf"));
+      healthInfo.put("alcohol-free", qm.value("af"));
 
       Set<String> healthKeys = healthInfo.keySet();
       Set<String> dietKeys = dietInfo.keySet();
