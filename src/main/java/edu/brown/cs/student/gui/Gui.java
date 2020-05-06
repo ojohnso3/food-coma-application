@@ -584,11 +584,15 @@ public class Gui {
 //        System.out.println("KEY:::  " + string);
       }
      Map<String, double[]> nuts = currRecipe.getNutrientsMap();
-      double[] nutValues = new double[nuts.keySet().size()];
+      String[] nutValues = new String[nuts.keySet().size()];
       int i = 0;
+//      int j = 1;
       for (String itm : nuts.keySet()) {
-        nutValues[i] = nuts.get(itm)[1];
+        nutValues[i] = itm;
+//        nutValues[j] = nuts.get(itm)[1];
         i++;
+//        i+=2;
+//        j+=2;
       }
      ImmutableMap<String,Object> variables = ImmutableMap.<String, Object>builder()
               .put("recipeList", recipePageRecipes)
