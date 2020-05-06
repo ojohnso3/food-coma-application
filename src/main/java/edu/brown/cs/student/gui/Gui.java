@@ -21,6 +21,7 @@ import edu.brown.cs.student.login.AccountException;
 import edu.brown.cs.student.login.Accounts;
 import edu.brown.cs.student.login.User;
 import edu.brown.cs.student.login.UserCreationException;
+import edu.brown.cs.student.recommendation.RecommendationException;
 import edu.brown.cs.student.recommendation.Recommender;
 import freemarker.template.Configuration;
 import spark.ExceptionHandler;
@@ -534,18 +535,36 @@ public class Gui {
       }
 //      HashMap<String, String> map = new HashMap<String, String>();
 //      Set<String> keys = recipes.keySet();
-//      List<Recipe> recommendations = recommender.makeRecommendation(prevQuery, );
+      List<Recipe> recommendations = new ArrayList<Recipe>();
+      try {
+        System.out.println("Prev Query: " + prevQuery);
+        System.out.println("Prev REstrict: " + prevRestrictions);
+        recommendations = recommender.makeRecommendation(prevQuery, new HashMap<String, String[]>(), prevRestrictions);
+      } catch (RecommendationException e) {
+        e.printStackTrace();
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      } catch (IOException e) {
+        e.printStackTrace();
+      } catch (APIException e) {
+        e.printStackTrace();
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+
       Map<String, String[]> recipePageRecipes = new HashMap<String, String[]>();
       Set<String> keys = gui.recipesMap.keySet();
 
-      for(String key : keys){
-        if(key == currRecipe.getCompactUri()){
-          continue;
-        }
-        String[] fields = new String[gui.recipesMap.get(key).getIngredients().size() + 1];
-        Recipe currRec = gui.recipesMap.get(key);
-        fields[0] = currRec.getLabel();
-        recipePageRecipes.put(currRec.getCompactUri(), fields);
+      for(Recipe recp : recommendations){
+//        if(key == currRecipe.getCompactUri()){
+//          continue;
+//        }
+//        String[] fields = new String[gui.recipesMap.get(key).getIngredients().size() + 1];
+//        Recipe currRec = gui.recipesMap.get(key);
+//        fields[0] = currRec.getLabel();
+        String[] fields = new String[1];
+        fields[0] = recp.getLabel();
+        recipePageRecipes.put(recp.getCompactUri(), fields);
       }
       Map<String, String> nutrientsMap = new HashMap<String, String>();
 
