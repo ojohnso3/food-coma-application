@@ -100,7 +100,10 @@ public class Recommender {
       axisWeights.add(1.);
     }
     for (String code : this.user.getNutrients()) {
-      axisWeights.set(NutrientInfo.getNutrientCodes().indexOf(code), 6.);
+      int i = NutrientInfo.getNutrientCodes().indexOf(code);
+      if (i >= 0 && i < axisWeights.size()) {
+        axisWeights.set(i, 6.);
+      }
     }
     return axisWeights;
   }
