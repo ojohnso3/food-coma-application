@@ -1,13 +1,12 @@
 package edu.brown.cs.student.food;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * 
+ *
  * This class stores the data for a recipe, received from the Edamam api.
  *
  */
@@ -81,7 +80,7 @@ public class Recipe {
     return this.nutrients.get(nutrientCode);
   }
 
-  public Map<String, double[]> getNutrientsMap(){
+  public Map<String, double[]> getNutrientsMap() {
     return nutrients;
   }
 

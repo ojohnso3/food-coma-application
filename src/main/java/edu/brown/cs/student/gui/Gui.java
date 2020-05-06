@@ -4,7 +4,12 @@ import com.google.gson.Gson;
 
 import java.io.*;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -43,16 +48,13 @@ public class Gui {
   private static final Gson GSON = new Gson();
   public Map<String, Recipe> recipesMap;
   public Set<String> clickedSet;
-  private Set<String> nutrients;
+  private final Set<String> nutrients;
   private String prevQuery;
-  private ArrayList<String> prevRestrictions;
+  private final ArrayList<String> prevRestrictions;
   public Gui() {
-    clickedSet  = new HashSet<String>();
-    nutrients = new HashSet<String>();
-   prevRestrictions = new ArrayList<String>();
-
-//    fieldParser = fp;
-//    nutrientInfo = nut;
+    clickedSet  = new HashSet<>();
+    nutrients = new HashSet<>();
+    prevRestrictions = new ArrayList<>();
   }
 
   private static FreeMarkerEngine createEngine() {
@@ -68,8 +70,8 @@ public class Gui {
   }
 
   /**
-   * Add comment.
-   * @param port
+   * Starts running webpage.
+   * @param port - port to run server on
    */
   public void runSparkServer(int port) {
     Spark.port(port);
@@ -82,11 +84,15 @@ public class Gui {
     Spark.get("/home", new SetupHandler("home.ftl", "foodCOMA Home", ""), freeMarker);
     Spark.get("/about", new SetupHandler("about.ftl", "About", ""), freeMarker);
     Spark.get("/login", new SetupHandler("login.ftl", "Login", ""), freeMarker);
-    Spark.get("/recipe/:recipeuri", new SetupHandler("recipe.ftl", "Recipe Detail", ""), freeMarker);
+    Spark.get("/recipe/:recipeuri", new SetupHandler("recipe.ftl", "Recipe Detail",
+            ""), freeMarker);
     Spark.get("/signup", new SetupHandler("signup.ftl", "Signup", ""), freeMarker);
-    Spark.get("/survey", new SetupHandler("survey.ftl", "New User Survey", ""), freeMarker);
-    Spark.get("/search", new SetupHandler("search.ftl", "Recipe Search", new ArrayList<Recipe>()), freeMarker);
-    Spark.get("/user", new SetupHandler("user.ftl", "User Profile", new ArrayList<Recipe>()), freeMarker);
+    Spark.get("/survey", new SetupHandler("survey.ftl", "New User Survey", ""),
+            freeMarker);
+    Spark.get("/search", new SetupHandler("search.ftl", "Recipe Search",
+            new ArrayList<Recipe>()), freeMarker);
+    Spark.get("/user", new SetupHandler("user.ftl", "User Profile",
+            new ArrayList<Recipe>()), freeMarker);
 
     Spark.post("/search", new SearchPostHandler());
     Spark.post("/logged", new LoginHandler());
@@ -637,4 +643,5 @@ public class Gui {
       res.body(stacktrace.toString());
     }
   }
+
 }

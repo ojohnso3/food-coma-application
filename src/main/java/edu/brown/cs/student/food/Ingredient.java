@@ -6,13 +6,8 @@ package edu.brown.cs.student.food;
  *
  */
 public class Ingredient {
-
-  private String foodId;
-  private float quantity;
-  private Measure measure;
-  private double weight;
-  private Food food;
-  private String text;
+  private final double weight;
+  private final String text;
 
   public Ingredient(String text, double weight) {
     this.text = text;
