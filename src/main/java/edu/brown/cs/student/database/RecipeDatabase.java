@@ -392,7 +392,7 @@ public final class RecipeDatabase {
     return recipesFromExactQuery;
   }
 
-  public static List<String> getSimilar(String query){
+  public static List<String> getSimilar(String query) {
 
     List<String> recipesFromSimilarQuery = new ArrayList<String>();
     try {
@@ -400,12 +400,12 @@ public final class RecipeDatabase {
       PreparedStatement prep = conn.prepareStatement("SELECT uri FROM recipe WHERE label LIKE ?");
       prep.setString(1,q);
       ResultSet recipeSet = prep.executeQuery();
-      while(recipeSet.next()){
+      while (recipeSet.next()) {
         recipesFromSimilarQuery.add(recipeSet.getString("uri"));
       }
       recipeSet.close();
       prep.close();
-    } catch (SQLException e){
+    } catch (SQLException e) {
       e.printStackTrace();
     }
     return recipesFromSimilarQuery;

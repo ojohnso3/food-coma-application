@@ -218,6 +218,30 @@ public final class UserDatabase {
   }
 
   /**
+   * Function to delete a user from the database. Used during testing.
+   * @param username - the username of the user to delete.
+   * @throws SQLException - thrown if there is a database error.
+   */
+  public static void deleteUser(String username) throws SQLException {
+
+    PreparedStatement prep = conn.prepareStatement("DELETE FROM prev_recipe WHERE username = ?");
+    prep.setString(1, username);
+    prep.executeUpdate();
+
+    prep = conn.prepareStatement("DELETE FROM nutrient WHERE username = ?");
+    prep.setString(1, username);
+    prep.executeUpdate();
+
+    prep = conn.prepareStatement("DELETE FROM restriction WHERE username = ?");
+    prep.setString(1, username);
+    prep.executeUpdate();
+
+    prep = conn.prepareStatement("DELETE FROM account WHERE username = ?");
+    prep.setString(1, username);
+    prep.executeUpdate();
+  }
+
+  /**
    * Database test function.
    */
   public static void testDatabaseFile() {
