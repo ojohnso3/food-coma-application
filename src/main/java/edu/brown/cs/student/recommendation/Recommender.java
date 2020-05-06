@@ -101,13 +101,16 @@ public class Recommender {
     for (int i = 0; i < NutrientInfo.getSecondaryNutrients().size(); i++) {
       axisWeights.add(SEC_NUT_WEIGHT);
     }
+    System.out.println("AXISWEIGHTS SIZE: " + axisWeights.size());
+    System.out.println("Dim: " + this.dim);
     for (String code : this.user.getNutrients()) {
       int i = NutrientInfo.getNutrientCodes().indexOf(code);
+      System.out.println(i);
       if (i >= 0 && i < axisWeights.size()) {
         axisWeights.set(i, USER_PREF_WEIGHT);
       }
     }
-    System.out.println("AXISWEIGHTS SIZE: " + axisWeights.size());
+
     return axisWeights;
   }
 
