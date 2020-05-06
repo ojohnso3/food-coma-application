@@ -107,7 +107,7 @@ public class Recommender {
         axisWeights.set(i, USER_PREF_WEIGHT);
       }
     }
-    System.out.println("AXISWEIGHTS SIZE: " + axisWeights.size());
+
     return axisWeights;
   }
 
