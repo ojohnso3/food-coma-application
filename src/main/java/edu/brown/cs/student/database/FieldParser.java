@@ -241,6 +241,7 @@ public final class FieldParser {
     List<String> healthLabels = r.getHealthLabels();
     for (String label : dietaryRestrictions) {
       if (!healthLabels.contains(label)) {
+        System.out.println("LABEL " + label);
         return false;
       }
     }
