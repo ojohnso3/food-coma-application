@@ -124,7 +124,7 @@ public final class RecipeDatabase {
     if (checkRecipeInDatabase(recipe.getUri())) {
 //      throw new SQLException("duplicate");
     }
-    System.out.println(recipe.prepareForInsert());
+//    System.out.println(recipe.prepareForInsert());
   PreparedStatement prep = conn.prepareStatement("INSERT INTO recipe VALUES("
           + recipe.prepareForInsert() + ");");
   prep.executeUpdate();
@@ -357,7 +357,6 @@ public final class RecipeDatabase {
    */
   public static boolean checkQueryInDatabase(String query){
 
-    System.out.println("REQUESTED QUERY IS " + query);
     boolean retVal = false;
     try {
       PreparedStatement prep = conn.prepareStatement("SELECT query FROM queries WHERE query = ?");
@@ -369,48 +368,46 @@ public final class RecipeDatabase {
     } catch (SQLException e){
       e.printStackTrace();
     }
-
+    System.out.println("QUERY IN DB : " + retVal);
     return retVal;
   }
 
-  public static List<String> getQueryURIListFromDatabase(String query){
+  public static List<String> getQueryURIListFromDatabase(String query) {
     List<String> recipesFromExactQuery = new ArrayList<String>();
 
-    try{
+    try {
       PreparedStatement prep = conn.prepareStatement("SELECT recipe_uri FROM queries WHERE query = ?");
       prep.setString(1, query);
       ResultSet recipeSet = prep.executeQuery();
-      while(recipeSet.next()){
+      while (recipeSet.next()) {
         String uri = recipeSet.getString("recipe_uri");
-        System.out.println("CURR URI IS: " + uri);
         recipesFromExactQuery.add(uri);
       }
       prep.close();
       recipeSet.close();
-    } catch (SQLException e){
+    } catch (SQLException e) {
       e.printStackTrace();
     }
 
     return recipesFromExactQuery;
   }
 
-  public static List<String> getSimilar(String query){
+  public static List<String> getSimilar(String query) {
 
     List<String> recipesFromSimilarQuery = new ArrayList<String>();
-    try{
+    try {
       String q = "%" + query + "%";
       PreparedStatement prep = conn.prepareStatement("SELECT uri FROM recipe WHERE label LIKE ?");
       prep.setString(1,q);
       ResultSet recipeSet = prep.executeQuery();
-      while(recipeSet.next()){
+      while (recipeSet.next()) {
         recipesFromSimilarQuery.add(recipeSet.getString("uri"));
       }
       recipeSet.close();
       prep.close();
-    } catch (SQLException e){
+    } catch (SQLException e) {
       e.printStackTrace();
     }
-    System.out.println("RECIPES from SIM QUERY size: " + recipesFromSimilarQuery.size());
     return recipesFromSimilarQuery;
   }
 

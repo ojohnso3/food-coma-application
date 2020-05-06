@@ -2,6 +2,7 @@
 package edu.brown.cs.student.recommendation;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -37,10 +38,12 @@ public class Recommender {
    * Overarching make recipe function to be called. Takes query,
    * @param input Search input of user
    * @param paramsMap - parameters for the query the user has entered.
+   * @param restrictions - list of restrictions the user has applied to the query.
    * @return List of recommended recipes
    */
-  public List<Recipe> makeRecommendation(String input, Map<String, String[]> paramsMap) throws
-          RecommendationException, InterruptedException, IOException, APIException {
+  public List<Recipe> makeRecommendation(String input, Map<String, String[]> paramsMap,
+                                         List<String> restrictions) throws
+          RecommendationException, InterruptedException, IOException, APIException, SQLException {
     try {
       this.recipeTree = new KDTree<>(dim);
       // User History: get, nodify, and normalize previous recipes
@@ -53,7 +56,7 @@ public class Recommender {
 
       // Query Recs: get recipes based on the query and put into a queried recipes tree
       List<Recipe> recipesList = Arrays.asList(FieldParser.getRecipesFromQuery(input,
-              this.user.getDietaryRestrictions(), paramsMap));
+              restrictions, paramsMap));
       List<RecipeNode> queryNodes = convertRecipesToRecipeNodes(recipesList);
       this.recipeTree.initializeTree(queryNodes);
       // add the target nodes' coordinates to each node in tree to make the origin the target point

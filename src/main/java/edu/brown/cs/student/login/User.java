@@ -183,6 +183,9 @@ public class User {
     return this.recommender;
   }
 
+  public void setRecommender(Recommender r) {
+    this.recommender = r;
+  }
 
   @Override
   public boolean equals(Object o) {

@@ -41,6 +41,9 @@ public class UserDatabaseTest {
       this.testInsertToRestriction();
       this.testInsertToPrevRecipe();
       this.testInsertToNutrient();
+
+      UserDatabase.deleteUser(user1.getUsername());
+      UserDatabase.deleteUser(user2.getUsername());
     } catch (AccountException e) {
       e.printStackTrace();
     } catch (SQLException e) {

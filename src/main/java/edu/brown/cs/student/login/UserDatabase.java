@@ -208,7 +208,7 @@ public final class UserDatabase {
 
     List<Recipe> prevRecipes = new ArrayList<>();
     while (recipeSet.next()) {
-      System.out.println("RECIPE: " + recipeSet.getString(1));
+//      System.out.println("RECIPE: " + recipeSet.getString(1));
       Recipe r = RecipeDatabase.getRecipeFromURI(recipeSet.getString(1));
       prevRecipes.add(r);
     }
@@ -218,14 +218,38 @@ public final class UserDatabase {
   }
 
   /**
+   * Function to delete a user from the database. Used during testing.
+   * @param username - the username of the user to delete.
+   * @throws SQLException - thrown if there is a database error.
+   */
+  public static void deleteUser(String username) throws SQLException {
+
+    PreparedStatement prep = conn.prepareStatement("DELETE FROM prev_recipe WHERE username = ?");
+    prep.setString(1, username);
+    prep.executeUpdate();
+
+    prep = conn.prepareStatement("DELETE FROM nutrient WHERE username = ?");
+    prep.setString(1, username);
+    prep.executeUpdate();
+
+    prep = conn.prepareStatement("DELETE FROM restriction WHERE username = ?");
+    prep.setString(1, username);
+    prep.executeUpdate();
+
+    prep = conn.prepareStatement("DELETE FROM account WHERE username = ?");
+    prep.setString(1, username);
+    prep.executeUpdate();
+  }
+
+  /**
    * Database test function.
    */
   public static void testDatabaseFile() {
     try {
       User user = getUser("ugh");
-      System.out.println(user.getUsername());
-      System.out.println(user.getDietaryRestrictions());
-      System.out.println(user.getPreviousRecipes().get(0).getUri());
+//      System.out.println(user.getUsername());
+//      System.out.println(user.getDietaryRestrictions());
+//      System.out.println(user.getPreviousRecipes().get(0).getUri());
     } catch (SQLException e) {
       e.printStackTrace();
     } catch (IOException e) {

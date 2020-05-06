@@ -37,8 +37,13 @@ function getRecipes(params){
             document.getElementById("ingredients").innerHTML += obj.ingredients[i] + "</br>";
             console.log(obj.ingredients[i]);
         }
-            // console.log(ingredients(key));
-
+        document.getElementById("nutrients").innerHTML += "Calories: " + obj.Nutrients[9] + " kcal <br>";
+        document.getElementById("nutrients").innerHTML += "Fat: " + obj.Nutrients[28] + " g <br>";
+        document.getElementById("nutrients").innerHTML += "Saturated Fat: " + obj.Nutrients[10] + " g <br>";
+        document.getElementById("nutrients").innerHTML += "Sodium: " + obj.Nutrients[26] + " mg <br>";
+        document.getElementById("nutrients").innerHTML += "Sugar: " + obj.Nutrients[23] + " g <br>";
+        document.getElementById("nutrients").innerHTML += "Sugar: " + obj.Nutrients[13] + " g <br>";
+        document.getElementById("nutrients").innerHTML += "Protein: " + obj.Nutrients[25] + " g <br>";
     });
 };
 //

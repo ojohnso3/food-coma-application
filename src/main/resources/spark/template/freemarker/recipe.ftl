@@ -11,7 +11,7 @@
             <h2>Recipe Ingredients: </h2>
             <p id="ingredients" aria-live=polite></p>
             <img class=recipeFood src="" id="foodImage">
-
+            <p id="nutrients"></p>
         </div>
 
         <div class="column2">
