@@ -38,7 +38,7 @@
 </div> 
 <br>
 
-<h2>FEATURED RECIPES</h2>
+<h2>TODAY'S FEATURED RECIPES</h2>
 <div class="container">
   <div class="art">
     <p>The Ultimate Chocolate Cake</p>
