@@ -84,7 +84,7 @@ public class Recommender {
     //get, turn into nodes, and normalize user history
     List<Recipe> userHistory = this.user.getPreviousRecipes();
     List<RecipeNode> prevRecipeNodes = this.convertRecipesToRecipeNodes(userHistory);
-    this.recipeTree.normalizeAxes(prevRecipeNodes, new ArrayList<>());
+    this.recipeTree.normalizeAxes(prevRecipeNodes, null);
     return prevRecipeNodes;
   }
 
