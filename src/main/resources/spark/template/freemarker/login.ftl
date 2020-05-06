@@ -21,7 +21,7 @@
     </div>
 
     <div>
-        <h2>OR</h2>
+        <h2 id="or" >OR</h2>
     </div>
 
     <div class="queryOption">
@@ -39,7 +39,7 @@
         <input id="pass2" class="u-full-width"
             type="password"
             placeholder="Confirm Password"
-            value=""></input>
+            value="">
         <br>
         <#--  <input id="bday" class="u-full-width"
             type="text"

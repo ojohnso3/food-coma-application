@@ -20,10 +20,6 @@
     type="text"
     placeholder="Search!"
     value="">
-
-  </input>
-  <br>
-  <button type="submit" id="submit">Submit</button>
   <br>
 
   <div class="dropdown">
@@ -43,10 +39,16 @@
       <label for="alcohol-free">Alcohol Free</label><br>
     </div>
   </div>
+  <br>
+  <#--  <button type="submit" id="submit">Submit</button>  -->
+  <input id="submit" type="submit" value="Submit">
+  <br>
 
 </div>
 
-
+<div>
+  <h2 id="search_label" >Your Search: ___</h2>
+</div>
 
   <p class="output">
   <h3>List of recipes:</h3>
