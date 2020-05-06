@@ -17,7 +17,7 @@
 
 
 <div class="queryBox">
-    <div class="queryOption">
+    <div id="searchbox" class="queryOption">
         <div class="buttonBox">
           <input id="preferences"
             type="text"
@@ -93,12 +93,12 @@
     <div class="shopBag" id="shoppingBag8"><img class="shoppingBag"></div>
     <div class="shopBag" id="shoppingBag9"><img class="shoppingBag"></div>
   </div>
-
-
-
   </p>
+
+
   <div id="container" class="container">
   </div>
+
   <script src="../js/search.js"></script>
 
 

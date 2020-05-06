@@ -57,9 +57,4 @@ function getRecipes(params){
 
     });
 };
-//
-// function newRecipe(){
-//     return "hello";
-// }
-
 

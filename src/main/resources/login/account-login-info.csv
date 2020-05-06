@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 username,passwordHash,salt
 morgan,$2a$10$BLS7xVgy.p0j3T6PRDaz9OB2ralTMdQH7qnIlVE5rWjWENXvMaxqO,$2a$10$BLS7xVgy.p0j3T6PRDaz9O
 morgann,$2a$10$1dRbgdPYi2twUoCM5JrpsOL6xmP3msKNCbWzk6.cKwCeFeZWuDmDK,$2a$10$1dRbgdPYi2twUoCM5JrpsO
@@ -36,3 +37,8 @@ username,passwordHash,salt
 
 hellohello,$2a$10$2SJJkdhLMz4AkeLey5v.Qe8IlIDwhLhE/FZwq1/bvSWRzs2ubQsVm,$2a$10$2SJJkdhLMz4AkeLey5v.Qe
 rkjhg,$2a$10$uVqWHgrAnD7pNAQdklEvjOLG5fRPmDZhMXcSJcSS/.Wf5P9fPBld.,$2a$10$uVqWHgrAnD7pNAQdklEvjO
+=======
+username,passwordHash,salt
+letsloginplease,$2a$10$z99KqZ/AmvyQwes0mbm2beZsEwBaBi5aUuCHnzmYs55ULKdWOc4V6,$2a$10$z99KqZ/AmvyQwes0mbm2be
+camsucksthemost,$2a$10$dJ5Ww4rPcc3b2l6Ty.jfneq5Dlciz6Ewh9fTYKKaXlSxIaJLv17Im,$2a$10$dJ5Ww4rPcc3b2l6Ty.jfne
+>>>>>>> 6a8aad18fbb81a1ae86bbe720b29b1eb4989c4f5

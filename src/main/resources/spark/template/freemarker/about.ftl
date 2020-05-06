@@ -39,7 +39,7 @@
 <div>
   <h2>JOIN US!</h2>
       <p>Give us your email if you want to be <br> considered for a position at foodCOMA!</p>
-      <input id="last_q" class="u-full-width"
+      <input id="email" class="u-full-width"
         type="text"
         placeholder="Your Email"
         value="">
