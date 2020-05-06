@@ -9,15 +9,30 @@
 
 
 <div>
-  <h2>THE FOOD</h2>
-  <p><i>We love cooking</i></p>
+  <h2>OUR MISSION</h2>
 </div> 
 
 <div class="details">
   <p>
-  We have created a recipe website. 
-  Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
-  sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+  It can be difficult to quickly find recipes on the Internet that are well-suited 
+  to both your personal food palate and your needs.
+  <br><br>
+  We want to be your go-to cooking application that recommends recipes based on your 
+  desired dish, previous searches, and preferred nutrients/dietary restrictions.
+  </p>
+</div> 
+
+<div>
+  <h2>OUR RESPONSE TO COVID-19</h2>
+</div> 
+
+<div class="details">
+  <p>
+  In response to this pandemic, Americans are cooking more and traffic to recipe
+  websites is surging. <br><br> We want foodCOMA to be a helpful resource for you and your 
+  loved ones in this time of need. <br><br> Please let us know if there are ways we can suit your needs
+  better in providing you with an abundance of delicious recipes for you to enjoy. <br><br> Stay safe
+  and eat well!
   </p>
 </div> 
 
