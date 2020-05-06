@@ -159,6 +159,7 @@ public class Gui {
       try {
         User currUser = Accounts.getUser(username);
       } catch (AccountException e) {
+        e.printStackTrace();
         System.out.println("AccountException when getting user from searchPostHandler: " + e.getMessage());
       }
       Map<String, String[]> paramsMap = new HashMap<>();
@@ -181,7 +182,6 @@ public class Gui {
         }
 
         RecipeDatabase.loadDatabase("data/recipeDatabase.sqlite3");
-        System.out.println("QUERY IN DB????? : " + RecipeDatabase.checkQueryInDatabase(query));
         //TODO: Make sure that health labels etc are what the user has requested
         if(RecipeDatabase.checkQueryInDatabase(query)){
           List<String> uris = RecipeDatabase.getQueryURIListFromDatabase(query);

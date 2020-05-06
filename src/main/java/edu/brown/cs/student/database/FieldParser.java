@@ -34,7 +34,6 @@ public final class FieldParser {
    */
   private static final String APP_ID = "2a676518";
   private static final String APP_KEY = "158f55a83eee58aff1544072b788784f";
-  private static final int MIN_NUM_RECS = 10;
 
   private FieldParser() { }
 
