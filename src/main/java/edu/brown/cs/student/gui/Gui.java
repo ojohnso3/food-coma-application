@@ -47,11 +47,9 @@ import spark.template.freemarker.FreeMarkerEngine;
  *
  */
 public class Gui {
-//  private static FieldParser fieldParser;
-//  private static NutrientInfo nutrientInfo;
   private static final Gson GSON = new Gson();
-  public Map<String, Recipe> recipesMap;
-  public Set<String> clickedSet;
+  private Map<String, Recipe> recipesMap;
+  private Set<String> clickedSet;
   private final Set<String> nutrients;
   private String prevQuery;
   private final ArrayList<String> prevRestrictions;
@@ -60,7 +58,7 @@ public class Gui {
     nutrients = new HashSet<>();
     prevRestrictions = new ArrayList<>();
   }
-
+  
   private static FreeMarkerEngine createEngine() {
     Configuration config = new Configuration();
     File templates = new File("src/main/resources/spark/template/freemarker");
