@@ -22,7 +22,7 @@ import edu.brown.cs.student.login.User;
 public class Recommender {
   private KDTree<RecipeNode> recipeTree;
   private static final int REC_QUANTITY = 1;
-  private final int dim;
+  private final int dim = 16;
   private final User user;
 
   /**
@@ -31,7 +31,6 @@ public class Recommender {
    */
   public Recommender(User user) {
     this.user = user;
-    this.dim = user.getNutrients().size();
   }
 
   /**
@@ -85,7 +84,7 @@ public class Recommender {
     //get, turn into nodes, and normalize user history
     List<Recipe> userHistory = this.user.getPreviousRecipes();
     List<RecipeNode> prevRecipeNodes = this.convertRecipesToRecipeNodes(userHistory);
-    this.recipeTree.normalizeAxes(prevRecipeNodes, new ArrayList<>());
+    this.recipeTree.normalizeAxes(prevRecipeNodes, null);
     return prevRecipeNodes;
   }
 
@@ -101,7 +100,10 @@ public class Recommender {
       axisWeights.add(1.);
     }
     for (String code : this.user.getNutrients()) {
-      axisWeights.set(NutrientInfo.getNutrientCodes().indexOf(code), 6.);
+      int i = NutrientInfo.getNutrientCodes().indexOf(code);
+      if (i >= 0 && i < axisWeights.size()) {
+        axisWeights.set(i, 6.);
+      }
     }
     return axisWeights;
   }

@@ -3,16 +3,16 @@ package edu.brown.cs.student.kdtree;
 import java.util.List;
 
 /**
- * A generic type for KDNode
+ * A generic type for KDNode.
  */
 public class BaseKDNode implements KDNode<BaseKDNode> {
-  private String id;
-  private List<Double> coords;
+  private final String id;
+  private final List<Double> coords;
   private BaseKDNode leftChild;
   private BaseKDNode rightChild;
 
   /**
-   * a node constructor
+   * a node constructor.
    * @param id the node id
    * @param coords the node's coordinates
    */

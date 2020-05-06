@@ -1,7 +1,5 @@
 package edu.brown.cs.student.kdtree;
 
-import edu.brown.cs.student.kdtree.KDNode;
-
 import java.util.Comparator;
 import java.util.List;
 
@@ -10,7 +8,7 @@ import java.util.List;
  * @param <N> - Node type
  */
 class EuclideanComparator<N extends KDNode<N>> implements Comparator<N> {
-  private N target;
+  private final N target;
   EuclideanComparator(N target) {
     this.target = target;
   }

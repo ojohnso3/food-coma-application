@@ -25,7 +25,7 @@ public class User {
    * nutrients - a list of nutrient codes that the user has specified.
    */
   private final String username;
-  private List<Recipe> previousRecipes;
+  private final List<Recipe> previousRecipes;
   private final List<String> dietaryRestrictions;
   private List<String> nutrients;
   private Recommender recommender;
@@ -91,6 +91,8 @@ public class User {
     this.recommender = new Recommender(this);
   }
 
+
+
   /**
    * username getter.
    * @return username
@@ -120,7 +122,7 @@ public class User {
 
   /**
    * Function to add to the previousRecipes field.
-   * @param recipe
+   * @param recipe - to add
    */
   public void addToPreviousRecipes(Recipe recipe) throws SQLException {
     UserDatabase.insertToPrevRecipe(this.username, recipe.getUri());
@@ -144,7 +146,6 @@ public class User {
     for (String label : newRestrictions) {
       UserDatabase.insertToRestriction(this.username, label);
     }
-    this.setDietaryRestrictions(newRestrictions);
   }
 
   /**
@@ -189,8 +190,12 @@ public class User {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (!(o instanceof User)) return false;
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof User)) {
+      return false;
+    }
     User user = (User) o;
     return Objects.equals(username, user.username);
   }

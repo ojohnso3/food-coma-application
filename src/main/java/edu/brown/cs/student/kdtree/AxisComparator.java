@@ -1,7 +1,5 @@
 package edu.brown.cs.student.kdtree;
 
-import edu.brown.cs.student.kdtree.KDNode;
-
 import java.util.Comparator;
 
 /**
@@ -9,7 +7,7 @@ import java.util.Comparator;
  * @param <N> - Node type
  */
 class AxisComparator<N extends KDNode<N>> implements Comparator<N> {
-  private int axis;
+  private final int axis;
   AxisComparator(int axis) {
     this.axis = axis;
   }
