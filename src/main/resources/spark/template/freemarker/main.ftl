@@ -46,6 +46,7 @@
       <div id="edamam-badge" data-color="white"></div>
       <br>
     </footer>
+    <#--  <div id="bottom_border"></div>  -->
 
     <script src="../js/main.js"></script>
 

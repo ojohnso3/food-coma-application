@@ -37,6 +37,7 @@ function getRecipes(params){
             document.getElementById("ingredients").innerHTML += obj.ingredients[i] + "</br>";
             console.log(obj.ingredients[i]);
         }
+        document.getElementById("nutrients_title").innerHTML = "Critical Nutrients:";
         document.getElementById("nutrients").innerHTML += "Calories: " + obj.Nutrients[9] + " kcal <br>";
         document.getElementById("nutrients").innerHTML += "Fat: " + obj.Nutrients[28] + " g <br>";
         document.getElementById("nutrients").innerHTML += "Saturated Fat: " + obj.Nutrients[10] + " g <br>";
@@ -46,9 +47,4 @@ function getRecipes(params){
         document.getElementById("nutrients").innerHTML += "Protein: " + obj.Nutrients[25] + " g <br>";
     });
 };
-//
-// function newRecipe(){
-//     return "hello";
-// }
-
 

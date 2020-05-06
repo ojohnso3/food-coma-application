@@ -12,11 +12,7 @@ body {
 h1 {
     font-size: 60px;
     font-family: monospace;
-    /* text-shadow: 0 0 3px #FF0000; */
-    /* color: #5e6ac7; */
     color: black;
-    /* text-shadow: 0 0 3px red, 0 0 5px orange; */
-    /* text-decoration: underline; */
     margin-top: 140px;
 }
 
@@ -24,13 +20,22 @@ h1 {
     float:left;
 }
 
-/* .border {
-	background: #8aa1e6;
+/* #bottom_border {
+    background: linear-gradient(#e77777, #e7af77);
+    bottom: 0;
+    width: 1000px;
+    height: 10px;
+} */
+
+.border {
+    background: linear-gradient(#e77777, #e7af77);
     position: fixed;
     top: 0; 
     bottom: 0;
-	width: 20px;
-} */
+    width: 8px;
+    margin-top: 133px;
+    height: 600px;
+}
 
 #left {
     left: 0px;
@@ -80,7 +85,8 @@ a {
 }
 
 a:hover {
-    background-color: rgb(236, 156, 156);
+    /* background-color: rgb(236, 156, 156); */
+    background-color: #C2DAFE;
     color: #fee6c2;
 }
 
@@ -88,7 +94,7 @@ a:hover {
     margin: 0;
     border: solid 3px black;
     height: 650px;
-    width: 100%;
+    width: 99.6%;
     display: cover;
     /* margin-left: auto;
     margin-right: auto; */
@@ -161,6 +167,7 @@ a:hover {
 .queryOption {
     display: flex;
     width: 25vw;
+    /* width: 500px; */
     /* max-width: 25vw; */
     flex-direction: column;
     justify-content: center;
@@ -173,6 +180,24 @@ a:hover {
     margin: 20px;
     /* background-color: #8de0b7; */
     background-color: #AFD275;
+}
+
+#searchbox {
+    width: 40vw;
+}
+
+#preferences {
+    width: 350px;
+    height: 50px;
+    font-size: 40px;
+    text-align: center;
+}
+
+#email {
+    width: 250px;
+    height: 30px;
+    font-size: 20px;
+    text-align: center;
 }
 
 .queryBox {
@@ -242,10 +267,30 @@ li {
     text-align: center;
 }
 
+.row {
+    display: flex;
+    /* width: 25vw; */
+    /* max-width: 25vw; */
+    flex-direction: row;
+    justify-content: center;
+    vertical-align: center;
+    text-align: center;
+}
+
 .column {
     float: left;
-    width: 70%;
-    color:grey;
+    width: 67%;
+    margin-right: 10px;
+    color:black;
+    background-color: #fee6c2;
+    border: solid 2px black;
+}
+
+.column2{
+    float: left;
+    background-color: #AFD275;
+    width: 30%;
+    border: solid 2px black;
 }
 
 .shoppingBag{
@@ -256,7 +301,6 @@ li {
 .shopBag{
     float:left;
     color:black;
-    text-color:black;
     max-width: 50%;
 
 }
@@ -294,19 +338,15 @@ li {
 
 }
 
-.column2{
-    float: left;
-    background-color: grey;
-    width: 30%
-}
-
 .recpTitle{
     font-family: monospace;
     font-size: 50px;
+    background-color: black;
 }
 
 .recipeFood{
     background-size: contain;
+    border: solid black 2px;
 }
 
 /* Clear floats after the columns */
@@ -487,4 +527,9 @@ input[type="submit"].survey_button {
 .portrait {
     width: 100%;
     height: 300px;
+}
+
+.featured {
+    width: 100%;
+    height: 500px;
 }

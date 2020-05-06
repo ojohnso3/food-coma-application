@@ -4,7 +4,7 @@
 
 <div class="skip">
     <p>If you don't want to fill out the survey, press the button below. <br>
-    NOTE: this survey is for recipe recommendation purposes only, and we 
+    NOTE: this survey is for recipe recommendation purposes only, <br> and we 
     will maintain your privacy at all costs.</p>
     <#--  <button id="survey_skip">Skip the Survey Here</button>   -->
     <input class="survey_button" id="survey_skip" type="submit" value="Skip the Survey Here">
@@ -159,8 +159,6 @@
 </div>
 
 <p id="validity" aria-live=polite></p>
-
-<img src="https://tinyurl.com/y86lsznl" id="foodCOMA">
 
 <script src="js/survey.js"></script>
 
