@@ -3,11 +3,10 @@ package edu.brown.cs.student.recommendation;
 import edu.brown.cs.student.food.Recipe;
 import edu.brown.cs.student.kdtree.KDNode;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 
+ *
  * Class comment.
  *
  */
@@ -17,8 +16,7 @@ public class RecipeNode implements KDNode<RecipeNode> {
   private RecipeNode leftNode;
   private RecipeNode rightNode;
   private String id;
-  
-  
+
   public RecipeNode(Recipe r) {
     this.recipe = r;
     this.id = r.getUri();
@@ -27,7 +25,6 @@ public class RecipeNode implements KDNode<RecipeNode> {
   public RecipeNode(List<Double> coordinates) {
     this.coordinates = coordinates;
   }
-  
   /**
    * Comment.
    * @return Recipe object
@@ -35,7 +32,6 @@ public class RecipeNode implements KDNode<RecipeNode> {
   public Recipe getRecipe() {
     return recipe;
   }
-
 
   @Override
   public String getId() {
