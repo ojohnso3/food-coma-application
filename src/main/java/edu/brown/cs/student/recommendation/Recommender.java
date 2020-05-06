@@ -21,7 +21,7 @@ import edu.brown.cs.student.login.User;
 public class Recommender {
   private KDTree<RecipeNode> recipeTree;
   private static final int REC_QUANTITY = 1;
-  private final int dim = 16;
+  private final int dim = NutrientInfo.getNutrientCodes().size();
   private final User user;
 
   /**
