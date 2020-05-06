@@ -1,12 +1,19 @@
 package edu.brown.cs.student.gui;
 
 import com.google.gson.Gson;
+
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,6 +28,7 @@ import edu.brown.cs.student.login.AccountException;
 import edu.brown.cs.student.login.Accounts;
 import edu.brown.cs.student.login.User;
 import edu.brown.cs.student.login.UserCreationException;
+import edu.brown.cs.student.recommendation.RecommendationException;
 import edu.brown.cs.student.recommendation.Recommender;
 import freemarker.template.Configuration;
 import spark.ExceptionHandler;
@@ -35,7 +43,7 @@ import spark.template.freemarker.FreeMarkerEngine;
 
 /**
  *
- * Class comment.
+ * GUI classes.
  *
  */
 public class Gui {
@@ -44,16 +52,13 @@ public class Gui {
   private static final Gson GSON = new Gson();
   public Map<String, Recipe> recipesMap;
   public Set<String> clickedSet;
-  private Set<String> nutrients;
+  private final Set<String> nutrients;
   private String prevQuery;
-  private ArrayList<String> prevRestrictions;
+  private final ArrayList<String> prevRestrictions;
   public Gui() {
-    clickedSet  = new HashSet<String>();
-    nutrients = new HashSet<String>();
-   prevRestrictions = new ArrayList<String>();
-
-//    fieldParser = fp;
-//    nutrientInfo = nut;
+    clickedSet  = new HashSet<>();
+    nutrients = new HashSet<>();
+    prevRestrictions = new ArrayList<>();
   }
 
   private static FreeMarkerEngine createEngine() {
@@ -69,8 +74,8 @@ public class Gui {
   }
 
   /**
-   * Add comment.
-   * @param port
+   * Starts running webpage.
+   * @param port - port to run server on
    */
   public void runSparkServer(int port) {
     Spark.port(port);
@@ -83,11 +88,15 @@ public class Gui {
     Spark.get("/home", new SetupHandler("home.ftl", "foodCOMA Home", ""), freeMarker);
     Spark.get("/about", new SetupHandler("about.ftl", "About", ""), freeMarker);
     Spark.get("/login", new SetupHandler("login.ftl", "Login", ""), freeMarker);
-    Spark.get("/recipe/:recipeuri", new SetupHandler("recipe.ftl", "Recipe Detail", ""), freeMarker);
+    Spark.get("/recipe/:recipeuri", new SetupHandler("recipe.ftl", "Recipe Detail",
+            ""), freeMarker);
     Spark.get("/signup", new SetupHandler("signup.ftl", "Signup", ""), freeMarker);
-    Spark.get("/survey", new SetupHandler("survey.ftl", "New User Survey", ""), freeMarker);
-    Spark.get("/search", new SetupHandler("search.ftl", "Recipe Search", new ArrayList<Recipe>()), freeMarker);
-    Spark.get("/user", new SetupHandler("user.ftl", "User Profile", new ArrayList<Recipe>()), freeMarker);
+    Spark.get("/survey", new SetupHandler("survey.ftl", "New User Survey", ""),
+            freeMarker);
+    Spark.get("/search", new SetupHandler("search.ftl", "Recipe Search",
+            new ArrayList<Recipe>()), freeMarker);
+    Spark.get("/user", new SetupHandler("user.ftl", "User Profile",
+            new ArrayList<Recipe>()), freeMarker);
 
     Spark.post("/search", new SearchPostHandler());
     Spark.post("/logged", new LoginHandler());
@@ -96,32 +105,27 @@ public class Gui {
     Spark.post("/survey_post", new SurveyHandler());
     Spark.post("/recipe/recipeuri", new RecipeHandler(this));
     Spark.post("/toggleNutrient", new NutrientHandler());
-
-
-
     // OLD Routes
 //    Spark.get("/results", new SubmitHandler(), freeMarker);
 //    Spark.get("/recipe/:recipeuri", new RecipeHandler());
 
   }
-
   // handlers for gui that interact w/html and javascript
-
   /**
    * Handle GET requests.
    *
    */
   private static class SetupHandler implements TemplateViewRoute {
-    private String page;
-    private String title;
-    private Object output;
-    
-    public SetupHandler(String p, String t, Object o) {
+    private final String page;
+    private final String title;
+    private final Object output;
+
+    SetupHandler(String p, String t, Object o) {
       page = p;
       title = t;
       output = o;
     }
-    
+
     @Override
     public ModelAndView handle(Request req, Response res) {
       Map<String, Object> variables = ImmutableMap.of("title",
@@ -130,30 +134,27 @@ public class Gui {
     }
   }
   
-  
   private class SearchPostHandler implements Route {
     @Override
-    public String handle(Request req, Response res){
+    public String handle(Request req, Response res) {
       QueryParamsMap qm = req.queryMap();
-      HashMap<String, String> healthInfo = new HashMap<String, String>();
-      HashMap<String, String> dietInfo = new HashMap<String, String>();
+      HashMap<String, String> healthInfo = new HashMap<>();
+      HashMap<String, String> dietInfo = new HashMap<>();
       String query = qm.value("prefs");
       prevQuery = query;
       String username = qm.value("username");
       String balanced = qm.value("bal");
-      healthInfo.put("vegan",qm.value("vg"));
-      healthInfo.put("vegetarian",qm.value("veg"));
-      healthInfo.put("sugar-conscious",qm.value("sug"));
-      healthInfo.put("peanut-free",qm.value("pf"));
-      healthInfo.put("tree-nut-free",qm.value("tf"));
-      healthInfo.put("alcohol-free",qm.value("af"));
+      healthInfo.put("vegan", qm.value("vg"));
+      healthInfo.put("vegetarian", qm.value("veg"));
+      healthInfo.put("sugar-conscious", qm.value("sug"));
+      healthInfo.put("peanut-free", qm.value("pf"));
+      healthInfo.put("tree-nut-free", qm.value("tf"));
+      healthInfo.put("alcohol-free", qm.value("af"));
 
       Set<String> healthKeys = healthInfo.keySet();
       Set<String> dietKeys = dietInfo.keySet();
 
-
-      for(String dietKey : dietKeys){
-
+      for (String dietKey : dietKeys) {
       }
 
       try {
@@ -170,9 +171,10 @@ public class Gui {
         NutrientInfo.createNutrientsList();
         List<String> restrictions = new ArrayList<>();
         prevRestrictions.clear();
-        for(String healthKey : healthKeys){
-//          System.out.println("HEALTH KEY IS:" + healthKey + "equals: " + healthInfo.get(healthKey));
-          if(healthInfo.get(healthKey).equals("true")){
+        for (String healthKey : healthKeys) {
+//          System.out.println("HEALTH KEY IS:" + healthKey + "equals: "
+//          + healthInfo.get(healthKey));
+          if (healthInfo.get(healthKey).equals("true")) {
             restrictions.add(healthKey);
             prevRestrictions.add(healthKey);
 //            System.out.println("ADDED: " + healthKey);
@@ -183,69 +185,85 @@ public class Gui {
 
         RecipeDatabase.loadDatabase("data/recipeDatabase.sqlite3");
         //TODO: Make sure that health labels etc are what the user has requested
-        if(RecipeDatabase.checkQueryInDatabase(query)){
-          List<String> uris = RecipeDatabase.getQueryURIListFromDatabase(query);
-          System.out.println("uris size is " + uris.size());
-          recipes = new Recipe[uris.size()];
-          for(int i = 0; i < uris.size(); i++){
-            recipes[i] = RecipeDatabase.getRecipeFromURI(uris.get(i));
-          }
-          simpleRecipeList = Gui.this.setUpRecipesList(recipes);
-        } else if(!RecipeDatabase.checkQueryInDatabase(query)){
-          System.out.println("MAKING API CALL");
+//        if(RecipeDatabase.checkQueryInDatabase(query)){
+//          List<String> uris = RecipeDatabase.getQueryURIListFromDatabase(query);
+//          System.out.println("uris size is " + uris.size());
+//          recipes = new Recipe[uris.size()];
+//          for(int i = 0; i < uris.size(); i++){
+//            recipes[i] = RecipeDatabase.getRecipeFromURI(uris.get(i));
+//          }
+//          simpleRecipeList = Gui.this.setUpRecipesList(recipes);
+//        } else if(!RecipeDatabase.checkQueryInDatabase(query)){
+//          System.out.println("MAKING API CALL");
+//
+//          recipes = FieldParser.getRecipesFromQuery(query, restrictions, paramsMap);
+//          String[] recipesForDb = new String[recipes.length];
+//          for(int i = 0; i < recipes.length; i++){
+//            recipesForDb[i] = recipes[i].getUri();
+//          }
+//          RecipeDatabase.insertQuery(query, recipesForDb);
+//          simpleRecipeList = Gui.this.setUpRecipesList(recipes);
+//
+//        }
+//
+//      } catch (IOException e) {
+//        System.out.println("IOException getting recipes from query: " + e.getMessage());
+//      } catch (InterruptedException e) {
+//        System.out.println("InterruptedException getting recipes from query");
+//      } catch (APIException e) {
+//        System.out.println("API Exception getting recipes from query. Message:  " + e.getMessage());
+//      } catch (ClassNotFoundException e) {
+//        System.out.println("Database not found when loading during search");
+//      } catch (SQLException e){
+//        System.out.println("SQLException in getting recipes from database: " + e.getMessage());
+//      }
+//
+//      if(recipes.length==0){
+//        List<String> sim = RecipeDatabase.getSimilar(query);
+//        if(sim.size() > 0){
+//          recipes = new Recipe[sim.size()];
+//          System.out.println("SIMILAR HAS BEEN CALLED. SIZE OF SIMILAR IS: " + sim.size());
+//          for(int i = 0; i < sim.size(); i ++){
+//            try {
+//              recipes[i] = RecipeDatabase.getRecipeFromURI(sim.get(i));
+//            } catch (SQLException e) {
+//              System.out.println("SQLException getting similar recipes from query. Message:"
+//              + e.getMessage());
+//            } catch (InterruptedException e) {
+//              System.out.println("InterruptedException getting similar recipes from query. Message:"
+//              + e.getMessage());
+//            } catch (APIException e) {
+//              System.out.println("API Exception getting similar recipes from query. Message:"
+//              + e.getMessage());
+//            } catch (IOException e) {
+//              System.out.println("IOException getting similar recipes from query. Message:"
+//              + e.getMessage());
+//            }
+//          }
+//          simpleRecipeList = Gui.this.setUpRecipesList(recipes);
+//        }
+//      }
+        recipes = FieldParser.getRecipesDBandAPI(query, recipes, restrictions, paramsMap);
+        simpleRecipeList = Gui.this.setUpRecipesList(recipes);
 
-          recipes = FieldParser.getRecipesFromQuery(query, restrictions, paramsMap);
-          String[] recipesForDb = new String[recipes.length];
-          for(int i = 0; i < recipes.length; i++){
-            recipesForDb[i] = recipes[i].getUri();
-          }
-          RecipeDatabase.insertQuery(query, recipesForDb);
-          simpleRecipeList = Gui.this.setUpRecipesList(recipes);
+      } catch (FileNotFoundException ignored) {
 
-        }
+      } catch (SQLException e) {
 
-      } catch (IOException e) {
-        System.out.println("IOException getting recipes from query: " + e.getMessage());
-      } catch (InterruptedException e) {
-        System.out.println("InterruptedException getting recipes from query");
-      } catch (APIException e) {
-        System.out.println("API Exception getting recipes from query. Message:  " + e.getMessage());
       } catch (ClassNotFoundException e) {
-        System.out.println("Database not found when loading during search");
-      } catch (SQLException e){
-        System.out.println("SQLException in getting recipes from database: " + e.getMessage());
+
       }
 
-      if(recipes.length==0){
-        List<String> sim = RecipeDatabase.getSimilar(query);
-        if(sim.size() > 0){
-          recipes = new Recipe[sim.size()];
-          System.out.println("SIMILAR HAS BEEN CALLED. SIZE OF SIMILAR IS: " + sim.size());
-          for(int i = 0; i < sim.size(); i ++){
-            try {
-              recipes[i] = RecipeDatabase.getRecipeFromURI(sim.get(i));
-            } catch (SQLException e) {
-              System.out.println("SQLException getting similar recipes from query. Message:" + e.getMessage());
-            } catch (InterruptedException e) {
-              System.out.println("InterruptedException getting similar recipes from query. Message:" + e.getMessage());
-            } catch (APIException e) {
-              System.out.println("API Exception getting similar recipes from query. Message:" + e.getMessage());
-            } catch (IOException e) {
-              System.out.println("IOException getting similar recipes from query. Message:" + e.getMessage());
-            }
-          }
-          simpleRecipeList = Gui.this.setUpRecipesList(recipes);
-        }
-      }
 
-      Map<String, Object> variables = ImmutableMap.of("recipes",recipes, "simpleRecipeList", simpleRecipeList);
+      Map<String, Object> variables = ImmutableMap.of("recipes", recipes, "simpleRecipeList", simpleRecipeList);
       return GSON.toJson(variables);
-    }
 
+
+    }
   }
 
   /**
-   * This method sets up a list of recipe URIs and maps to their URLs
+   * This method sets up a list of recipe URIs and maps to their URLs.
    * @param recipes The list of recipes to be added
    * @return A simple list of shortened URLs to recipe URIs
    */
@@ -391,6 +409,7 @@ public class Gui {
         System.out.println("CHECK " + Accounts.checkSignUpValidity(user, pass1, pass2));
         if(Accounts.checkSignUpValidity(user, pass1, pass2)) {
           User newUser = new User(user, pass1);
+          System.out.println("NEW USER?: "+ newUser);
           newUser.setRecommender(new Recommender(newUser));
           output = "Successful Sign-up!";
         }
@@ -430,7 +449,7 @@ public class Gui {
       } catch (AccountException e) {
         System.out.println("AccountException error: " + e.getMessage());
       }
-      if(currUser == null){
+      if (currUser == null) {
         Map<String, Object> noUserVars = ImmutableMap.of("title", "User", "output", new HashMap<String, String>());
         return GSON.toJson(noUserVars);
       }
@@ -452,21 +471,16 @@ public class Gui {
       Map<String, Object> variables = ImmutableMap.of("title", "User", "output", output);
   
       return GSON.toJson(variables);
-
     }
-    
   }
   
-
-  
-  private class RecipeHandler implements Route{
+  private class RecipeHandler implements Route {
     private Gui gui;
-    
-    RecipeHandler(Gui g){
+    RecipeHandler(Gui g) {
       gui = g;
     }
     @Override
-    public String handle(Request req, Response res){
+    public String handle(Request req, Response res) {
       QueryParamsMap qm = req.queryMap();
       String url = qm.value("url");
       String username = qm.value("username");
@@ -477,15 +491,16 @@ public class Gui {
       } catch (AccountException e) {
         System.out.println("AccountException getting User in RecipeHandler: " + e.getMessage());
       }
+      assert currUser != null;
       Recommender recommender = currUser.getRecommender();
 //
       // TODO: use Recommender object below!
       
       Pattern load = Pattern.compile("localhost:.+\\/recipe\\/(.+)");
       String recipeURI = null;
-      if(url != null){
+      if (url != null) {
         Matcher matchURL = load.matcher(url);
-        if(matchURL.find()){
+        if (matchURL.find()) {
           recipeURI = matchURL.group(1);
           String fullUri = "http://www.edamam.com/ontologies/edamam.owl#recipe_" + recipeURI;
           clickedSet.add(fullUri);
@@ -512,8 +527,9 @@ public class Gui {
       } catch (SQLException | InterruptedException | APIException | IOException | ClassNotFoundException e) {
         System.out.println("SQLException getting recipe from database");
       }
-      if(currRecipe == null){
+      if (currRecipe == null) {
         try {
+          System.out.println("RECIPE URI LOOKUP" + recipeURI);
           currRecipe = RecipeDatabase.getRecipeFromURI("http://www.edamam.com/ontologies/edamam.owl#recipe_" + recipeURI);
         } catch (IOException e) {
           System.out.println("IOException in getting recipe from API");
@@ -524,42 +540,60 @@ public class Gui {
           System.out.println("Error message: " + e.getMessage());
         }
       }
-      if(currRecipe == null){
+      if (currRecipe == null) {
         System.out.println("EXCEEDED RECIPES LOOKUP!!");
       }
 
       String actualName = currRecipe.getLabel();
       List<String> ingredientsList = new ArrayList<String>();
-      for(int i = 0; i < currRecipe.getIngredients().size(); i ++){
+      for (int i = 0; i < currRecipe.getIngredients().size(); i++) {
         ingredientsList.add(currRecipe.getIngredients().get(i).getText());
       }
 //      HashMap<String, String> map = new HashMap<String, String>();
 //      Set<String> keys = recipes.keySet();
-//      List<Recipe> recommendations = recommender.makeRecommendation(prevQuery, );
+      List<Recipe> recommendations = new ArrayList<Recipe>();
+      try {
+        System.out.println("Prev Query: " + prevQuery);
+        System.out.println("Prev REstrict: " + prevRestrictions);
+        System.out.println("Recommender: " + recommender);
+        System.out.println("User: " + currUser);
+        recommendations = recommender.makeRecommendation(prevQuery, new HashMap<>(),
+                prevRestrictions);
+      } catch (RecommendationException | InterruptedException | IOException | APIException
+              | SQLException e) {
+        e.printStackTrace();
+      }
+
       Map<String, String[]> recipePageRecipes = new HashMap<String, String[]>();
       Set<String> keys = gui.recipesMap.keySet();
 
-      for(String key : keys){
-        if(key == currRecipe.getCompactUri()){
-          continue;
-        }
-        String[] fields = new String[gui.recipesMap.get(key).getIngredients().size() + 1];
-        Recipe currRec = gui.recipesMap.get(key);
-        fields[0] = currRec.getLabel();
-        recipePageRecipes.put(currRec.getCompactUri(), fields);
+      for (Recipe recp : recommendations) {
+//        if(key == currRecipe.getCompactUri()){
+//          continue;
+//        }
+//        String[] fields = new String[gui.recipesMap.get(key).getIngredients().size() + 1];
+//        Recipe currRec = gui.recipesMap.get(key);
+//        fields[0] = currRec.getLabel();
+        String[] fields = new String[1];
+        fields[0] = recp.getLabel();
+        recipePageRecipes.put(recp.getCompactUri(), fields);
       }
       Map<String, String> nutrientsMap = new HashMap<String, String>();
 
       Map<String, double[]> map = currRecipe.getNutrientsMap();
-      for(String string : map.keySet()){
+      for (String string : map.keySet()) {
 //        System.out.println("KEY:::  " + string);
       }
      Map<String, double[]> nuts = currRecipe.getNutrientsMap();
-      double[] nutValues = new double[nuts.keySet().size()];
+      String[] nutValues = new String[nuts.keySet().size()];
       int i = 0;
-      for(String itm : nuts.keySet()){
-        nutValues[i] = nuts.get(itm)[1];
+//      int j = 1;
+      for (String itm : nuts.keySet()) {
+        nutValues[i] = itm;
+//        nutValues[j] = nuts.get(itm)[1];
         i++;
+//        i+=2;
+//        j+=2;
       }
      ImmutableMap<String,Object> variables = ImmutableMap.<String, Object>builder()
               .put("recipeList", recipePageRecipes)
@@ -574,12 +608,11 @@ public class Gui {
   }
 
   private class NutrientHandler implements Route{
-
     @Override
     public Object handle(Request request, Response response) throws Exception {
       QueryParamsMap qm = request.queryMap();
       String nutrient = qm.value("nut");
-      if(nutrients.contains(nutrient)){
+      if (nutrients.contains(nutrient)) {
         nutrients.remove(nutrient);
       } else {
         nutrients.add(nutrient);
@@ -605,4 +638,5 @@ public class Gui {
       res.body(stacktrace.toString());
     }
   }
+
 }

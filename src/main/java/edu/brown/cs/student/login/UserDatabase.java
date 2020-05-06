@@ -208,7 +208,7 @@ public final class UserDatabase {
 
     List<Recipe> prevRecipes = new ArrayList<>();
     while (recipeSet.next()) {
-//      System.out.println("RECIPE: " + recipeSet.getString(1));
+      System.out.println("RECIPE: " + recipeSet.getString(1));
       Recipe r = RecipeDatabase.getRecipeFromURI(recipeSet.getString(1));
       prevRecipes.add(r);
     }

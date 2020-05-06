@@ -1,5 +1,7 @@
 package edu.brown.cs.student.login;
 
+import edu.brown.cs.student.recommendation.Recommender;
+
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -85,6 +87,7 @@ public class Accounts {
         String username = login[0];
         System.out.println("USERNAME " + username);
         User user = UserDatabase.getUser(username);
+        user.setRecommender(new Recommender(user));
         System.out.println("Line 4 " + user);
         nameUserMap.putIfAbsent(username, user);
         System.out.println("Line 5 " + nameUserMap.get(username));

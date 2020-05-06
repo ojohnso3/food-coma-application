@@ -9,6 +9,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import edu.brown.cs.student.food.Recipe;
+import edu.brown.cs.student.gui.Gui;
 
 import java.io.IOException;
 import java.net.URI;
@@ -156,14 +157,14 @@ public final class FieldParser {
    */
   public static Recipe[] getRecipesFromQuery(String query, List<String> dietaryRestrictions,
                                              Map<String, String[]> paramsMap)
-      throws IOException, InterruptedException, APIException, SQLException {
+      throws IOException, InterruptedException, APIException {
     query = query.replace(" ", "+");
     HttpClient httpClient = HttpClient.newBuilder().build();
     String queryUri = handleParamsAndRestrictions(dietaryRestrictions, paramsMap);
 
     HttpRequest httpRequest = HttpRequest.newBuilder().GET()
         .uri(URI.create("https://api.edamam.com/search?q=" + query
-            + "&app_id=" + APP_ID + "&app_key=" + APP_KEY + "&to=99" + queryUri)).build();
+            + "&app_id=" + APP_ID + "&app_key=" + APP_KEY + "&to=50" + queryUri)).build();
 
     HttpResponse<String> response = httpClient.send(httpRequest,
         HttpResponse.BodyHandlers.ofString());
@@ -188,43 +189,6 @@ public final class FieldParser {
     }
 
     return recipes;
-  }
-
-  /**
-   * Test api function.
-   * @return the response
-   */
-  public static String apiCall() {
-    HttpClient httpClient = HttpClient.newBuilder().build();
-    HttpRequest httpRequest = HttpRequest.newBuilder().GET()
-        .uri(URI.create("https://api.edamam.com/search?")).build();
-
-    try {
-      HttpResponse<String> response = httpClient.send(httpRequest,
-          HttpResponse.BodyHandlers.ofString());
-      System.out.println(response.statusCode());
-//      System.out.println(response.body());
-      return response.body();
-    } catch (IOException | InterruptedException ioe) {
-      ioe.printStackTrace();
-      return null;
-    }
-  }
-
-  /**
-   * Test Gson function.
-   * @return the recipe
-   */
-  public static Recipe parseJSON() {
-    String json = apiCall();
-    assert json != null;
-    Recipe[] recipes = parseRecipeJSON(json);
-    assert recipes != null;
-    for (Recipe recipe : recipes) {
-      System.out.println(recipe.getUri());
-      System.out.println(recipe.getNutrientVals("FE")[0]);
-    }
-    return recipes[0];
   }
 
   /**
@@ -304,4 +268,77 @@ public final class FieldParser {
     }
     return recipeList;
   }
+
+
+
+
+
+
+
+  public static Recipe[] getRecipesDBandAPI(String query, Recipe[] recipes, List<String> restrictions, Map<String, String[]> paramsMap){
+    try{
+    if(RecipeDatabase.checkQueryInDatabase(query)){
+      List<String> uris = RecipeDatabase.getQueryURIListFromDatabase(query);
+      System.out.println("uris size is " + uris.size());
+      recipes = new Recipe[uris.size()];
+      for(int i = 0; i < uris.size(); i++){
+        recipes[i] = RecipeDatabase.getRecipeFromURI(uris.get(i));
+      }
+//      simpleRecipeList = Gui.this.setUpRecipesList(recipes);
+    } else if(!RecipeDatabase.checkQueryInDatabase(query)){
+      System.out.println("MAKING API CALL");
+
+      recipes = FieldParser.getRecipesFromQuery(query, restrictions, paramsMap);
+      String[] recipesForDb = new String[recipes.length];
+      for(int i = 0; i < recipes.length; i++){
+        recipesForDb[i] = recipes[i].getUri();
+      }
+      RecipeDatabase.insertQuery(query, recipesForDb);
+//      simpleRecipeList = Gui.this.setUpRecipesList(recipes);
+
+    }
+
+  } catch (IOException e) {
+    System.out.println("IOException getting recipes from query: " + e.getMessage());
+  } catch (InterruptedException e) {
+    System.out.println("InterruptedException getting recipes from query");
+  } catch (APIException e) {
+    System.out.println("API Exception getting recipes from query. Message:  " + e.getMessage());
+//  } catch (ClassNotFoundException e) {
+//    System.out.println("Database not found when loading during search");
+  } catch (SQLException e){
+    System.out.println("SQLException in getting recipes from database: " + e.getMessage());
+  }
+
+      if(recipes.length==0){
+    List<String> sim = RecipeDatabase.getSimilar(query);
+    if(sim.size() > 0){
+      recipes = new Recipe[sim.size()];
+      System.out.println("SIMILAR HAS BEEN CALLED. SIZE OF SIMILAR IS: " + sim.size());
+      for(int i = 0; i < sim.size(); i ++){
+        try {
+          recipes[i] = RecipeDatabase.getRecipeFromURI(sim.get(i));
+        } catch (SQLException e) {
+          System.out.println("SQLException getting similar recipes from query. Message:" + e.getMessage());
+        } catch (InterruptedException e) {
+          System.out.println("InterruptedException getting similar recipes from query. Message:" + e.getMessage());
+        } catch (APIException e) {
+          System.out.println("API Exception getting similar recipes from query. Message:" + e.getMessage());
+        } catch (IOException e) {
+          System.out.println("IOException getting similar recipes from query. Message:" + e.getMessage());
+        }
+      }
+//      simpleRecipeList = Gui.this.setUpRecipesList(recipes);
+    }
+  }
+      return recipes;
+  }
+
+
+
+
+
+
+
+
 }

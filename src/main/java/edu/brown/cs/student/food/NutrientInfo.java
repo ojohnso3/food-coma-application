@@ -51,7 +51,7 @@ public final class NutrientInfo {
 
     setMainNutrients();
     setSecondaryNutrients();
-    setOtherNutrients();
+//    setOtherNutrients();
   }
 
   private static void setMainNutrients() {
