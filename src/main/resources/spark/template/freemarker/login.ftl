@@ -51,6 +51,7 @@
         <p id="sign_validity" aria-live=polite></p>
     </div>
 </div>
+<br><br>
 
 <#--  <div class="signContainer">
     <div class="signBox">
