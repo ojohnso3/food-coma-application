@@ -134,7 +134,7 @@ public final class FieldParser {
     if (response.statusCode() != 200) {
       throw new APIException("API returned error " + response.statusCode());
     }
-    System.out.println(response.body());
+//    System.out.println(response.body());
     Recipe[] recipeArray = parseRecipeJSON(response.body());
     if (recipeArray == null) {
       throw new APIException("API returned malformed JSON");
@@ -204,7 +204,7 @@ public final class FieldParser {
       HttpResponse<String> response = httpClient.send(httpRequest,
           HttpResponse.BodyHandlers.ofString());
       System.out.println(response.statusCode());
-      System.out.println(response.body());
+//      System.out.println(response.body());
       return response.body();
     } catch (IOException | InterruptedException ioe) {
       ioe.printStackTrace();

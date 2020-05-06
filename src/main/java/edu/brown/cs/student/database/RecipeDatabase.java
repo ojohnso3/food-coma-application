@@ -124,7 +124,7 @@ public final class RecipeDatabase {
     if (checkRecipeInDatabase(recipe.getUri())) {
 //      throw new SQLException("duplicate");
     }
-    System.out.println(recipe.prepareForInsert());
+//    System.out.println(recipe.prepareForInsert());
   PreparedStatement prep = conn.prepareStatement("INSERT INTO recipe VALUES("
           + recipe.prepareForInsert() + ");");
   prep.executeUpdate();

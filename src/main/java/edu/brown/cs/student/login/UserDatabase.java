@@ -208,7 +208,7 @@ public final class UserDatabase {
 
     List<Recipe> prevRecipes = new ArrayList<>();
     while (recipeSet.next()) {
-      System.out.println("RECIPE: " + recipeSet.getString(1));
+//      System.out.println("RECIPE: " + recipeSet.getString(1));
       Recipe r = RecipeDatabase.getRecipeFromURI(recipeSet.getString(1));
       prevRecipes.add(r);
     }
@@ -247,9 +247,9 @@ public final class UserDatabase {
   public static void testDatabaseFile() {
     try {
       User user = getUser("ugh");
-      System.out.println(user.getUsername());
-      System.out.println(user.getDietaryRestrictions());
-      System.out.println(user.getPreviousRecipes().get(0).getUri());
+//      System.out.println(user.getUsername());
+//      System.out.println(user.getDietaryRestrictions());
+//      System.out.println(user.getPreviousRecipes().get(0).getUri());
     } catch (SQLException e) {
       e.printStackTrace();
     } catch (IOException e) {

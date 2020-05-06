@@ -81,6 +81,10 @@ public class Recipe {
     return this.nutrients.get(nutrientCode);
   }
 
+  public Map<String, double[]> getNutrientsMap(){
+    return nutrients;
+  }
+
   public String prepareForInsert() {
     label = label.replace("\"", "");
     return "\"" + uri + "\",\"" + label + "\",\"" + image + "\",\"" + source + "\",\"" + url
