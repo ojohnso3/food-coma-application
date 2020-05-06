@@ -37,13 +37,24 @@ function getRecipes(params){
             document.getElementById("ingredients").innerHTML += obj.ingredients[i] + "</br>";
             console.log(obj.ingredients[i]);
         }
-        document.getElementById("nutrients").innerHTML += "Calories: " + obj.Nutrients[9] + " kcal <br>";
-        document.getElementById("nutrients").innerHTML += "Fat: " + obj.Nutrients[28] + " g <br>";
-        document.getElementById("nutrients").innerHTML += "Saturated Fat: " + obj.Nutrients[10] + " g <br>";
-        document.getElementById("nutrients").innerHTML += "Sodium: " + obj.Nutrients[26] + " mg <br>";
-        document.getElementById("nutrients").innerHTML += "Sugar: " + obj.Nutrients[23] + " g <br>";
-        document.getElementById("nutrients").innerHTML += "Sugar: " + obj.Nutrients[13] + " g <br>";
-        document.getElementById("nutrients").innerHTML += "Protein: " + obj.Nutrients[25] + " g <br>";
+        document.getElementById("nutrients").innerHTML += obj.Nutrients[0] + ": " + obj.Nutrients[1] + " kcal <br>";
+        document.getElementById("nutrients").innerHTML += obj.Nutrients[2] + ": " + obj.Nutrients[3] + " kcal <br>";
+        document.getElementById("nutrients").innerHTML += obj.Nutrients[4] + ": " + obj.Nutrients[5] + " kcal <br>";
+        document.getElementById("nutrients").innerHTML += obj.Nutrients[6] + ": " + obj.Nutrients[7] + " kcal <br>";
+        document.getElementById("nutrients").innerHTML += obj.Nutrients[8] + ": " + obj.Nutrients[9] + " kcal <br>";
+        document.getElementById("nutrients").innerHTML += obj.Nutrients[10] + ": " + obj.Nutrients[11] + " kcal <br>";
+        document.getElementById("nutrients").innerHTML += obj.Nutrients[12] + ": " + obj.Nutrients[13] + " kcal <br>";
+        document.getElementById("nutrients").innerHTML += obj.Nutrients[14] + ": " + obj.Nutrients[15] + " kcal <br>";
+        document.getElementById("nutrients").innerHTML += obj.Nutrients[16] + ": " + obj.Nutrients[17] + " kcal <br>";
+        document.getElementById("nutrients").innerHTML += obj.Nutrients[18] + ": " + obj.Nutrients[19] + " kcal <br>";
+        document.getElementById("nutrients").innerHTML += obj.Nutrients[20] + ": " + obj.Nutrients[21] + " kcal <br>";
+        document.getElementById("nutrients").innerHTML += obj.Nutrients[22] + ": " + obj.Nutrients[23] + " kcal <br>";
+        document.getElementById("nutrients").innerHTML += obj.Nutrients[24] + ": " + obj.Nutrients[25] + " kcal <br>";
+        document.getElementById("nutrients").innerHTML += obj.Nutrients[26] + ": " + obj.Nutrients[27] + " kcal <br>";
+        document.getElementById("nutrients").innerHTML += obj.Nutrients[28] + ": " + obj.Nutrients[29] + " kcal <br>";
+        document.getElementById("nutrients").innerHTML += obj.Nutrients[30] + ": " + obj.Nutrients[31] + " kcal <br>";
+        document.getElementById("nutrients").innerHTML += obj.Nutrients[32] + ": " + obj.Nutrients[33] + " kcal <br>";
+
     });
 };
 //

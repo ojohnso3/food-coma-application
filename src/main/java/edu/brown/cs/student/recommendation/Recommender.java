@@ -53,7 +53,7 @@ public class Recommender {
       List<Double> weightedAxes = getNutrientIndices();
 
       // Query Recs: get recipes based on the query and put into a queried recipes tree
-      List<Recipe> recipesList = Arrays.asList(FieldParser.getRecipesFromQuery(input,
+      List<Recipe> recipesList = Arrays.asList(FieldParser.getRecipesDBandAPI(input,
               restrictions, paramsMap));
       List<RecipeNode> queryNodes = convertRecipesToRecipeNodes(recipesList);
       this.recipeTree.initializeTree(queryNodes);

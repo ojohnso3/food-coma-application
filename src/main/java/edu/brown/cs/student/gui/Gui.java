@@ -243,7 +243,7 @@ public class Gui {
 //          simpleRecipeList = Gui.this.setUpRecipesList(recipes);
 //        }
 //      }
-        recipes = FieldParser.getRecipesDBandAPI(query, recipes, restrictions, paramsMap);
+        recipes = FieldParser.getRecipesDBandAPI(query, restrictions, paramsMap);
         simpleRecipeList = Gui.this.setUpRecipesList(recipes);
 
       } catch (FileNotFoundException ignored) {
@@ -584,15 +584,14 @@ public class Gui {
 //        System.out.println("KEY:::  " + string);
       }
      Map<String, double[]> nuts = currRecipe.getNutrientsMap();
-      String[] nutValues = new String[nuts.keySet().size()];
+      String[] nutValues = new String[nuts.keySet().size()*2];
       int i = 0;
-//      int j = 1;
+      int j = 1;
       for (String itm : nuts.keySet()) {
         nutValues[i] = itm;
-//        nutValues[j] = nuts.get(itm)[1];
-        i++;
-//        i+=2;
-//        j+=2;
+        nutValues[j] = Double.toString(nuts.get(itm)[1]);
+        i+=2;
+        j+=2;
       }
      ImmutableMap<String,Object> variables = ImmutableMap.<String, Object>builder()
               .put("recipeList", recipePageRecipes)

@@ -106,9 +106,10 @@ public final class RecipeDatabase {
         + "FOREIGN KEY (recipe_uri) REFERENCES recipe(uri));";
     stat.executeUpdate(sql);
 
-    sql = "CREATE TABLE IF NOT EXISTS queries("
+    sql = "CREATE TABLE IF NOT EXISTS new_queries("
             + "query TEXT,"
             + "recipe_uri TEXT,"
+            + "restrictions TEXT,"
             + "FOREIGN KEY (recipe_uri) REFERENCES recipe(uri));";
     stat.executeUpdate(sql);
     stat.close();
@@ -169,14 +170,15 @@ public final class RecipeDatabase {
 
   }
 
-  public static void insertQuery(String query, String[] uriList) throws SQLException {
-    if (checkQueryInDatabase(query)) {
-      throw new SQLException("duplicate");
-    }
+  public static void insertQuery(String query, String[] uriList, List<String> restrictions, Map<String, String[]> paramsMap) throws SQLException {
+//    if (checkQueryInDatabase(query)) {
+//      throw new SQLException("duplicate");
+//    }
+    String inputRestrict = prepRestrictionsForDB(restrictions);
 
     for(String uri : uriList){
-      PreparedStatement prep = conn.prepareStatement("INSERT INTO queries VALUES("
-              +"\"" + query + "\" , \"" + uri + "\");");
+      PreparedStatement prep = conn.prepareStatement("INSERT INTO new_queries VALUES("
+              +"\"" + query + "\" , \"" + uri + "\" , \"" + inputRestrict + "\");");
       prep.executeUpdate();
       prep.close();
     }
@@ -335,6 +337,7 @@ public final class RecipeDatabase {
    * @return - boolean representing whether the given uri is in the database.
    */
   public static boolean checkRecipeInDatabase(String uri) {
+
     boolean retVal = false;
     try{
       PreparedStatement prep = conn.prepareStatement("SELECT * FROM recipe WHERE uri = ?");
@@ -355,12 +358,13 @@ public final class RecipeDatabase {
    * @param query - String uri of a recipe.
    * @return - boolean representing whether the given uri is in the database.
    */
-  public static boolean checkQueryInDatabase(String query){
+  public static boolean checkQueryInDatabase(String query, List<String> restrictions){
 
     boolean retVal = false;
     try {
-      PreparedStatement prep = conn.prepareStatement("SELECT query FROM queries WHERE query = ?");
+      PreparedStatement prep = conn.prepareStatement("SELECT query FROM new_queries WHERE query = ? AND restrictions = ?");
       prep.setString(1, query);
+      prep.setString(2, prepRestrictionsForDB(restrictions));
       ResultSet recipeSet = prep.executeQuery();
       retVal = recipeSet.next();
       prep.close();
@@ -372,27 +376,59 @@ public final class RecipeDatabase {
     return retVal;
   }
 
-  public static List<String> getQueryURIListFromDatabase(String query) {
+  public static String prepRestrictionsForDB(List<String> restrictions){
+    String insertThis = "";
+    if(restrictions.contains("alcohol-free")){
+      insertThis+="a";
+    }
+    if(restrictions.contains("vegan")){
+      insertThis+="e";
+    }
+    if(restrictions.contains("peanut-free")){
+      insertThis+="p";
+    }
+    if(restrictions.contains("sugar-conscious")){
+      insertThis+="s";
+    }
+    if(restrictions.contains("tree-nut-free")){
+      insertThis+="t";
+    }
+    if(restrictions.contains("vegetarian")){
+      insertThis+="v";
+    }
+    return insertThis;
+  }
+
+  public static List<String> getQueryURIListFromDatabase(String query, List<String> restrictions, Map<String, String[]> paramsMap) {
     List<String> recipesFromExactQuery = new ArrayList<String>();
 
     try {
-      PreparedStatement prep = conn.prepareStatement("SELECT recipe_uri FROM queries WHERE query = ?");
+      PreparedStatement prep = conn.prepareStatement("SELECT recipe_uri FROM new_queries WHERE query = ? AND restrictions = ?");
       prep.setString(1, query);
+      prep.setString(2, prepRestrictionsForDB(restrictions));
       ResultSet recipeSet = prep.executeQuery();
       while (recipeSet.next()) {
         String uri = recipeSet.getString("recipe_uri");
-        recipesFromExactQuery.add(uri);
+        if (FieldParser.checkRecipeValidity(RecipeDatabase.getRecipeFromURI(uri), restrictions, paramsMap)) {
+          recipesFromExactQuery.add(uri);
+        }
       }
       prep.close();
       recipeSet.close();
     } catch (SQLException e) {
+      e.printStackTrace();
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    } catch (APIException e) {
+      e.printStackTrace();
+    } catch (IOException e) {
       e.printStackTrace();
     }
 
     return recipesFromExactQuery;
   }
 
-  public static List<String> getSimilar(String query) {
+  public static List<String> getSimilar(String query, List<String> dietaryRestrictions, Map<String, String[]> paramsMap) {
 
     List<String> recipesFromSimilarQuery = new ArrayList<String>();
     try {
@@ -401,11 +437,19 @@ public final class RecipeDatabase {
       prep.setString(1,q);
       ResultSet recipeSet = prep.executeQuery();
       while (recipeSet.next()) {
-        recipesFromSimilarQuery.add(recipeSet.getString("uri"));
+        if (FieldParser.checkRecipeValidity(RecipeDatabase.getRecipeFromURI(recipeSet.getString("uri")), dietaryRestrictions, paramsMap)) {
+          recipesFromSimilarQuery.add(recipeSet.getString("uri"));
+        }
       }
       recipeSet.close();
       prep.close();
     } catch (SQLException e) {
+      e.printStackTrace();
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    } catch (APIException e) {
+      e.printStackTrace();
+    } catch (IOException e) {
       e.printStackTrace();
     }
     return recipesFromSimilarQuery;
@@ -415,20 +459,20 @@ public final class RecipeDatabase {
      * Database test function.
      */
   public static void testDatabaseFile() {
-    try {
-      String[] uriList = new String[1];
-      uriList[0] = "http://www.edamam.com/ontologies/edamam.owl#recipe_b79327d05b8e5b838ad6cfd9576b30b6";
-      insertQuery("x", uriList);
+//    try {
+//      String[] uriList = new String[1];
+//      uriList[0] = "http://www.edamam.com/ontologies/edamam.owl#recipe_b79327d05b8e5b838ad6cfd9576b30b6";
+//      insertQuery("x", uriList);
 //      System.out.println("URI: " + r.getUri());
-    } catch (SQLException e) {
-      e.printStackTrace();
+//    } catch (SQLException e) {
+//      e.printStackTrace();
 //    } catch (InterruptedException e) {
 //      e.printStackTrace();
 //    } catch (APIException e) {
 //      e.printStackTrace();
 //    } catch (IOException e) {
 //      e.printStackTrace();
-    }
+//    }
   }
 }
 
