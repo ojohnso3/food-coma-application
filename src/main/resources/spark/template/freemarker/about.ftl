@@ -2,9 +2,19 @@
 
 <h1>About</h1>
 
-<img src="css/foodCOMA.png" alt="HELP">
+<#--  <img src="css/foodCOMA.png" alt="HELP">  -->
+<div class="details">
+  <p>
+  We are a committed team of 4 Brown students who are passionate about technology and cooking.
+  <br><br>
+  Hope you enjoy!
+  </p>
+</div> 
 
-<p>About this company, blah blah blah.</p>
+<div>
+  <h2>OUR TEAM</h2>
+</div> 
+
 
 <div class="container">
   <div class="art">
@@ -25,6 +35,17 @@
   </div>
 </div> 
 <br>
+
+<div>
+  <h2>JOIN US!</h2>
+      <p>Give us your email if you want to be considered for a position at foodCOMA!</p>
+      <input id="last_q" class="u-full-width"
+        type="text"
+        placeholder="Your Email"
+        value="">
+    <br>
+    <h2 id="email_validity" aria-live=polite></h2>
+</div> 
 
 
 </#assign>

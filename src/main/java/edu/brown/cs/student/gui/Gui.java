@@ -158,6 +158,7 @@ public class Gui {
       try {
         User currUser = Accounts.getUser(username);
       } catch (AccountException e) {
+        e.printStackTrace();
         System.out.println("AccountException when getting user from searchPostHandler: " + e.getMessage());
       }
       Map<String, String[]> paramsMap = new HashMap<>();
@@ -180,7 +181,6 @@ public class Gui {
         }
 
         RecipeDatabase.loadDatabase("data/recipeDatabase.sqlite3");
-        System.out.println("QUERY IN DB????? : " + RecipeDatabase.checkQueryInDatabase(query));
         //TODO: Make sure that health labels etc are what the user has requested
 //        if(RecipeDatabase.checkQueryInDatabase(query)){
 //          List<String> uris = RecipeDatabase.getQueryURIListFromDatabase(query);
@@ -401,7 +401,9 @@ public class Gui {
       try {
         System.out.println("CHECK " + Accounts.checkSignUpValidity(user, pass1, pass2));
         if(Accounts.checkSignUpValidity(user, pass1, pass2)) {
-          new User(user, pass1);
+          User newUser = new User(user, pass1);
+          System.out.println("NEW USER?: "+ newUser);
+          newUser.setRecommender(new Recommender(newUser));
           output = "Successful Sign-up!";
         }
       } catch (UserCreationException e1) {
