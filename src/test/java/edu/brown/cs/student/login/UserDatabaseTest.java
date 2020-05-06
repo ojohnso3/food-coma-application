@@ -3,7 +3,10 @@
 //import edu.brown.cs.student.database.APIException;
 //import edu.brown.cs.student.database.RecipeDatabase;
 //import edu.brown.cs.student.food.NutrientInfo;
+<<<<<<< HEAD
 //import edu.brown.cs.student.food.Recipe;
+=======
+>>>>>>> 6d1cc864cf38d0c632a2796e03489e62aa4ccc50
 //import org.junit.Test;
 //
 //import java.io.FileNotFoundException;
@@ -31,8 +34,14 @@
 //      UserDatabase.loadDatabase("data/userDatabase.sqlite3");
 //      RecipeDatabase.loadDatabase("data/recipeDatabase.sqlite3");
 //      NutrientInfo.createNutrientsList();
+<<<<<<< HEAD
 //      String user1name = "1000";
 //      String user2name = "2000";
+=======
+//      Random rand = new Random();
+//      String user1name = rand.nextInt(1000) + "";
+//      String user2name = rand.nextInt(1000) + "";
+>>>>>>> 6d1cc864cf38d0c632a2796e03489e62aa4ccc50
 //      this.user1 = new User(user1name, "password", PATH_CSV);
 //      this.user2 = new User(user2name, "password", PATH_CSV);
 //
@@ -130,6 +139,7 @@
 //   * Function to test the insertToPrevRecipe method in UserDatabase.
 //   */
 //  public void testInsertToPrevRecipe() {
+<<<<<<< HEAD
 //    try {
 //      Recipe r1 = RecipeDatabase.getRecipeFromURI("684");
 //      UserDatabase.insertToPrevRecipe(this.user1.getUsername(), r1.getUri());
@@ -154,6 +164,28 @@
 //    } catch (IndexOutOfBoundsException e) {
 //      e.printStackTrace();
 //    }
+=======
+////    try {
+////      UserDatabase.insertToPrevRecipe(this.user1.getUsername(), "987");
+////      User user1Test = UserDatabase.getUser(this.user1.getUsername());
+////      assertEquals("987", user1Test.getPreviousRecipes().get(1));
+////
+////      UserDatabase.insertToPrevRecipe(this.user2.getUsername(), "http://edamam.api.com/Ontology#752");
+////      User user2Test = UserDatabase.getUser(this.user2.getUsername());
+////      assertEquals("http://edamam.api.com/Ontology#752", user2Test.getPreviousRecipes().get(0));
+////
+////    } catch (SQLException e) {
+////      e.printStackTrace();
+////    } catch (IOException e) {
+////      e.printStackTrace();
+////    } catch (InterruptedException e) {
+////      e.printStackTrace();
+////    } catch (APIException e) {
+////      e.printStackTrace();
+////    } catch (AccountException e) {
+////      e.printStackTrace();
+////    }
+>>>>>>> 6d1cc864cf38d0c632a2796e03489e62aa4ccc50
 //  }
 //
 //  /**
