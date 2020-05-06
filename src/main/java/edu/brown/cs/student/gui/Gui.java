@@ -390,7 +390,8 @@ public class Gui {
       try {
         System.out.println("CHECK " + Accounts.checkSignUpValidity(user, pass1, pass2));
         if(Accounts.checkSignUpValidity(user, pass1, pass2)) {
-          new User(user, pass1);
+          User newUser = new User(user, pass1);
+          newUser.setRecommender(new Recommender(newUser));
           output = "Successful Sign-up!";
         }
       } catch (UserCreationException e1) {
