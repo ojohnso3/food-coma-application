@@ -1,7 +1,4 @@
 username,passwordHash,salt
-<<<<<<< HEAD
-
-<<<<<<< HEAD
 hello,$2a$10$gInZW4WoeKRRhTZGH20b8..dJJW4eQjZ/Fg8LNkz4Iz2XBz9Bk06G,$2a$10$gInZW4WoeKRRhTZGH20b8.
 hello1,$2a$10$DSCEk39nWpLUZweuuWGDlOT7ON3dzaG0Rz.HNiiYuvcCBYKb7BtC2,$2a$10$DSCEk39nWpLUZweuuWGDlO
 abcdefg,$2a$10$ln2OSJ4IGbcwBDknwA.co.oIO/ODUQ7G5RffHQGFyYIptNO8M8GVm,$2a$10$ln2OSJ4IGbcwBDknwA.co.
@@ -9,17 +6,13 @@ hellomynameiscameronand,$2a$10$imas3JIlLOC4VUuNLtDvTeAR2dOnBImfHeggY9FNMXnOp7THJ
 hellomynameiscam,$2a$10$eSnsi9D6LVEIja5.FU9awOfySkcaP3eyyQFkWvlclYin7ASovb8W6,$2a$10$eSnsi9D6LVEIja5.FU9awO
 superman,$2a$10$ZfL4FpmrFBoQWp5FUuANJ.0551kOGD66WGSThkc580GF5k/oiRuKi,$2a$10$ZfL4FpmrFBoQWp5FUuANJ.
 superman22,$2a$10$ZkFvPPfSODILfiwVqgBx.u3m00FjTMeC7pTSAnqIMZ9KDwKTcLtFy,$2a$10$ZkFvPPfSODILfiwVqgBx.u
-=======
 newuserwasgood,$2a$10$vAWKwnJGcb4sGiLvMyK5jOZ6MHUfbXiejVEOUBeEG0C5.KaHPfLQC,$2a$10$vAWKwnJGcb4sGiLvMyK5jO
 camsucksalot,$2a$10$BhzpszeY683yGaM3QOabie1Z.EIVc4t9AH.D.2DviRaYGfeORt12W,$2a$10$BhzpszeY683yGaM3QOabie
 camsuckz9,$2a$10$x/kaSB1d0.9.j9iQN4WdRuofNZT5Q5lJLMSZkl5S2uWtHry.3LPg.,$2a$10$x/kaSB1d0.9.j9iQN4WdRu
->>>>>>> 6bd449b686512820dfebd5ef24c5dd9a91a04d57
-
 user111,$2a$10$jSx6lcPNAih6dqSg3v54Judy2NYBychgWg1k64VEshy6G85H4TOYG,$2a$10$jSx6lcPNAih6dqSg3v54Ju
 super,$2a$10$ky1xbBKqMaEnv2Uj6XHgi.Q6gm.mTufSqPTGNJaTQjtuCW3CiJ9pm,$2a$10$ky1xbBKqMaEnv2Uj6XHgi.
 superman,$2a$10$2enpu4z1z0kNyt0UfmEsJOeC5Z/ePZmaXgJExi5ORozTrA/ODu5Zm,$2a$10$2enpu4z1z0kNyt0UfmEsJO
 superman1111,$2a$10$QJGZe0LIRpPYzX2bZF7zWeQ3ElBAJ9jMuW8GXq7H6FPfkURQwfYaW,$2a$10$QJGZe0LIRpPYzX2bZF7zWe
-=======
 dontfailmenow,$2a$10$CaIFy4TeOZl/Jqu.rVoDh.YR1JtNA/JQSB8VRZlwprU8/Yserv/V2,$2a$10$CaIFy4TeOZl/Jqu.rVoDh.
 bike4u,$2a$10$x1Kp22wQi5UY5woJGll1/ecZTrCTvjI436xsOeUSOL6eIeFQfH8nW,$2a$10$x1Kp22wQi5UY5woJGll1/e
 tryagainyay,$2a$10$1M0DWmeq3/1zGNDYV9yjgetT2YEphpqtO0SlA8rzyDhWD6BQq8jS2,$2a$10$1M0DWmeq3/1zGNDYV9yjge
@@ -29,22 +22,20 @@ helpmeeeee,$2a$10$Q1xDHt5Mwsc/fbwI.lGFTOmszc2BtDZeuhrDo/0bp4T8IMQL30zVO,$2a$10$Q
 newusernameCAM,$2a$10$BP6W/r2BnCRDChoQu224Y.txYfB.GUtH0IOWdvur53jfhNwrTXbC6,$2a$10$BP6W/r2BnCRDChoQu224Y.
 whyisthisbroken,$2a$10$pU26f.y8jEKU500hP0ciwO7EtmL56Bv.oDQt3w3YTvqgwgu3uhZI2,$2a$10$pU26f.y8jEKU500hP0ciwO
 confusedstudent,$2a$10$Sgw8MxQrK/U4HSf9vxgFZ.u9ZLy3bY.rJqPbh.LmMmtLoVFXUVArW,$2a$10$Sgw8MxQrK/U4HSf9vxgFZ.
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> d556dde7e23525ed6e09129d42085e54cb509b4a
-=======
 helpzzzzzzzzz,$2a$10$w/hF0vlsWD.E92nnQdE4Guhq18I4zABWBTZo.2ogVGh1ox6kx1b/6,$2a$10$w/hF0vlsWD.E92nnQdE4Gu
->>>>>>> d7f1563a8b0b160edf82c5ea5924e7991855db78
-
 abrandnewuser,$2a$10$MsCFWFxdNB9HhXAoaMfnSOL4i5XC/cl54gfHY3SEvypFONb5jafym,$2a$10$MsCFWFxdNB9HhXAoaMfnSO
 newuseruser,$2a$10$eOGzZuKf1PeaGfhsLUy5.eDqdbsmx2n1ElVJHoUxZ9kfnGk1XH9W2,$2a$10$eOGzZuKf1PeaGfhsLUy5.e
 userrrrr,$2a$10$ftR.5HmVvkX8mP7AMM0WCOsWNchDX7sup4IiBhiH4v7rH5P4qJC4q,$2a$10$ftR.5HmVvkX8mP7AMM0WCO
 qqqqq,$2a$10$BVCm07eFcrf174RFHFMrluKz7ubihfJIHqW/.mnKJFD7ADI1Erghq,$2a$10$BVCm07eFcrf174RFHFMrlu
 abcdefg,$2a$10$CfrA6oawI3RgWq/1DnPvWub.fuPvvnxBQPjEsEpQS7OSzcxTBxufa,$2a$10$CfrA6oawI3RgWq/1DnPvWu
-=======
 helpzzzzzzzzz,$2a$10$w/hF0vlsWD.E92nnQdE4Guhq18I4zABWBTZo.2ogVGh1ox6kx1b/6,$2a$10$w/hF0vlsWD.E92nnQdE4Gu
 newnewnew,$2a$10$smunZ20NKJKpFH24qB6jgOmIv3vYMbdvCo6W/NLLLqoabPT8Hz316,$2a$10$smunZ20NKJKpFH24qB6jgO
 porkporkpork,$2a$10$3Hg6Xx394OHsW8.mt6nTmuleSI7CB27QW223DB/Ill1j8TlOdQhpm,$2a$10$3Hg6Xx394OHsW8.mt6nTmu
 breakthesystem,$2a$10$reW.hvFJTYsOkV6NVXR23ugp/q11cDcUyNHlaV7EL3FSZGOpjOGEe,$2a$10$reW.hvFJTYsOkV6NVXR23u
 lastpass,$2a$10$vycQXaB1EmipAwRM7N.tSuXd1z8hrlv/3t5jA5sNcQupwAMPF/SzK,$2a$10$vycQXaB1EmipAwRM7N.tSu
->>>>>>> fb0ba8eb7a9e75f4f4fda299c7a4ab45d1c2db3f
+hellohello,$2a$10$pWjQiRRd1RnKKyJxuIhV6.ayLj6EFPH79bprZm4FpyOmEEVL4vZFa,$2a$10$pWjQiRRd1RnKKyJxuIhV6.
+goodbyegoodbye,$2a$10$pIBmBAhnktyoWej3qC5f9eZfMqPEWACOasGolBzqvUb.y.lDYs3RW,$2a$10$pIBmBAhnktyoWej3qC5f9e
+query,$2a$10$8mPYIBiDV2dKxAhAH1ofG.5PtsBXisxMA35dt7GgZS5bHOM1O77V6,$2a$10$8mPYIBiDV2dKxAhAH1ofG.
+whatisgoingon,$2a$10$89nvMx01LW.fubdRzVYpMuNmOWreRNuReSGds8shzJl1NEWfofesC,$2a$10$89nvMx01LW.fubdRzVYpMu
+youandme,$2a$10$xFbPK3IQ.KL0mQBRIhW/u.D2L3kzHRQgc1Ntv4tX6u/UsE4qEJEaW,$2a$10$xFbPK3IQ.KL0mQBRIhW/u.
+ready,$2a$10$THY5pLHtOCWrJBw1LAk5/uTHV/LgtYqBWS156gH2NGz/VcR/evA66,$2a$10$THY5pLHtOCWrJBw1LAk5/u

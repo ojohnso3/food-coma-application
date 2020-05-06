@@ -174,16 +174,16 @@ public class Gui {
           }
         }
         RecipeDatabase.loadDatabase("data/recipeDatabase.sqlite3");
-        System.out.println("QUERY IN DB????? : " + RecipeDatabase.checkQueryInDatabase(query));
-        if(RecipeDatabase.checkQueryInDatabase(query)){
-          List<String> uris = RecipeDatabase.getQueryURIListFromDatabase(query);
-          System.out.println("uris size is " + uris.size());
-          recipes = new Recipe[uris.size()];
-          for(int i = 0; i < uris.size(); i++){
-            recipes[i] = RecipeDatabase.getRecipeFromURI(uris.get(i));
-
-          }
-        } else if(!RecipeDatabase.checkQueryInDatabase(query)){
+//        if(RecipeDatabase.checkQueryInDatabase(query)){
+//          List<String> uris = RecipeDatabase.getQueryURIListFromDatabase(query);
+//          System.out.println("uris size is " + uris.size());
+//          recipes = new Recipe[uris.size()];
+//          for(int i = 0; i < uris.size(); i++){
+//            recipes[i] = RecipeDatabase.getRecipeFromURI(uris.get(i));
+//
+//          }
+//        }
+        if (!RecipeDatabase.checkQueryInDatabase(query)){
           System.out.println("MAKING API CALL!!!!!! NOOO!");
           recipes = FieldParser.getRecipesFromQuery(query, restrictions, paramsMap);
           String[] recipesForDb = new String[recipes.length];

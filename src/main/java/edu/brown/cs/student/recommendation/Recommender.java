@@ -40,7 +40,8 @@ public class Recommender {
    * @param paramsMap - parameters for the query the user has entered.
    * @return List of recommended recipes
    */
-  public List<Recipe> makeRecommendation(String input, Map<String, String[]> paramsMap) throws
+  public List<Recipe> makeRecommendation(String input, Map<String, String[]> paramsMap,
+                                         List<String> restrictions) throws
           RecommendationException, InterruptedException, IOException, APIException, SQLException {
     try {
       this.recipeTree = new KDTree<>(dim);
@@ -55,7 +56,7 @@ public class Recommender {
 
       // Query Recs: get recipes based on the query and put into a queried recipes tree
       List<Recipe> recipesList = Arrays.asList(FieldParser.getRecipesFromQuery(input,
-              this.user.getDietaryRestrictions(), paramsMap));
+              restrictions, paramsMap));
       List<RecipeNode> queryNodes = convertRecipesToRecipeNodes(recipesList);
       this.recipeTree.initializeTree(queryNodes);
       // add the target nodes' coordinates to each node in tree to make the origin the target point

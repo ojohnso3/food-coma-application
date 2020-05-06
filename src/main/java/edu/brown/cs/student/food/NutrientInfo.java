@@ -36,7 +36,7 @@ public final class NutrientInfo {
     nutrientCodes.add("CA");
 
     String[] carbs = new String[2];
-    calcium[0] = "Carbs";
+    carbs[0] = "Carbs";
     carbs[1] = "g";
     nutrients.put("CHOCDF", carbs);
     allNutrients.put("Carbs", "CHOCDF");
