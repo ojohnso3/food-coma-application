@@ -78,17 +78,20 @@ public class Accounts {
       checkHeader(loginInfo.nextLine());
       // create each user
       System.out.println("GETS HERE");
-      String[] header = loginInfo.nextLine().split(",");
       while (loginInfo.hasNext()) {
-        String[] login = loginInfo.nextLine().split(",");
+        String line = loginInfo.nextLine();
+        System.out.println("LINE " + line);
+        String[] login = line.split(",");
         String username = login[0];
+        System.out.println("USERNAME " + username);
         User user = UserDatabase.getUser(username);
         System.out.println("Line 4 " + user);
         nameUserMap.putIfAbsent(username, user);
         System.out.println("Line 5 " + nameUserMap.get(username));
       }
     } catch (Exception e) {
-      throw new AccountException(e.getMessage());
+      e.printStackTrace();
+      //throw new AccountException(e.getMessage());
     }
   }
 
