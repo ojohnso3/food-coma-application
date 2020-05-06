@@ -38,6 +38,7 @@ public class Recommender {
    * Overarching make recipe function to be called. Takes query,
    * @param input Search input of user
    * @param paramsMap - parameters for the query the user has entered.
+   * @param restrictions - list of restrictions the user has applied to the query.
    * @return List of recommended recipes
    */
   public List<Recipe> makeRecommendation(String input, Map<String, String[]> paramsMap,
@@ -51,8 +52,7 @@ public class Recommender {
       RecipeNode target = getTargetNode(prevRecipeNodes);
 
       // Nutrients: get the nutrients to weight higher
-      //TODO: SET WEIGHTS FOR ALL THE SPECIFIC NUTRIENTS
-      List<Integer> weightedAxes = getNutrientIndices();
+      List<Double> weightedAxes = getNutrientIndices();
 
       // Query Recs: get recipes based on the query and put into a queried recipes tree
       List<Recipe> recipesList = Arrays.asList(FieldParser.getRecipesFromQuery(input,
@@ -92,12 +92,18 @@ public class Recommender {
   /*
    * uses the users important nutrients to return indices to be weighted higher in normalize
    */
-  private List<Integer> getNutrientIndices() {
-    List<Integer> weightedAxes = new ArrayList<>();
-    for (String code : this.user.getNutrients()) {
-      weightedAxes.add(NutrientInfo.nutrientCodes.indexOf(code));
+  private List<Double> getNutrientIndices() {
+    List<Double> axisWeights = new ArrayList<>();
+    for (int i = 0; i < NutrientInfo.getMainNutrients().size(); i++) {
+      axisWeights.add(3.);
     }
-    return weightedAxes;
+    for (int i = 0; i < NutrientInfo.getSecondaryNutrients().size(); i++) {
+      axisWeights.add(1.);
+    }
+    for (String code : this.user.getNutrients()) {
+      axisWeights.set(NutrientInfo.getNutrientCodes().indexOf(code), 6.);
+    }
+    return axisWeights;
   }
 
   /*
@@ -116,8 +122,8 @@ public class Recommender {
    * @param prevRecipeNodes - the previous recipes that the user has accessed as nodes.
    * @return - a RecipeNode at the coordinates determined by the query and the user's history.
    */
-  private RecipeNode getTargetNode(List<RecipeNode> prevRecipeNodes) throws RecommendationException
-  {
+  private RecipeNode getTargetNode(List<RecipeNode> prevRecipeNodes) throws
+          RecommendationException {
     // prepare target
     List<Double> coords = new ArrayList<>();
     for (int i = 0; i < this.dim; i++) {
@@ -154,7 +160,7 @@ public class Recommender {
    */
   private void addRecipeNodeCoords(RecipeNode r) {
     List<Double> coords = new ArrayList<>();
-    for (String code : NutrientInfo.nutrientCodes) {
+    for (String code : NutrientInfo.getNutrientCodes()) {
       coords.add(r.getRecipe().getNutrientVals(code)[0]);
     }
 

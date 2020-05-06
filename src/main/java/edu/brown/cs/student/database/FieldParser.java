@@ -158,7 +158,6 @@ public final class FieldParser {
   public static Recipe[] getRecipesFromQuery(String query, List<String> dietaryRestrictions,
                                              Map<String, String[]> paramsMap)
       throws IOException, InterruptedException, APIException, SQLException {
-
     query = query.replace(" ", "+");
     HttpClient httpClient = HttpClient.newBuilder().build();
     String queryUri = handleParamsAndRestrictions(dietaryRestrictions, paramsMap);
@@ -187,7 +186,6 @@ public final class FieldParser {
       } catch (SQLException e) {
         System.out.println("Duplicate recipe attempted to be added to DB");
       }
-
     }
 
     return recipes;
@@ -195,6 +193,7 @@ public final class FieldParser {
 
   /**
    * Test api function.
+   * @return the response
    */
   public static String apiCall() {
     HttpClient httpClient = HttpClient.newBuilder().build();
@@ -215,13 +214,16 @@ public final class FieldParser {
 
   /**
    * Test Gson function.
+   * @return the recipe
    */
-  public static Recipe parseJSON() throws APIException {
+  public static Recipe parseJSON() {
     String json = apiCall();
+    assert json != null;
     Recipe[] recipes = parseRecipeJSON(json);
-    for (int i = 0; i < recipes.length; i++) {
-      System.out.println(recipes[i].getUri());
-      System.out.println(recipes[i].getNutrientVals("FE")[0]);
+    assert recipes != null;
+    for (Recipe recipe : recipes) {
+      System.out.println(recipe.getUri());
+      System.out.println(recipe.getNutrientVals("FE")[0]);
     }
     return recipes[0];
   }

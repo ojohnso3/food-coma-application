@@ -17,6 +17,7 @@ public class Accounts {
   private static final int MIN_PASS_LENGTH = 6;
   private static final int MAX_LENGTH = 32;
   private static final String LOGIN_INFO_PATH = "src/main/resources/login/account-login-info.csv";
+  private static final String USER_DATABASE_PATH = "data/userDatabase.sqlite3";
 
   private static Map<String, User> nameUserMap;
 
@@ -60,10 +61,9 @@ public class Accounts {
    * to be called at the start of running application.
    * @throws AccountException on file UserDatabase failure
    */
-  public static void initializeMap() throws AccountException, 
-      FileNotFoundException, ClassNotFoundException, SQLException {
-
-    UserDatabase.loadDatabase("data/userDatabase.sqlite3");
+  public static void initializeMap() throws AccountException, FileNotFoundException,
+          ClassNotFoundException, SQLException {
+    UserDatabase.loadDatabase(USER_DATABASE_PATH);
     initializeMap(LOGIN_INFO_PATH);
   }
   /*
@@ -74,6 +74,8 @@ public class Accounts {
     nameUserMap = new HashMap<>();
     // create users from info files and databases
     try (Scanner loginInfo = new Scanner(new FileReader(path))) {
+      // get rid of header
+      checkHeader(loginInfo.nextLine());
       // create each user
       System.out.println("GETS HERE");
       String[] header = loginInfo.nextLine().split(",");
@@ -124,7 +126,8 @@ public class Accounts {
    * implementation
    */
   public static void checkHeader(String path) throws AccountException {
-    if (!readHeader(path).equals("username,passwordHash,salt")) {
+    if (!path.equals("username,passwordHash,salt")
+            && !readHeader(path).equals("username,passwordHash,salt")) {
       throw new AccountException("login CSV header malformed");
     }
   }

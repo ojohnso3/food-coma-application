@@ -42,7 +42,7 @@ public final class Main {
     new Main(args).run();
   }
 
-  private String[] args;
+  private final String[] args;
 
   private Main(String[] inputArgs) {
     args = inputArgs;
@@ -93,17 +93,14 @@ public final class Main {
         Map<String, String[]> paramsMap = new HashMap<>();
         paramsMap.put("x", new String[] {"x"});
         Recipe[] recipes = FieldParser.getRecipesFromQuery("pasta", dietaryRestrictions, paramsMap);
-        for (int i = 0; i < recipes.length; i++) {
-          System.out.println(recipes[i].getUri());
+        for (Recipe recipe : recipes) {
+          System.out.println(recipe.getUri());
         }
-      } catch (IOException | InterruptedException | APIException | SQLException | ClassNotFoundException ie) {
+      } catch (IOException | InterruptedException | APIException | SQLException
+              | ClassNotFoundException ie) {
         ie.printStackTrace();
+      }
     }
-
-    }
-
     // TODO: add functionality here
-
   }
-  
 }
