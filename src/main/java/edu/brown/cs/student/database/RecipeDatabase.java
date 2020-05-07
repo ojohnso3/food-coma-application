@@ -12,11 +12,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.sql.Connection;
-import java.util.Map;
 
 import com.google.common.io.Files;
 
@@ -177,7 +174,7 @@ public final class RecipeDatabase {
    * @param query - the query that corresponds to the given recipes.
    * @param uriList -  a list of recipes that conform to the given query.
    */
-  public static void insertQuery(String query, String[] uriList, List<String> restrictions, Map<String, String[]> paramsMap) throws SQLException {
+  public static void insertQuery(String query, String[] uriList, Set<String> restrictions, Map<String, String[]> paramsMap) throws SQLException {
 //    if (checkQueryInDatabase(query)) {
 //      throw new SQLException("duplicate");
 //    }
@@ -365,7 +362,7 @@ public final class RecipeDatabase {
    * @param query - String uri of a recipe.
    * @return - boolean representing whether the given uri is in the database.
    */
-  public static boolean checkQueryInDatabase(String query, List<String> restrictions){
+  public static boolean checkQueryInDatabase(String query, Set<String> restrictions){
 
     boolean retVal = false;
     try {
@@ -383,7 +380,7 @@ public final class RecipeDatabase {
     return retVal;
   }
 
-  public static String prepRestrictionsForDB(List<String> restrictions){
+  public static String prepRestrictionsForDB(Set<String> restrictions){
     String insertThis = "";
     if(restrictions.contains("alcohol-free")){
       insertThis+="a";
@@ -410,19 +407,25 @@ public final class RecipeDatabase {
        * @param query - the query to find recipes for.
        * @return - a list of the recipes that correspond to the given query.
        */
-  public static List<String> getQueryURIListFromDatabase(String query, List<String> restrictions, Map<String, String[]> paramsMap) {
+  public static List<Recipe> getQueryRecipesFromDatabase(String query, Set<String> restrictions, Map<String, String[]> paramsMap) {
     List<String> recipesFromExactQuery = new ArrayList<String>();
-
+    List<Recipe> recipesFromExact = new ArrayList<>();
     try {
       PreparedStatement prep = conn.prepareStatement("SELECT recipe_uri FROM new_queries WHERE query = ? AND restrictions = ?");
+
+      System.out.println("query: " +query);
       prep.setString(1, query);
+      System.out.println("prepRest: " + prepRestrictionsForDB(restrictions));
       prep.setString(2, prepRestrictionsForDB(restrictions));
       ResultSet recipeSet = prep.executeQuery();
       while (recipeSet.next()) {
         String uri = recipeSet.getString("recipe_uri");
-        if (FieldParser.checkRecipeValidity(RecipeDatabase.getRecipeFromURI(uri), restrictions, paramsMap)) {
+
+        Recipe currRecipe = RecipeDatabase.getRecipeFromURI(uri);
+//        if (FieldParser.checkRecipeValidity(currRecipe, restrictions, paramsMap)) {
           recipesFromExactQuery.add(uri);
-        }
+          recipesFromExact.add(currRecipe);
+//        }
       }
       prep.close();
       recipeSet.close();
@@ -436,24 +439,27 @@ public final class RecipeDatabase {
       e.printStackTrace();
     }
 
-    return recipesFromExactQuery;
+    return recipesFromExact;
   }
       /**
        * Function to find recipes whose labels are similar to the given query.
        * @param query - the query to search on.
        * @return - a list of recipe uris that correspond to the given query.
        */
-  public static List<String> getSimilar(String query, List<String> dietaryRestrictions, Map<String, String[]> paramsMap) {
+  public static List<Recipe> getSimilar(String query, Set<String> dietaryRestrictions, Map<String, String[]> paramsMap) {
 
     List<String> recipesFromSimilarQuery = new ArrayList<>();
+    List<Recipe> recipesFromSimilar = new ArrayList<>();
     try {
       String q = "%" + query + "%";
       PreparedStatement prep = conn.prepareStatement("SELECT uri FROM recipe WHERE label LIKE ?");
       prep.setString(1,q);
       ResultSet recipeSet = prep.executeQuery();
       while (recipeSet.next()) {
-        if (FieldParser.checkRecipeValidity(RecipeDatabase.getRecipeFromURI(recipeSet.getString("uri")), dietaryRestrictions, paramsMap)) {
+        Recipe currRecipe = RecipeDatabase.getRecipeFromURI(recipeSet.getString("uri"));
+        if (FieldParser.checkRecipeValidity(currRecipe, dietaryRestrictions, paramsMap)) {
           recipesFromSimilarQuery.add(recipeSet.getString("uri"));
+          recipesFromSimilar.add(currRecipe);
         }
       }
       recipeSet.close();
@@ -467,7 +473,7 @@ public final class RecipeDatabase {
     } catch (IOException e) {
       e.printStackTrace();
     }
-    return recipesFromSimilarQuery;
+    return recipesFromSimilar;
   }
 
   /**

@@ -43,7 +43,7 @@ public class RecipeDeserializer implements JsonDeserializer<Recipe> {
         double totalDailyQuantity = currDailyNutrientObject.get("quantity").getAsDouble();
         nutrientArray[0] = totalDailyQuantity;
       } else {
-        nutrientArray[0] = 0;
+        nutrientArray[0] = 0.;
       }
       if (totalNutrientsObject.has(code)) {
         JsonElement currNutrientJson = totalNutrientsObject.get(code);
@@ -52,7 +52,7 @@ public class RecipeDeserializer implements JsonDeserializer<Recipe> {
 
         nutrientArray[1] = totalNutrientQuantity;
       } else {
-        nutrientArray[1] = 0;
+        nutrientArray[1] = 0.;
       }
       nutrients.put(code, nutrientArray);
     }

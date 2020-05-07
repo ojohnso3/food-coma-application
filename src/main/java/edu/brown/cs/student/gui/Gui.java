@@ -52,13 +52,13 @@ public class Gui {
   private Set<String> clickedSet;
   private final Set<String> nutrients;
   private String prevQuery;
-  private final ArrayList<String> prevRestrictions;
+  private final Set<String> prevRestrictions;
   public Gui() {
     clickedSet  = new HashSet<>();
     nutrients = new HashSet<>();
-    prevRestrictions = new ArrayList<>();
+    prevRestrictions = new HashSet<String>();
   }
-  
+
   private static FreeMarkerEngine createEngine() {
     Configuration config = new Configuration();
     File templates = new File("src/main/resources/spark/template/freemarker");
@@ -167,7 +167,7 @@ public class Gui {
       Map<String, String[]> simpleRecipeList = new HashMap<String, String[]>();
       try {
         NutrientInfo.createNutrientsList();
-        List<String> restrictions = new ArrayList<>();
+        Set<String> restrictions = new HashSet<>();
         prevRestrictions.clear();
         for (String healthKey : healthKeys) {
 //          System.out.println("HEALTH KEY IS:" + healthKey + "equals: "
@@ -524,9 +524,16 @@ public class Gui {
         System.out.println("ABOUT TO ENTER " + recipeURI);
         RecipeDatabase.loadDatabase("/data/recipeDatabase.sqlite3");
         currRecipe = RecipeDatabase.getRecipeFromURI(recipeURI);
-      } catch (SQLException | InterruptedException | APIException | IOException
-              | ClassNotFoundException e) {
-        System.out.println("SQLException getting recipe from database");
+      } catch (SQLException e){
+        System.out.println("SQLException getting recipe from database: " + e.getMessage());
+      } catch(InterruptedException e){
+        System.out.println("InterruptedException getting recipe from database: " + e.getMessage());
+      } catch(APIException e){
+        System.out.println("API Exception getting recipe from database: " + e.getMessage());
+      } catch(IOException e){
+        System.out.println("IOException getting recipe from database: " + e.getMessage());
+      } catch(ClassNotFoundException e) {
+        System.out.println("ClassNotFoundException getting recipe from database: " + e.getMessage());
       }
       if (currRecipe == null) {
         try {
@@ -561,8 +568,14 @@ public class Gui {
         System.out.println("User: " + currUser);
         recommendations = recommender.makeRecommendation(prevQuery, new HashMap<>(),
                 prevRestrictions);
-      } catch (RecommendationException | InterruptedException | IOException | APIException e) {
-        e.printStackTrace();
+      } catch (RecommendationException e){
+        System.out.println("RecommendationException in getting recommendations on recipe page: " + e.getMessage());
+      } catch(InterruptedException e){
+        System.out.println("InterruptedException in getting recommendations on recipe page: " + e.getMessage());
+      } catch( IOException e){
+        System.out.println("IOException in getting recommendations on recipe page: " + e.getMessage());
+      } catch(APIException e) {
+        System.out.println("APIException in getting recommendations on recipe page: " + e.getMessage());
       }
 
       Map<String, String[]> recipePageRecipes = new HashMap<>();

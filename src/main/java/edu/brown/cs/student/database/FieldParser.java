@@ -20,6 +20,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  *
@@ -59,7 +60,7 @@ public final class FieldParser {
    * @return - String of each element in the restrictions list and the params map formatted for
    * uris.
    */
-  private static String handleParamsAndRestrictions(List<String> dietaryRestrictions,
+  private static String handleParamsAndRestrictions(Set<String> dietaryRestrictions,
                                                     Map<String, String[]> paramsMap) {
     StringBuilder line = new StringBuilder();
     for (String s : dietaryRestrictions) {
@@ -155,7 +156,7 @@ public final class FieldParser {
    * more details.
    * @return - an array of recipes that correspond to the given query in the api.
    */
-  public static Recipe[] getRecipesFromQuery(String query, List<String> dietaryRestrictions,
+  public static Recipe[] getRecipesFromQuery(String query, Set<String> dietaryRestrictions,
                                              Map<String, String[]> paramsMap)
       throws IOException, InterruptedException, APIException {
     query = query.replace(" ", "+");
@@ -198,35 +199,19 @@ public final class FieldParser {
    * @param paramsMap - the map that contains which diet and health labels to check for.
    * @return - true if the Recipe has the correct labels, false otherwise.
    */
-  public static boolean checkRecipeValidity(Recipe r, List<String> dietaryRestrictions,
+  public static boolean checkRecipeValidity(Recipe r, Set<String> dietaryRestrictions,
                                              Map<String, String[]> paramsMap) {
     List<String> dietLabels = r.getDietLabels();
     List<String> healthLabels = r.getHealthLabels();
     for (String label : dietaryRestrictions) {
+      System.out.println("valid loop");
       if (!healthLabels.contains(label)) {
 //        System.out.println("LABEL " + label);
+        System.out.println("contains label?");
         return false;
       }
     }
-//    System.out.println(r.getLabel());
-//    System.out.println("params map: " + paramsMap);
-//    System.out.println("params map health: " + paramsMap.get("health"));
-    if(paramsMap.get("health") != null){
-      for (String param : paramsMap.get("health")) {
-        if (!healthLabels.contains(param)) {
-          return false;
-        }
-      }
-    }
-
-    if(paramsMap.get("diet") != null) {
-      for (String param : paramsMap.get("diet")) {
-        if (!dietLabels.contains(param)) {
-          return false;
-        }
-      }
-    }
-    System.out.println("Acceptable labels");
+    System.out.println("OK Acceptable labels");
     return true;
   }
 
@@ -238,42 +223,42 @@ public final class FieldParser {
    * more details.
    * @return - an array of recipes that correspond to the given query in the api.
    */
-  public static List<Recipe> pullPrevRecipes(String query, List<String> dietaryRestrictions,
-                                             Map<String, String[]> paramsMap)
-          throws IOException, InterruptedException, APIException, SQLException {
-    List<String> uris = RecipeDatabase.getQueryURIListFromDatabase(query, dietaryRestrictions, paramsMap);
-    List<Recipe> recipesForRet = new ArrayList<>();
-    for (String s : uris) {
-      Recipe currRec = RecipeDatabase.getRecipeFromURI(s);
-      if (checkRecipeValidity(currRec, dietaryRestrictions, paramsMap)) {
-        System.out.println("VALID RECIPE: " + currRec.getLabel());
-        recipesForRet.add(currRec);
-      }
-    }
-    return recipesForRet;
-  }
+//  public static List<Recipe> pullPrevRecipes(String query, Set<String> dietaryRestrictions,
+//                                             Map<String, String[]> paramsMap)
+//          throws IOException, InterruptedException, APIException, SQLException {
+//    List<Recipe> uris = RecipeDatabase.getQueryRecipesFromDatabase(query, dietaryRestrictions, paramsMap);
+//    List<Recipe> recipesForRet = new ArrayList<>();
+//    for (String s : uris) {
+//      Recipe currRec = RecipeDatabase.getRecipeFromURI(s);
+//      if (checkRecipeValidity(currRec, dietaryRestrictions, paramsMap)) {
+//        System.out.println("VALID RECIPE: " + currRec.getLabel());
+//        recipesForRet.add(currRec);
+//      }
+//    }
+//    return recipesForRet;
+//  }
 
   /**
    * This function retrieves recipes that correspond to the given query in the api.
    * @param query - the desired query to search for in the api.
-   * @param dietaryRestrictions - the diet and health labels to include in the query.
+   * @param restrictions - the diet and health labels to include in the query.
    * @param paramsMap - the map of constraints for the query -- see comment in InputMatcher for
    * more details.
    * @return - an array of recipes that correspond to the given query in the api.
    */
-  public static List<Recipe> pullSimilar(String query, List<String> dietaryRestrictions,
-                                         Map<String, String[]> paramsMap) throws SQLException,
-      InterruptedException, IOException, APIException {
-    List<String> uris = RecipeDatabase.getSimilar(query, dietaryRestrictions, paramsMap);
-    List<Recipe> recipeList = new ArrayList<>();
-    for (String s : uris) {
-      Recipe currRec = RecipeDatabase.getRecipeFromURI(s);
-      if (checkRecipeValidity(currRec, dietaryRestrictions, paramsMap)) {
-        recipeList.add(RecipeDatabase.getRecipeFromURI(s));
-      }
-    }
-    return recipeList;
-  }
+//  public static List<Recipe> pullSimilar(String query, Set<String> dietaryRestrictions,
+//                                         Map<String, String[]> paramsMap) throws SQLException,
+//      InterruptedException, IOException, APIException {
+//    List<String> uris = RecipeDatabase.getSimilar(query, dietaryRestrictions, paramsMap);
+//    List<Recipe> recipeList = new ArrayList<>();
+//    for (String s : uris) {
+//      Recipe currRec = RecipeDatabase.getRecipeFromURI(s);
+//      if (checkRecipeValidity(currRec, dietaryRestrictions, paramsMap)) {
+//        recipeList.add(RecipeDatabase.getRecipeFromURI(s));
+//      }
+//    }
+//    return recipeList;
+//  }
 
 
 
@@ -281,16 +266,16 @@ public final class FieldParser {
 
 
 
-  public static Recipe[] getRecipesDBandAPI(String query, List<String> restrictions, Map<String, String[]> paramsMap){
+  public static Recipe[] getRecipesDBandAPI(String query, Set<String> restrictions, Map<String, String[]> paramsMap){
     Recipe[] recipes = new Recipe[0];
     try{
     if(RecipeDatabase.checkQueryInDatabase(query, restrictions)){
-      System.out.println("QUERY ALREADY IN DB...");
-      List<String> uris = RecipeDatabase.getQueryURIListFromDatabase(query, restrictions, paramsMap);
-      System.out.println("uris size is " + uris.size());
-      recipes = new Recipe[uris.size()];
-      for(int i = 0; i < uris.size(); i++){
-        recipes[i] = RecipeDatabase.getRecipeFromURI(uris.get(i));
+      System.out.println("QUERY ALREADY IN DB...Query: " + query + "Rest: " + RecipeDatabase.prepRestrictionsForDB(restrictions));
+      List<Recipe> exactQueryRecipes = RecipeDatabase.getQueryRecipesFromDatabase(query, restrictions, paramsMap);
+      System.out.println("uris size is " + exactQueryRecipes.size());
+      recipes = new Recipe[exactQueryRecipes.size()];
+      for(int i = 0; i < exactQueryRecipes.size(); i++){
+        recipes[i] = exactQueryRecipes.get(i);
       }
 //      simpleRecipeList = Gui.this.setUpRecipesList(recipes);
       System.out.println("Recipes size is (2): " + recipes.length);
@@ -323,22 +308,12 @@ public final class FieldParser {
   }
 
       if(recipes.length==0){
-    List<String> sim = RecipeDatabase.getSimilar(query, restrictions, paramsMap);
+    List<Recipe> sim = RecipeDatabase.getSimilar(query, restrictions, paramsMap);
     if(sim.size() > 0){
       recipes = new Recipe[sim.size()];
       System.out.println("SIMILAR HAS BEEN CALLED. SIZE OF SIMILAR IS: " + sim.size());
       for(int i = 0; i < sim.size(); i ++){
-        try {
-          recipes[i] = RecipeDatabase.getRecipeFromURI(sim.get(i));
-        } catch (SQLException e) {
-          System.out.println("SQLException getting similar recipes from query. Message:" + e.getMessage());
-        } catch (InterruptedException e) {
-          System.out.println("InterruptedException getting similar recipes from query. Message:" + e.getMessage());
-        } catch (APIException e) {
-          System.out.println("API Exception getting similar recipes from query. Message:" + e.getMessage());
-        } catch (IOException e) {
-          System.out.println("IOException getting similar recipes from query. Message:" + e.getMessage());
-        }
+          recipes[i] = sim.get(i);
       }
 //      simpleRecipeList = Gui.this.setUpRecipesList(recipes);
     }
