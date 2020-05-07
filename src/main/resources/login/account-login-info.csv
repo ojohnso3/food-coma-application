@@ -1,12 +1,2 @@
 username,passwordHash,salt
-
-newuser,$2a$10$akFg8n2QM/IolEP39GV/fOaSHtKunyv30/SfdJ32OJ4WIxCvQssmq,$2a$10$akFg8n2QM/IolEP39GV/fO
-newuser22,$2a$10$.YOQo.8wPNb8SrRaYVDvm.veJwvCg.rbVNNhtcV5ogq3GNhxQyiFK,$2a$10$.YOQo.8wPNb8SrRaYVDvm.
-abcd,$2a$10$x0a7NkRTpjGbExk87VZR4.I5iqxqfa0QRCUcuoNEQdw23m9O4VPlC,$2a$10$x0a7NkRTpjGbExk87VZR4.
-newuser2,$2a$10$B1U.R3xnA/kFWE0dFib8ROKs9UzzKDxfZQRlUitPA0raI354xtc2u,$2a$10$B1U.R3xnA/kFWE0dFib8RO
-alskfdj,$2a$10$qbBaMN6h4Eh1PxdV9mj2gucCGjOz3JCOunVmQLpQORiU5PM0kiUQy,$2a$10$qbBaMN6h4Eh1PxdV9mj2gu
-2345678,$2a$10$Sh.RXS5/tm0u6wzGi8iuV.1dlQ2/OBYxwLeU/rm0aRlTKq2i6HlEe,$2a$10$Sh.RXS5/tm0u6wzGi8iuV.
-456765678,$2a$10$5Q2nvwUKToc1C5HvOuFG6.7f5EcepTp7ZC3oIeI9E4MJfM88An5dm,$2a$10$5Q2nvwUKToc1C5HvOuFG6.
-sjkdf,$2a$10$liTQmEEvOhE1rsW5Zf9NCuibWgEQUO5vyIPvUwN7JUJcjyXLvumTq,$2a$10$liTQmEEvOhE1rsW5Zf9NCu
-56765678,$2a$10$fZKaRL0aNvX27nuEex2O4uplNRTMfFIgCfXE2hc2YMKzgXOCT/6Ea,$2a$10$fZKaRL0aNvX27nuEex2O4u
-user111,$2a$10$xr5NS0gFZuXAJQvWoJjC..jHakjMY/vtLXgnBcr.swExR2kRjjShu,$2a$10$xr5NS0gFZuXAJQvWoJjC..
+newusername,$2a$10$iQfEmiYKD0eNrCkmI/iz6uCO9G7hAV.eRQpmqwTHlt0r4CNUH7TJ2,$2a$10$iQfEmiYKD0eNrCkmI/iz6u

@@ -60,6 +60,7 @@ h1 {
     width: 100%;
     height: 70px;
     border-bottom: 3px solid black;
+    z-index: 10;
 }
 
 .bar_item {
@@ -95,10 +96,12 @@ a:hover {
 }
 .home_slides {
     justify-content: center;
-    margin: 135px;
+    margin-top: 132px;
     border: solid 3px black;
-    height: 650px;
-    width: 79.6%;
+    height: 630px;
+    width: 100px;
+    width: 99.6%;
+    /* width: 79.6%; */
     display: cover;
     /* margin-left: auto;
     margin-right: auto; */
@@ -288,6 +291,8 @@ li {
     color:black;
     background-color: #fee6c2;
     border: solid 2px black;
+    overflow-y: auto;
+    height: 500px;
 }
 
 .column2{
@@ -295,6 +300,8 @@ li {
     background-color: #AFD275;
     width: 30%;
     border: solid 2px black;
+    overflow-y: auto;
+    height: 500px;
 }
 
 .shoppingBag{
@@ -394,7 +401,7 @@ li {
     text-align: center;
     margin-left: auto;
     margin-right: auto;
-    background-color: #8de0b7;
+    background-color: #AFD275;
     padding: 20px;
 }
 
@@ -488,34 +495,36 @@ input[type="submit"].survey_button {
 
 /* Dropdown Button */
 .dropbtn {
-    background-color: #77e777;
-    color: white;
+    background-color: #C2CAD0;
+    color: black;
     padding: 16px;
     font-size: 16px;
     border: none;
 }
 
 /* The container <div> - needed to position the dropdown content */
-.dropdown {
+/* .dropdown {
     position: relative;
     display: inline-block;
-}
+} */
 
 /* Dropdown Content (Hidden by Default) */
 .dropdown-content {
     display: none;
     position: absolute;
     background-color: slategray;
-    min-width: 160px;
+    /* min-width: 160px; */
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
-    jutify-content:center;
+    justify-content: center;
+    padding: 20px;
+    text-align: left;
 }
 
 /* Links inside the dropdown */
 .dropdown-content a {
     color: black;
-    padding: 12px 16px;
+    /* padding: 12px 16px; */
     text-decoration: none;
     display: block;
 }
@@ -524,10 +533,10 @@ input[type="submit"].survey_button {
 .dropdown-content a:hover {background-color: #ddd;}
 
 /* Show the dropdown menu on hover */
-.dropdown:hover .dropdown-content {display: block;}
+.dropdown:hover .dropdown-content {display: inline-block;}
 
 /* Change the background color of the dropdown button when the dropdown content is shown */
-.dropdown:hover .dropbtn {background-color: #77e7af;}
+.dropdown:hover .dropbtn {background-color: #e8ebed;}
 
 .portrait {
     width: 100%;
@@ -537,4 +546,20 @@ input[type="submit"].survey_button {
 .featured {
     width: 100%;
     height: 500px;
+}
+
+.logbox {
+    width: 350px;
+    height: 40px;
+    font-size: 24px;
+    text-align: center;
+    margin: 5px;
+}
+
+#last_q {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+    width: 450px;
+    font-size: 20px;
 }

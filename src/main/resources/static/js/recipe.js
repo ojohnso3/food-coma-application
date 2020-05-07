@@ -28,6 +28,7 @@ function getRecipes(params){
         document.getElementById("title").innerHTML = " <h1><a target=_blank href=\"" + obj.URL + "\"> " + obj.title + " </a></h1>";
         console.log(obj.URL);
         document.getElementById("title").href = obj.URL;
+        document.getElementById("link_note").innerHTML = "<em>Note</em>: click title above to view full recipe.";
         $.each(obj.recipeList, function printRecipe(key, value){
             console.log(key + ": " + value[0]);
             document.getElementById("recipes").innerHTML += " <h6 id=\"recipes\"><a href=\"/recipe/" + key + "\"> " + value[0] + " </a></h6>";
@@ -37,6 +38,7 @@ function getRecipes(params){
             document.getElementById("ingredients").innerHTML += obj.ingredients[i] + "</br>";
             console.log(obj.ingredients[i]);
         }
+        document.getElementById("nutrients_title").innerHTML = "Recipe Nutrients";
         document.getElementById("nutrients").innerHTML += obj.Nutrients[0] + ": " + obj.Nutrients[1] + " kcal <br>";
         document.getElementById("nutrients").innerHTML += obj.Nutrients[2] + ": " + obj.Nutrients[3] + " kcal <br>";
         document.getElementById("nutrients").innerHTML += obj.Nutrients[4] + ": " + obj.Nutrients[5] + " kcal <br>";

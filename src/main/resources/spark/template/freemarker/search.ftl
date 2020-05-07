@@ -28,7 +28,7 @@
       <br><br><br>
 
       <div class="dropdown">
-        <button class="dropbtn">Select Nutrient Preferences</button>
+        <button class="dropbtn">Select Dietary Restrictions</button>
         <div class="dropdown-content">
           <input type="checkbox" id="vegan" value="" onclick="toggleNutrition('vegan')">
           <label for="vegan">Vegan</label><br>
@@ -79,7 +79,7 @@
 <br>
 
   <p class="output">
-  <h3 style="text-decoration:underline">List of recipes</h3>
+  <h2 id="recititle" style="text-decoration:underline"></h2><br>
   <h2 id="isEmpty"></h2>
   <div class="bagContainer">
     <div class="shopBag" id="shoppingBag0"><img class="shoppingBag"></div>
