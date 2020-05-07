@@ -20,7 +20,7 @@ public class Recommender {
   private final int dim = NutrientInfo.getNutrientCodes().size();
   private static final double USER_PREF_WEIGHT = 6.;
   private static final double MAIN_NUT_WEIGHT = 3.;
-  private static final double SEC_NUT_WEIGHT = 3.;
+  private static final double SEC_NUT_WEIGHT = 1.;
   private final User user;
 
   /**
