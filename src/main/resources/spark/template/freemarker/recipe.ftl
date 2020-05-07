@@ -5,10 +5,10 @@
     <div id="container" class="container">
 
     </div>
+    <h4 id="link_note"></h4>
 
     <div class="row">
         <div class="column">
-            <h4><em>Note</em>: click title above to view full recipe.</h4>
             <h2 style="text-decoration: underline">Recipe Ingredients: </h2>
             <p id="ingredients" aria-live=polite></p>
             <img class=recipeFood src="" id="foodImage">

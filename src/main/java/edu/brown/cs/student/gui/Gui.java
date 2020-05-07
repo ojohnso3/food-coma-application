@@ -310,12 +310,15 @@ public class Gui {
       
       for (String nutrient: nutrientsMap.keySet()) {
         String currNu = map.value(nutrient);
+        System.out.println("1: " + nutrient + "2: " + currNu);
         if (currNu.equals("true")) {
           nutrients.add(nutrientsMap.get(nutrient));
         }
       }
       
       String output;
+      
+      System.out.println("SIZE OF NUT " + nutrients.size());
       
       if (nutrients.size() > 2) {
         System.out.println(nutrients);

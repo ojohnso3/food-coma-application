@@ -24,20 +24,20 @@ submit.click(event => {
     const iron = $("#iron").is(":checked");
     const fiber = $("#fiber").is(":checked");
     const potassium = $("#potassium").is(":checked");
-    const magnesium = $("#magnesium").is(":checked");
+    // const magnesium = $("#magnesium").is(":checked");
     const sodium = $("#sodium").is(":checked");
-    const vitaminB6 = $("#vitaminB6").is(":checked");
+    // const vitaminB6 = $("#vitaminB6").is(":checked");
     const energy = $("#energy").is(":checked");
     const protein = $("#protein").is(":checked");
     const sugarsadded = $("#sugarsadded").is(":checked");
     const saturated = $("#saturated").is(":checked");
-    const vitaminE = $("#vitaminE").is(":checked");
-    const vitaminA = $("#vitaminA").is(":checked");
+    // const vitaminE = $("#vitaminE").is(":checked");
+    // const vitaminA = $("#vitaminA").is(":checked");
     const vitaminB12 = $("#vitaminB12").is(":checked");
-    const vitaminC = $("#vitaminC").is(":checked");
+    // const vitaminC = $("#vitaminC").is(":checked");
     const vitaminD = $("#vitaminD").is(":checked");
-    const vitaminK = $("#vitaminK").is(":checked");
-
+    // const vitaminK = $("#vitaminK").is(":checked");
+    
     const postParameters = {
         username: getCookie("username"),
         feedback: feedback.val(),
@@ -52,19 +52,19 @@ submit.click(event => {
         Iron: iron,
         Fiber: fiber,
         Potassium: potassium,
-        Magnesium: magnesium,
+        // Magnesium: magnesium,
         Sodium: sodium,
-        VitaminB6: vitaminB6,
+        // VitaminB6: vitaminB6,
         Energy: energy,
         Protein: protein,
         Sugarsadded: sugarsadded,
         Saturated: saturated,
-        VitaminE: vitaminE,
-        VitaminA: vitaminA,
+        // VitaminE: vitaminE,
+        // VitaminA: vitaminA,
         VitaminB12: vitaminB12,
-        VitaminC: vitaminC,
+        // VitaminC: vitaminC,
         VitaminD: vitaminD,
-        VitaminK: vitaminK
+        // VitaminK: vitaminK
     };
 
     $.post("/survey_post", postParameters, response => {

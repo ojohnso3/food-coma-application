@@ -6,12 +6,12 @@
 <div class="queryBox">
     <div class="queryOption">
         <h2> SIGN-IN </h2>
-        <input id="log_user" class="u-full-width"
+        <input id="log_user" class="logbox"
             type="text"
             placeholder="Username"
             value="">
         <br>    
-        <input id="log_pass" class="u-full-width"
+        <input id="log_pass" class="logbox"
             type="password"
             placeholder="Password"
             value="">
@@ -26,17 +26,17 @@
 
     <div class="queryOption">
         <h2> SIGN-UP </h2>
-        <input id="user" class="u-full-width"
+        <input id="user" class="logbox"
             type="text"
             placeholder="Username"
             value="">
         <br>    
-        <input id="pass" class="u-full-width"
+        <input id="pass" class="logbox"
             type="password"
             placeholder="Password"
             value="">
         <br>
-        <input id="pass2" class="u-full-width"
+        <input id="pass2" class="logbox"
             type="password"
             placeholder="Confirm Password"
             value="">

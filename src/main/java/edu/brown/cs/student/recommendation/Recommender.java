@@ -1,9 +1,12 @@
 package edu.brown.cs.student.recommendation;
 
-import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
-import edu.brown.cs.student.database.APIException;
 import edu.brown.cs.student.database.FieldParser;
 import edu.brown.cs.student.food.NutrientInfo;
 import edu.brown.cs.student.food.Recipe;
@@ -22,7 +25,11 @@ public class Recommender {
   private static final double MAIN_NUT_WEIGHT = 3.;
   private static final double SEC_NUT_WEIGHT = 1.;
   private final User user;
+<<<<<<< HEAD
   private static List<Double> distances;
+=======
+  private RecipeNode targetNode;
+>>>>>>> 7b5a232c836c168f6a54b39b3f886e186612c3fc
 
   /**
    * constructor; should be called on initial survey or on user recreation.
@@ -30,6 +37,10 @@ public class Recommender {
    */
   public Recommender(User user) {
     this.user = Objects.requireNonNullElseGet(user, User::new);
+  }
+
+  public RecipeNode getTargetNode() {
+    return targetNode;
   }
 
   /**
@@ -40,8 +51,7 @@ public class Recommender {
    * @return List of recommended recipes
    */
   public List<Recipe> makeRecommendation(String input, Map<String, String[]> paramsMap,
-                                         Set<String> restrictions) throws
-          RecommendationException, InterruptedException, IOException, APIException {
+                                         Set<String> restrictions) throws RecommendationException {
     try {
       this.recipeTree = new KDTree<>(dim);
       // User History: get, nodify, and normalize previous recipes
@@ -49,11 +59,12 @@ public class Recommender {
 
       //generate a target node for an ideal recipe using the history
       RecipeNode target = getTargetNode(prevRecipeNodes);
+      this.targetNode = target;
 
       // Nutrients: get the nutrients to weight higher
       List<Double> weightedAxes = getNutrientIndices();
 
-      Recipe[] recipesArray = new Recipe[0];
+      Recipe[] recipesArray;
       // Query Recs: get recipes based on the query and put into a queried recipes tree
       recipesArray = FieldParser.getRecipesDBandAPI(input, restrictions, paramsMap);
       List<Recipe> recipesList = Arrays.asList(recipesArray);
@@ -74,7 +85,14 @@ public class Recommender {
       for (RecipeNode node : recNodes) {
         recommendations.add(node.getRecipe());
       }
+<<<<<<< HEAD
       distances = this.recipeTree.getDistances();
+=======
+      List<Double> distances = this.recipeTree.getDistances();
+      for (Double d : distances) {
+        System.out.println(d);
+      }
+>>>>>>> 7b5a232c836c168f6a54b39b3f886e186612c3fc
       return recommendations;
     } catch (KDTreeException e) {
       throw new RecommendationException(e.getMessage());
