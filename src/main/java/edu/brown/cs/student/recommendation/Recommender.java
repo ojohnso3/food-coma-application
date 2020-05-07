@@ -1,10 +1,7 @@
 package edu.brown.cs.student.recommendation;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import edu.brown.cs.student.database.APIException;
 import edu.brown.cs.student.database.FieldParser;
@@ -31,8 +28,7 @@ public class Recommender {
    * @param user - user
    */
   public Recommender(User user) {
-    System.out.println(user.getUsername());
-    this.user = user;
+    this.user = Objects.requireNonNullElseGet(user, User::new);
   }
 
   /**
