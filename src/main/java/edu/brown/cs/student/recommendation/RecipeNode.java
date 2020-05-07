@@ -40,7 +40,6 @@ public class RecipeNode implements KDNode<RecipeNode> {
 
   @Override
   public List<Double> getCoords() {
-    System.out.println("COORDS: " + this.coordinates);
     return this.coordinates;
   }
 
