@@ -25,11 +25,8 @@ public class Recommender {
   private static final double MAIN_NUT_WEIGHT = 3.;
   private static final double SEC_NUT_WEIGHT = 1.;
   private final User user;
-<<<<<<< HEAD
   private static List<Double> distances;
-=======
   private RecipeNode targetNode;
->>>>>>> 7b5a232c836c168f6a54b39b3f886e186612c3fc
 
   /**
    * constructor; should be called on initial survey or on user recreation.
@@ -85,14 +82,8 @@ public class Recommender {
       for (RecipeNode node : recNodes) {
         recommendations.add(node.getRecipe());
       }
-<<<<<<< HEAD
       distances = this.recipeTree.getDistances();
-=======
-      List<Double> distances = this.recipeTree.getDistances();
-      for (Double d : distances) {
-        System.out.println(d);
-      }
->>>>>>> 7b5a232c836c168f6a54b39b3f886e186612c3fc
+
       return recommendations;
     } catch (KDTreeException e) {
       throw new RecommendationException(e.getMessage());

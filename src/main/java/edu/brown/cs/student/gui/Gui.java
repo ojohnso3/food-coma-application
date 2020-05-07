@@ -127,6 +127,9 @@ public class Gui {
     }
   }
 
+  /*
+   * This class handles post requests from the Search page
+   */
   private class SearchPostHandler implements Route {
     @Override
     public String handle(Request req, Response res) {
@@ -165,86 +168,23 @@ public class Gui {
         Set<String> restrictions = new HashSet<>();
         prevRestrictions.clear();
         for (String healthKey : healthKeys) {
-//          System.out.println("HEALTH KEY IS:" + healthKey + "equals: "
-//          + healthInfo.get(healthKey));
           if (healthInfo.get(healthKey).equals("true")) {
             restrictions.add(healthKey);
             prevRestrictions.add(healthKey);
-//            System.out.println("ADDED: " + healthKey);
-//            paramsMap.put(healthKey, healthInfo.get(healthKey));
-
           }
         }
 
         RecipeDatabase.loadDatabase("data/recipeDatabase.sqlite3");
-        //TODO: Make sure that health labels etc are what the user has requested
-//        if(RecipeDatabase.checkQueryInDatabase(query)){
-//          List<String> uris = RecipeDatabase.getQueryURIListFromDatabase(query);
-//          System.out.println("uris size is " + uris.size());
-//          recipes = new Recipe[uris.size()];
-//          for(int i = 0; i < uris.size(); i++){
-//            recipes[i] = RecipeDatabase.getRecipeFromURI(uris.get(i));
-//          }
-//          simpleRecipeList = Gui.this.setUpRecipesList(recipes);
-//        } else if(!RecipeDatabase.checkQueryInDatabase(query)){
-//          System.out.println("MAKING API CALL");
-//
-//          recipes = FieldParser.getRecipesFromQuery(query, restrictions, paramsMap);
-//          String[] recipesForDb = new String[recipes.length];
-//          for(int i = 0; i < recipes.length; i++){
-//            recipesForDb[i] = recipes[i].getUri();
-//          }
-//          RecipeDatabase.insertQuery(query, recipesForDb);
-//          simpleRecipeList = Gui.this.setUpRecipesList(recipes);
-//
-//        }
-//
-//      } catch (IOException e) {
-//        System.out.println("IOException getting recipes from query: " + e.getMessage());
-//      } catch (InterruptedException e) {
-//        System.out.println("InterruptedException getting recipes from query");
-//      } catch (APIException e) {
-//        System.out.println("API Exception getting recipes from query. Message:  " + e.getMessage());
-//      } catch (ClassNotFoundException e) {
-//        System.out.println("Database not found when loading during search");
-//      } catch (SQLException e){
-//        System.out.println("SQLException in getting recipes from database: " + e.getMessage());
-//      }
-//
-//      if(recipes.length==0){
-//        List<String> sim = RecipeDatabase.getSimilar(query);
-//        if(sim.size() > 0){
-//          recipes = new Recipe[sim.size()];
-//          System.out.println("SIMILAR HAS BEEN CALLED. SIZE OF SIMILAR IS: " + sim.size());
-//          for(int i = 0; i < sim.size(); i ++){
-//            try {
-//              recipes[i] = RecipeDatabase.getRecipeFromURI(sim.get(i));
-//            } catch (SQLException e) {
-//              System.out.println("SQLException getting similar recipes from query. Message:"
-//              + e.getMessage());
-//            } catch (InterruptedException e) {
-//              System.out.println("InterruptedException getting similar recipes from query. Message:"
-//              + e.getMessage());
-//            } catch (APIException e) {
-//              System.out.println("API Exception getting similar recipes from query. Message:"
-//              + e.getMessage());
-//            } catch (IOException e) {
-//              System.out.println("IOException getting similar recipes from query. Message:"
-//              + e.getMessage());
-//            }
-//          }
-//          simpleRecipeList = Gui.this.setUpRecipesList(recipes);
-//        }
-//      }
         recipes = FieldParser.getRecipesDBandAPI(query, restrictions, paramsMap);
         simpleRecipeList = Gui.this.setUpRecipesList(recipes);
 
       } catch (FileNotFoundException e) {
+        System.out.println("File Not Found Exception: " + e.getMessage());
       } catch( ClassNotFoundException e){
+        System.out.println("Class Not Found Exception: " + e.getMessage());
       }catch( SQLException e) {
-        }
-
-
+        System.out.println("SQLException: " + e.getMessage());
+      }
       Map<String, Object> variables = ImmutableMap.of("recipes", recipes, "simpleRecipeList",
               simpleRecipeList);
       return GSON.toJson(variables);
@@ -259,8 +199,6 @@ public class Gui {
   private HashMap<String, String[]> setUpRecipesList(Recipe[] recipes) {
     HashMap<String, String[]> simpleRecipeList = new HashMap<>();
     Pattern load = Pattern.compile("#recipe_(.+)");
-
-    //HOW LONG DO WE WANT THE RESULTS?? 10??????? .LENGTH????
     for (Recipe recipe : recipes) {
       recipesMap = new HashMap<>();
       recipesMap.put(recipe.getUri(), recipe);
@@ -268,14 +206,12 @@ public class Gui {
       fields[0] = recipe.getUrl();
       fields[1] = recipe.getUri();
       Matcher matchUri = load.matcher(recipe.getUri());
-
       if (matchUri.find()) {
         fields[1] = matchUri.group(1);
       } else {
         fields[1] = "error";
       }
       simpleRecipeList.put(recipe.getLabel(), fields);
-
     }
     return simpleRecipeList;
   }
@@ -551,8 +487,6 @@ public class Gui {
       for (int i = 0; i < currRecipe.getIngredients().size(); i++) {
         ingredientsList.add(currRecipe.getIngredients().get(i).getText());
       }
-//      HashMap<String, String> map = new HashMap<String, String>();
-//      Set<String> keys = recipes.keySet();
       List<Recipe> recommendations = new ArrayList<>();
       List<Double> foodComaWeights = new ArrayList<>();
       try {
@@ -564,12 +498,6 @@ public class Gui {
                 prevRestrictions);
       } catch (RecommendationException e){
         System.out.println("RecommendationException in getting recommendations on recipe page: " + e.getMessage());
-      } catch(InterruptedException e){
-        System.out.println("InterruptedException in getting recommendations on recipe page: " + e.getMessage());
-      } catch( IOException e){
-        System.out.println("IOException in getting recommendations on recipe page: " + e.getMessage());
-      } catch(APIException e) {
-        System.out.println("APIException in getting recommendations on recipe page: " + e.getMessage());
       }
 
       Map<String, String[]> recipePageRecipes = new HashMap<>();
@@ -613,9 +541,6 @@ public class Gui {
       for(Map.Entry<String, String[]> itm : recipeListSet){
         newMap.put(itm.getKey(), itm.getValue());
       }
-      for(Map.Entry<String, String[]> o : newMap.entrySet()) {
-        System.out.println("Score aaaa: " + o.getValue()[1]);
-      }
       ImmutableMap<String, Object> variables = ImmutableMap.<String, Object>builder()
               .put("recipeList", recipePageRecipes)
               .put("title", " " + actualName)
@@ -631,8 +556,6 @@ public class Gui {
   private class CompRecipes implements Comparator<Map.Entry<String, String[]>>{
     @Override
     public int compare(Map.Entry<String, String[]> t1, Map.Entry<String, String[]> t2) {
-      System.out.println("Val 1 " + t1.getValue()[1]);
-      System.out.println("Val 2 " + t2.getValue()[1]);
       return Double.compare(Double.parseDouble(t1.getValue()[1]), Double.parseDouble(t2.getValue()[1]));
     }
   }
@@ -646,7 +569,6 @@ public class Gui {
       collection.add(uri);
       collection.add(recipes.get(uri)[0]);
       collection.add(recipes.get(uri)[1]);
-      System.out.println("Score is: " + recipes.get(uri)[1]);
       coll[i] = collection;
       i++;
     }
@@ -663,7 +585,6 @@ public class Gui {
       } else {
         nutrients.add(nutrient);
       }
-//      System.out.println(nutrient);
       return null;
     }
   }

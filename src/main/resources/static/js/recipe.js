@@ -10,15 +10,6 @@ $(document).ready(() => {
     };
     console.log(postParams.url);
     getRecipes(postParams);
-
-    // $.post("/recipe/recipeuri", postParams, response => {
-    //     console.log("We made a get request!");
-    //     console.log(postParams.url);
-    //     // console.log(response);
-    //     // const output = JSON.parse(response);
-    //     // Do something with the response here
-    // });
-    // document.getElementById("validity").innerHTML = "START";
 });
 
 
@@ -34,20 +25,13 @@ function getRecipes(params){
         var sortedRecipes = obj.sortedArray;
         for(let i = 0; i < obj.sortedArray.length; i++){
             console.log(sortedRecipes[i]);
-            // console.log(sortedRecipes[i].get(2));
-            // console.log(sortedRecipes[i].get(3));
         }
-        // var sorted = Object.keys(map)
-        //     .sort(function(a,b) { return +b - +a })
-        //     .map(function(k) { return map[k] });
-
-        $.each(sorted, function printRecipe(key, value){
+        $.each(sortedRecipes, function printRecipe(key, value){
             if(first = true){
-                // sort.sort(compComaScores);
                 first = false;
             }
             console.log(key + ": " + value[0] + "foodcoma score: " + value[1]);
-            document.getElementById("recipes").innerHTML += " <h6 id=\"recipes\"><a href=\"/recipe/" + key + "\"> " + value[0] + " foodCOMA score: " + value[1] + " </a></h6>";
+            document.getElementById("recipes").innerHTML += " <h6 id=\"recipes\"><a href=\"/recipe/" + value[0] + "\"> " + value[1] + " foodCOMA score: " + value[2] + " </a></h6>";
             document.getElementById("foodImage").src = obj.image;
         })
         for(let i = 0; i < obj.ingredients.length; i ++){
@@ -72,7 +56,6 @@ function getRecipes(params){
         document.getElementById("nutrients").innerHTML += obj.Nutrients[28] + ": " + obj.Nutrients[29] + " kcal <br>";
         document.getElementById("nutrients").innerHTML += obj.Nutrients[30] + ": " + obj.Nutrients[31] + " kcal <br>";
         document.getElementById("nutrients").innerHTML += obj.Nutrients[32] + ": " + obj.Nutrients[33] + " kcal <br>";
-
 
     });
 
