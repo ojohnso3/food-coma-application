@@ -40,6 +40,7 @@ public class User {
     this.username = user;
     this.previousRecipes = new ArrayList<>(); // initialized
     this.dietaryRestrictions = new ArrayList<>(); // initialized w/ survey in GUI
+    this.nutrients = new ArrayList<>();
     Accounts.writeLoginInfo(user, password); // write the login info to our csv
     this.recommender = null;
     // add to user map
@@ -58,11 +59,20 @@ public class User {
     this.username = username;
     this.previousRecipes = new ArrayList<>();
     this.dietaryRestrictions = new ArrayList<>();
+    this.nutrients = new ArrayList<>();
     // write the login info to any csv (for testing)
     Accounts.writeLoginInfo(username, password, path);
     // create a personal recommender
     this.recommender = null;
     // don't add test users to map or user database
+  }
+
+  public User() {
+    this.username = "";
+    this.previousRecipes = new ArrayList<>();
+    this.dietaryRestrictions = new ArrayList<>();
+    this.nutrients = new ArrayList<>();
+    this.recommender = null;
   }
 
   /**

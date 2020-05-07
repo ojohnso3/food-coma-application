@@ -58,7 +58,7 @@ public class Gui {
     nutrients = new HashSet<>();
     prevRestrictions = new ArrayList<>();
   }
-  
+
   private static FreeMarkerEngine createEngine() {
     Configuration config = new Configuration();
     File templates = new File("src/main/resources/spark/template/freemarker");
