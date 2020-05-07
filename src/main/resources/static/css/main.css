@@ -90,11 +90,15 @@ a:hover {
     color: #fee6c2;
 }
 
+.images{
+    align-self:center;
+}
 .home_slides {
-    margin: 0;
+    justify-content: center;
+    margin: 135px;
     border: solid 3px black;
     height: 650px;
-    width: 99.6%;
+    width: 79.6%;
     display: cover;
     /* margin-left: auto;
     margin-right: auto; */
@@ -324,7 +328,8 @@ li {
 .rollingDonut{
     position:relative;
     animation-name: rollDonut;
-    animation-duration: 5s;
+    animation-duration: 2s;
+    animation-iteration-count:9999;
 }
 
 @keyframes rollDonut {
@@ -333,7 +338,7 @@ li {
         transform: rotate(0deg);
     }to{
         transform:rotate(720deg);
-        left:100%;
+        left:50%;
     }
 
 }

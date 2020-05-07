@@ -63,6 +63,7 @@ public class Recommender {
       // add the target nodes' coordinates to each node in tree to make the origin the target point
       this.recipeTree.translateTree(target.getCoords());
       // normalize the query tree, weighted using the nutrients
+
       this.recipeTree.normalizeAxes(queryNodes, weightedAxes); //weight special axes higher
 
       // Recommend: return the nearest neighbors to the target (the origin now).
@@ -72,6 +73,10 @@ public class Recommender {
       for (RecipeNode node : recNodes) {
         recommendations.add(node.getRecipe());
       }
+//      List<Double> distances = this.recipeTree.getDistances();
+//      for(Double d : distances){
+//        System.out.println(d);
+//      }
       return recommendations;
     } catch (KDTreeException e) {
       throw new RecommendationException(e.getMessage());
@@ -170,6 +175,7 @@ public class Recommender {
   private void addRecipeNodeCoords(RecipeNode r) {
     List<Double> coords = new ArrayList<>();
     for (String code : NutrientInfo.getNutrientCodes()) {
+      System.out.println("Nutrient Coordinate: " + r.getRecipe().getNutrientVals(code)[0]);
       coords.add(r.getRecipe().getNutrientVals(code)[0]);
     }
 

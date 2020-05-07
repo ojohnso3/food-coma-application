@@ -164,6 +164,7 @@ function makeQuery() {
     //TODO: make a post request to the url to handle this request you set in your Main.java
 
     $.post("/search", postParameters, response => {
+        document.getElementById("rollingDonut").style.animationPlayState="running";
         console.log("We made a post request!");
         const output = JSON.parse(response);
         // document.getElementById("#preferences").innerHTML = "";
@@ -200,6 +201,7 @@ function makeQuery() {
         // }
         console.log("RECIPE SIZE:");
         console.log(output.recipes.length);
+        document.getElementById("rollingDonut").style.animationPlayState="paused";
         if(output.recipes.length == 0){
             for(let i = 0; i < 10; i++){
                 var fullShopBagHtml = "<img class=\"shoppingBag\"><a class=\"recipeText\" </a>"
