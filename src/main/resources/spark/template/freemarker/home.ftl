@@ -5,8 +5,10 @@
 
 
 <div class="images">
-  <img class="home_slides" src="https://tinyurl.com/ya7urluw">
-  <img class="home_slides" src="https://tinyurl.com/y86lsznl">
+
+  <img class="home_slides" src="https://i.postimg.cc/g2Nqdxh8/190305-lemon-garlic-asparagus-pasta-horizontal-161-1553190755.jpg">
+  <img class="home_slides" src="https://tinyurl.com/y7skbqzz">
+  <img class="home_slides" src="https://tinyurl.com/y8wbbpub">
 </div>
 
 <#--  <h1>Home</h1>  -->

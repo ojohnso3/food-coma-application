@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 import edu.brown.cs.student.database.FieldParser;
 import edu.brown.cs.student.food.NutrientInfo;
@@ -46,7 +47,7 @@ public class Recommender {
    * @return List of recommended recipes
    */
   public List<Recipe> makeRecommendation(String input, Map<String, String[]> paramsMap,
-                                         List<String> restrictions) throws RecommendationException {
+                                         Set<String> restrictions) throws RecommendationException {
     try {
       this.recipeTree = new KDTree<>(dim);
       // User History: get, nodify, and normalize previous recipes
@@ -59,9 +60,9 @@ public class Recommender {
       // Nutrients: get the nutrients to weight higher
       List<Double> weightedAxes = getNutrientIndices();
 
-      Recipe[] recipesArray = new Recipe[0];
+      Recipe[] recipesArray;
       // Query Recs: get recipes based on the query and put into a queried recipes tree
-      recipesArray = FieldParser.getRecipesDBandAPI(input, recipesArray, restrictions, paramsMap);
+      recipesArray = FieldParser.getRecipesDBandAPI(input, restrictions, paramsMap);
       List<Recipe> recipesList = Arrays.asList(recipesArray);
       List<RecipeNode> queryNodes = convertRecipesToRecipeNodes(recipesList);
 
@@ -70,6 +71,7 @@ public class Recommender {
       // add the target nodes' coordinates to each node in tree to make the origin the target point
       this.recipeTree.translateTree(target.getCoords());
       // normalize the query tree, weighted using the nutrients
+
       this.recipeTree.normalizeAxes(queryNodes, weightedAxes); //weight special axes higher
 
       // Recommend: return the nearest neighbors to the target (the origin now).
@@ -78,6 +80,10 @@ public class Recommender {
       List<Recipe> recommendations = new ArrayList<>();
       for (RecipeNode node : recNodes) {
         recommendations.add(node.getRecipe());
+      }
+      List<Double> distances = this.recipeTree.getDistances();
+      for (Double d : distances) {
+        System.out.println(d);
       }
       return recommendations;
     } catch (KDTreeException e) {

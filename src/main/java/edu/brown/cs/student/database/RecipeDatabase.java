@@ -12,11 +12,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.sql.Connection;
-import java.util.Map;
 
 import com.google.common.io.Files;
 
@@ -106,9 +103,10 @@ public final class RecipeDatabase {
         + "FOREIGN KEY (recipe_uri) REFERENCES recipe(uri));";
     stat.executeUpdate(sql);
 
-    sql = "CREATE TABLE IF NOT EXISTS queries("
+    sql = "CREATE TABLE IF NOT EXISTS new_queries("
             + "query TEXT,"
             + "recipe_uri TEXT,"
+            + "restrictions TEXT,"
             + "FOREIGN KEY (recipe_uri) REFERENCES recipe(uri));";
     stat.executeUpdate(sql);
     stat.close();
@@ -171,20 +169,20 @@ public final class RecipeDatabase {
     prep.close();
 
   }
-
   /**
    * Function to insert a query into the query table of the database.
    * @param query - the query that corresponds to the given recipes.
    * @param uriList -  a list of recipes that conform to the given query.
    */
-  public static void insertQuery(String query, String[] uriList) throws SQLException {
-    if (checkQueryInDatabase(query)) {
-      throw new SQLException("duplicate");
-    }
+  public static void insertQuery(String query, String[] uriList, Set<String> restrictions, Map<String, String[]> paramsMap) throws SQLException {
+//    if (checkQueryInDatabase(query)) {
+//      throw new SQLException("duplicate");
+//    }
+    String inputRestrict = prepRestrictionsForDB(restrictions);
 
-    for (String uri : uriList) {
-      PreparedStatement prep = conn.prepareStatement("INSERT INTO queries VALUES("
-              + "\"" + query + "\" , \"" + uri + "\");");
+    for(String uri : uriList){
+      PreparedStatement prep = conn.prepareStatement("INSERT INTO new_queries VALUES("
+              +"\"" + query + "\" , \"" + uri + "\" , \"" + inputRestrict + "\");");
       prep.executeUpdate();
       prep.close();
     }
@@ -343,6 +341,7 @@ public final class RecipeDatabase {
    * @return - boolean representing whether the given uri is in the database.
    */
   public static boolean checkRecipeInDatabase(String uri) {
+
     boolean retVal = false;
     try {
       PreparedStatement prep = conn.prepareStatement("SELECT * FROM recipe WHERE uri = ?");
@@ -363,12 +362,13 @@ public final class RecipeDatabase {
    * @param query - String uri of a recipe.
    * @return - boolean representing whether the given uri is in the database.
    */
-  public static boolean checkQueryInDatabase(String query) {
+  public static boolean checkQueryInDatabase(String query, Set<String> restrictions){
 
     boolean retVal = false;
     try {
-      PreparedStatement prep = conn.prepareStatement("SELECT query FROM queries WHERE query = ?");
+      PreparedStatement prep = conn.prepareStatement("SELECT query FROM new_queries WHERE query = ? AND restrictions = ?");
       prep.setString(1, query);
+      prep.setString(2, prepRestrictionsForDB(restrictions));
       ResultSet recipeSet = prep.executeQuery();
       retVal = recipeSet.next();
       prep.close();
@@ -380,54 +380,100 @@ public final class RecipeDatabase {
     return retVal;
   }
 
-  /**
-   * Function to retrieve the list of uris that correspond to the given query.
-   * @param query - the query to find recipes for.
-   * @return - a list of the recipes that correspond to the given query.
-   */
-  public static List<String> getQueryURIListFromDatabase(String query) {
-    List<String> recipesFromExactQuery = new ArrayList<>();
-
+  public static String prepRestrictionsForDB(Set<String> restrictions){
+    String insertThis = "";
+    if(restrictions.contains("alcohol-free")){
+      insertThis+="a";
+    }
+    if(restrictions.contains("vegan")){
+      insertThis+="e";
+    }
+    if(restrictions.contains("peanut-free")){
+      insertThis+="p";
+    }
+    if(restrictions.contains("sugar-conscious")){
+      insertThis+="s";
+    }
+    if(restrictions.contains("tree-nut-free")){
+      insertThis+="t";
+    }
+    if(restrictions.contains("vegetarian")){
+      insertThis+="v";
+    }
+    return insertThis;
+  }
+      /**
+       * Function to retrieve the list of uris that correspond to the given query.
+       * @param query - the query to find recipes for.
+       * @return - a list of the recipes that correspond to the given query.
+       */
+  public static List<Recipe> getQueryRecipesFromDatabase(String query, Set<String> restrictions, Map<String, String[]> paramsMap) {
+    List<String> recipesFromExactQuery = new ArrayList<String>();
+    List<Recipe> recipesFromExact = new ArrayList<>();
     try {
-      PreparedStatement prep = conn.prepareStatement(
-          "SELECT recipe_uri FROM queries WHERE query = ?");
+      PreparedStatement prep = conn.prepareStatement("SELECT recipe_uri FROM new_queries WHERE query = ? AND restrictions = ?");
+
+      System.out.println("query: " +query);
       prep.setString(1, query);
+      System.out.println("prepRest: " + prepRestrictionsForDB(restrictions));
+      prep.setString(2, prepRestrictionsForDB(restrictions));
       ResultSet recipeSet = prep.executeQuery();
       while (recipeSet.next()) {
         String uri = recipeSet.getString("recipe_uri");
-        recipesFromExactQuery.add(uri);
+
+        Recipe currRecipe = RecipeDatabase.getRecipeFromURI(uri);
+//        if (FieldParser.checkRecipeValidity(currRecipe, restrictions, paramsMap)) {
+          recipesFromExactQuery.add(uri);
+          recipesFromExact.add(currRecipe);
+//        }
       }
       prep.close();
       recipeSet.close();
     } catch (SQLException e) {
       e.printStackTrace();
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    } catch (APIException e) {
+      e.printStackTrace();
+    } catch (IOException e) {
+      e.printStackTrace();
     }
 
-    return recipesFromExactQuery;
+    return recipesFromExact;
   }
-
-  /**
-   * Function to find recipes whose labels are similar to the given query.
-   * @param query - the query to search on.
-   * @return - a list of recipe uris that correspond to the given query.
-   */
-  public static List<String> getSimilar(String query) {
+      /**
+       * Function to find recipes whose labels are similar to the given query.
+       * @param query - the query to search on.
+       * @return - a list of recipe uris that correspond to the given query.
+       */
+  public static List<Recipe> getSimilar(String query, Set<String> dietaryRestrictions, Map<String, String[]> paramsMap) {
 
     List<String> recipesFromSimilarQuery = new ArrayList<>();
+    List<Recipe> recipesFromSimilar = new ArrayList<>();
     try {
       String q = "%" + query + "%";
       PreparedStatement prep = conn.prepareStatement("SELECT uri FROM recipe WHERE label LIKE ?");
       prep.setString(1,q);
       ResultSet recipeSet = prep.executeQuery();
       while (recipeSet.next()) {
-        recipesFromSimilarQuery.add(recipeSet.getString("uri"));
+        Recipe currRecipe = RecipeDatabase.getRecipeFromURI(recipeSet.getString("uri"));
+        if (FieldParser.checkRecipeValidity(currRecipe, dietaryRestrictions, paramsMap)) {
+          recipesFromSimilarQuery.add(recipeSet.getString("uri"));
+          recipesFromSimilar.add(currRecipe);
+        }
       }
       recipeSet.close();
       prep.close();
     } catch (SQLException e) {
       e.printStackTrace();
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    } catch (APIException e) {
+      e.printStackTrace();
+    } catch (IOException e) {
+      e.printStackTrace();
     }
-    return recipesFromSimilarQuery;
+    return recipesFromSimilar;
   }
 
   /**
