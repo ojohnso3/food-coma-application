@@ -13,6 +13,7 @@ public class KDTree<N extends KDNode<N>> {
   private N root;
   private final int dim;
   private static final double EPSILON = 1e-6;
+  private static LinkedList<Double> dist;
 
   /**
    * Constructor.
@@ -21,6 +22,7 @@ public class KDTree<N extends KDNode<N>> {
    * @throws KDTreeException when the dimension is invalid
    */
   public KDTree(int dim) throws KDTreeException {
+    dist = new LinkedList<Double>();
     if (dim < 1) {
       throw new KDTreeException("dim must be a positive integer");
     } else {
@@ -235,9 +237,14 @@ public class KDTree<N extends KDNode<N>> {
     nearestSearchRec(target, k, this.root, nearbyStars, 0);
     // convert pq to list, reversing order so that least distance is first
     LinkedList<N> ls = new LinkedList<>();
+    dist = new LinkedList<>();
+    EuclideanComparator<N> dc = new EuclideanComparator<>(target);
     while (!nearbyStars.isEmpty()) {
+//      System.out.println("DIST: " + distance(nearbyStars.peek(), target));
+      dist.addFirst(distance(nearbyStars.peek(), target));
       ls.addFirst(nearbyStars.poll());
     }
+
     return ls;
   }
   /*
@@ -275,6 +282,7 @@ public class KDTree<N extends KDNode<N>> {
     N skippedTree = null;
     N newFarthest = nearbyStars.peek();
     assert newFarthest != null;
+//    System.out.println(distance(target,newFarthest));
     if (distance(target, newFarthest) >= Math.abs(currCoord - targetCoord)) {
       nearestSearchRec(target, k, curr.getLeftChild(), nearbyStars, (axis + 1) % this.dim);
       nearestSearchRec(target, k, curr.getRightChild(), nearbyStars, (axis + 1) % this.dim);
@@ -448,6 +456,8 @@ public class KDTree<N extends KDNode<N>> {
     // find the average for each coord by dividing by the total # of recipes and set
     List<Double> targetCoords = target.getCoords();
     for (int i = 0; i < coordsSum.size(); i++) {
+      System.out.println("Nodes size (CANNOT be 0) kdtree:459: " + nodes.size());
+      System.out.println("SUM kdtree 460: " + coordsSum.get(i));
       targetCoords.set(i, coordsSum.get(i) / nodes.size());
     }
   }
@@ -534,10 +544,21 @@ public class KDTree<N extends KDNode<N>> {
       for (int j = 0; j < sz2; j++) { //nodes size
         double n = axisCoords.get(j);
         double weight = axisWeights.get(i);
-        double normalized = weight * (n - mins.get(i)) / (maxes.get(i) - mins.get(i));
+        double denominator = maxes.get(i) - mins.get(i);
+        double normalized;
+        if (denominator == 0) {
+          normalized = 0;
+        } else {
+          normalized = weight * (n - mins.get(i)) / denominator;
+        }
         // replace coords with their new values
         nodes.get(j).getCoords().set(i, normalized);
       }
     }
+  }
+
+  public LinkedList<Double> getDistances(){
+    System.out.println("Is dist null? " + dist);
+    return dist;
   }
 }

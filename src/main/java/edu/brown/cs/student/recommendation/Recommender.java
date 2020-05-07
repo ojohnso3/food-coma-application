@@ -1,10 +1,7 @@
 package edu.brown.cs.student.recommendation;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import edu.brown.cs.student.database.APIException;
 import edu.brown.cs.student.database.FieldParser;
@@ -23,7 +20,7 @@ public class Recommender {
   private final int dim = NutrientInfo.getNutrientCodes().size();
   private static final double USER_PREF_WEIGHT = 6.;
   private static final double MAIN_NUT_WEIGHT = 3.;
-  private static final double SEC_NUT_WEIGHT = 3.;
+  private static final double SEC_NUT_WEIGHT = 1.;
   private final User user;
 
   /**
@@ -31,8 +28,7 @@ public class Recommender {
    * @param user - user
    */
   public Recommender(User user) {
-    System.out.println(user.getUsername());
-    this.user = user;
+    this.user = Objects.requireNonNullElseGet(user, User::new);
   }
 
   /**
@@ -43,26 +39,31 @@ public class Recommender {
    * @return List of recommended recipes
    */
   public List<Recipe> makeRecommendation(String input, Map<String, String[]> paramsMap,
-                                         List<String> restrictions) throws
+                                         Set<String> restrictions) throws
           RecommendationException, InterruptedException, IOException, APIException {
     try {
       this.recipeTree = new KDTree<>(dim);
       // User History: get, nodify, and normalize previous recipes
       List<RecipeNode> prevRecipeNodes = prepUserHistoryNodes();
+
       //generate a target node for an ideal recipe using the history
       RecipeNode target = getTargetNode(prevRecipeNodes);
 
       // Nutrients: get the nutrients to weight higher
       List<Double> weightedAxes = getNutrientIndices();
 
+      Recipe[] recipesArray = new Recipe[0];
       // Query Recs: get recipes based on the query and put into a queried recipes tree
-      List<Recipe> recipesList = Arrays.asList(FieldParser.getRecipesFromQuery(input,
-              restrictions, paramsMap));
+      recipesArray = FieldParser.getRecipesDBandAPI(input, restrictions, paramsMap);
+      List<Recipe> recipesList = Arrays.asList(recipesArray);
       List<RecipeNode> queryNodes = convertRecipesToRecipeNodes(recipesList);
+
+
       this.recipeTree.initializeTree(queryNodes);
       // add the target nodes' coordinates to each node in tree to make the origin the target point
       this.recipeTree.translateTree(target.getCoords());
       // normalize the query tree, weighted using the nutrients
+
       this.recipeTree.normalizeAxes(queryNodes, weightedAxes); //weight special axes higher
 
       // Recommend: return the nearest neighbors to the target (the origin now).
@@ -71,6 +72,10 @@ public class Recommender {
       List<Recipe> recommendations = new ArrayList<>();
       for (RecipeNode node : recNodes) {
         recommendations.add(node.getRecipe());
+      }
+      List<Double> distances = this.recipeTree.getDistances();
+      for(Double d : distances){
+        System.out.println(d);
       }
       return recommendations;
     } catch (KDTreeException e) {
@@ -145,6 +150,7 @@ public class Recommender {
     } catch (KDTreeException e) {
       throw new RecommendationException(e.getMessage());
     }
+    System.out.println("TARGET NODE " + target.getCoords());
     return target;
   }
 
@@ -172,7 +178,6 @@ public class Recommender {
     for (String code : NutrientInfo.getNutrientCodes()) {
       coords.add(r.getRecipe().getNutrientVals(code)[0]);
     }
-
     r.setCoords(coords);
   }
 }

@@ -13,10 +13,7 @@ import joptsimple.OptionSet;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * The Main class of our project. This is where execution begins.
@@ -85,7 +82,7 @@ public final class Main {
       try {
         RecipeDatabase.loadDatabase("data/recipeDatabase.sqlite3");
         NutrientInfo.createNutrientsList();
-        List<String> dietaryRestrictions = new ArrayList<>();
+        Set<String> dietaryRestrictions = new HashSet<>();
         Map<String, String[]> paramsMap = new HashMap<>();
         paramsMap.put("x", new String[] {"x"});
         Recipe[] recipes = FieldParser.getRecipesFromQuery("pasta", dietaryRestrictions, paramsMap);
