@@ -28,9 +28,10 @@
 
 <div class="queryBox">
     <div class="queryOption" id="saved_recipes">
-        <h2>Your Previous Recipes</h2>
-        <ul id="saved_list">
-        </ul>
+        <h2 style="text-decoration: underline">Your Previous Recipes</h2>
+        <h3 id="recipes_saved" aria-live=polite></h3>
+        <#--  <ul id="saved_list">
+        </ul>  -->
     </div>
 </div>
 

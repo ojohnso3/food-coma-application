@@ -47,11 +47,9 @@ import spark.template.freemarker.FreeMarkerEngine;
  *
  */
 public class Gui {
-//  private static FieldParser fieldParser;
-//  private static NutrientInfo nutrientInfo;
   private static final Gson GSON = new Gson();
-  public Map<String, Recipe> recipesMap;
-  public Set<String> clickedSet;
+  private Map<String, Recipe> recipesMap;
+  private Set<String> clickedSet;
   private final Set<String> nutrients;
   private String prevQuery;
   private final ArrayList<String> prevRestrictions;
@@ -60,7 +58,7 @@ public class Gui {
     nutrients = new HashSet<>();
     prevRestrictions = new ArrayList<>();
   }
-
+  
   private static FreeMarkerEngine createEngine() {
     Configuration config = new Configuration();
     File templates = new File("src/main/resources/spark/template/freemarker");
@@ -133,7 +131,7 @@ public class Gui {
       return new ModelAndView(variables, page);
     }
   }
-  
+
   private class SearchPostHandler implements Route {
     @Override
     public String handle(Request req, Response res) {
@@ -246,19 +244,14 @@ public class Gui {
         recipes = FieldParser.getRecipesDBandAPI(query, recipes, restrictions, paramsMap);
         simpleRecipeList = Gui.this.setUpRecipesList(recipes);
 
-      } catch (FileNotFoundException ignored) {
-
-      } catch (SQLException e) {
-
-      } catch (ClassNotFoundException e) {
+      } catch (FileNotFoundException | ClassNotFoundException | SQLException ignored) {
 
       }
 
 
-      Map<String, Object> variables = ImmutableMap.of("recipes", recipes, "simpleRecipeList", simpleRecipeList);
+      Map<String, Object> variables = ImmutableMap.of("recipes", recipes, "simpleRecipeList",
+              simpleRecipeList);
       return GSON.toJson(variables);
-
-
     }
   }
 
@@ -267,36 +260,35 @@ public class Gui {
    * @param recipes The list of recipes to be added
    * @return A simple list of shortened URLs to recipe URIs
    */
-  private HashMap<String, String[]> setUpRecipesList(Recipe[] recipes){
-    HashMap<String, String[]> simpleRecipeList = new HashMap<String, String[]>();
+  private HashMap<String, String[]> setUpRecipesList(Recipe[] recipes) {
+    HashMap<String, String[]> simpleRecipeList = new HashMap<>();
     Pattern load = Pattern.compile("#recipe_(.+)");
 
     //HOW LONG DO WE WANT THE RESULTS?? 10??????? .LENGTH????
-    for(int i = 0; i < recipes.length; i++){
-      recipesMap = new HashMap<String, Recipe>();
-      recipesMap.put(recipes[i].getUri(), recipes[i]);
+    for (Recipe recipe : recipes) {
+      recipesMap = new HashMap<>();
+      recipesMap.put(recipe.getUri(), recipe);
       String[] fields = new String[2];
-      fields[0] = recipes[i].getUrl();
-      fields[1] = recipes[i].getUri();
-      Matcher matchUri = load.matcher(recipes[i].getUri());
+      fields[0] = recipe.getUrl();
+      fields[1] = recipe.getUri();
+      Matcher matchUri = load.matcher(recipe.getUri());
 
-      if(matchUri.find()){
+      if (matchUri.find()) {
         fields[1] = matchUri.group(1);
       } else {
         fields[1] = "error";
       }
-      simpleRecipeList.put(recipes[i].getLabel(), fields);
+      simpleRecipeList.put(recipe.getLabel(), fields);
 
     }
     return simpleRecipeList;
   }
-  
+
   /**
-   * Handles the functionality of printing out the result of the Stars algorithms.
-   *
+   * Handles the functionality of printing out the results.
    */
   private static class SurveyHandler implements Route {
-    private Map<String, String> nutrientsMap;
+    private final Map<String, String> nutrientsMap;
     
     SurveyHandler() {
       NutrientInfo.createNutrientsList();
@@ -318,7 +310,7 @@ public class Gui {
         System.out.println("AccountException error: " + e.getMessage());
       }
 
-      List<String> nutrients = new ArrayList<String>();
+      List<String> nutrients = new ArrayList<>();
       
       for (String nutrient: nutrientsMap.keySet()) {
         String currNu = map.value(nutrient);
@@ -327,7 +319,7 @@ public class Gui {
         }
       }
       
-      String output = "Invalid Survey: Please try again.";
+      String output;
       
       if (nutrients.size() > 2) {
         System.out.println(nutrients);
@@ -407,9 +399,9 @@ public class Gui {
       String output = "Failed Sign-up: Please try again.";
       try {
         System.out.println("CHECK " + Accounts.checkSignUpValidity(user, pass1, pass2));
-        if(Accounts.checkSignUpValidity(user, pass1, pass2)) {
+        if (Accounts.checkSignUpValidity(user, pass1, pass2)) {
           User newUser = new User(user, pass1);
-          System.out.println("NEW USER?: "+ newUser);
+          System.out.println("NEW USER?: " + newUser);
           newUser.setRecommender(new Recommender(newUser));
           output = "Successful Sign-up!";
         }
@@ -450,14 +442,15 @@ public class Gui {
         System.out.println("AccountException error: " + e.getMessage());
       }
       if (currUser == null) {
-        Map<String, Object> noUserVars = ImmutableMap.of("title", "User", "output", new HashMap<String, String>());
+        Map<String, Object> noUserVars = ImmutableMap.of("title", "User", "output",
+                new HashMap<String, String>());
         return GSON.toJson(noUserVars);
       }
       List<Recipe> prevRecipes = currUser.getPreviousRecipes();
 
       System.out.println("SIZE " + prevRecipes.size());
 
-      Map<String,String> output = new HashMap<String, String>();
+      Map<String, String> output = new HashMap<>();
 
       for (Recipe r : prevRecipes) {
         output.put(r.getCompactUri(), r.getLabel());
@@ -475,7 +468,7 @@ public class Gui {
   }
   
   private class RecipeHandler implements Route {
-    private Gui gui;
+    private final Gui gui;
     RecipeHandler(Gui g) {
       gui = g;
     }
@@ -496,7 +489,7 @@ public class Gui {
 //
       // TODO: use Recommender object below!
       
-      Pattern load = Pattern.compile("localhost:.+\\/recipe\\/(.+)");
+      Pattern load = Pattern.compile("localhost:.+/recipe/(.+)");
       String recipeURI = null;
       if (url != null) {
         Matcher matchURL = load.matcher(url);
@@ -508,13 +501,17 @@ public class Gui {
             currUser.addToPreviousRecipesByURI(fullUri);
             System.out.println("ADDED PREV");
           } catch (InterruptedException e) {
-            System.out.println("InterruptedException when adding recipe to previous recipes: " + e.getMessage());
+            System.out.println("InterruptedException when adding recipe to previous recipes: "
+                    + e.getMessage());
           } catch (SQLException e) {
-            System.out.println("SQLException when adding recipe to previous recipes: " + e.getMessage());
+            System.out.println("SQLException when adding recipe to previous recipes: "
+                    + e.getMessage());
           } catch (APIException e) {
-            System.out.println("APIException when adding recipe to previous recipes: " + e.getMessage());
+            System.out.println("APIException when adding recipe to previous recipes: "
+                    + e.getMessage());
           } catch (IOException e) {
-            System.out.println("IOException when adding recipe to previous recipes: " + e.getMessage());
+            System.out.println("IOException when adding recipe to previous recipes: "
+                    + e.getMessage());
           }
           System.out.println("The Recipe URI is " + recipeURI);
         }
@@ -524,7 +521,8 @@ public class Gui {
         System.out.println("ABOUT TO ENTER " + recipeURI);
         RecipeDatabase.loadDatabase("/data/recipeDatabase.sqlite3");
         currRecipe = RecipeDatabase.getRecipeFromURI(recipeURI);
-      } catch (SQLException | InterruptedException | APIException | IOException | ClassNotFoundException e) {
+      } catch (SQLException | InterruptedException | APIException | IOException
+              | ClassNotFoundException e) {
         System.out.println("SQLException getting recipe from database");
       }
       if (currRecipe == null) {
@@ -544,14 +542,15 @@ public class Gui {
         System.out.println("EXCEEDED RECIPES LOOKUP!!");
       }
 
+      assert currRecipe != null;
       String actualName = currRecipe.getLabel();
-      List<String> ingredientsList = new ArrayList<String>();
+      List<String> ingredientsList = new ArrayList<>();
       for (int i = 0; i < currRecipe.getIngredients().size(); i++) {
         ingredientsList.add(currRecipe.getIngredients().get(i).getText());
       }
 //      HashMap<String, String> map = new HashMap<String, String>();
 //      Set<String> keys = recipes.keySet();
-      List<Recipe> recommendations = new ArrayList<Recipe>();
+      List<Recipe> recommendations = new ArrayList<>();
       try {
         System.out.println("Prev Query: " + prevQuery);
         System.out.println("Prev REstrict: " + prevRestrictions);
@@ -559,12 +558,11 @@ public class Gui {
         System.out.println("User: " + currUser);
         recommendations = recommender.makeRecommendation(prevQuery, new HashMap<>(),
                 prevRestrictions);
-      } catch (RecommendationException | InterruptedException | IOException | APIException
-              | SQLException e) {
+      } catch (RecommendationException | InterruptedException | IOException | APIException e) {
         e.printStackTrace();
       }
 
-      Map<String, String[]> recipePageRecipes = new HashMap<String, String[]>();
+      Map<String, String[]> recipePageRecipes = new HashMap<>();
       Set<String> keys = gui.recipesMap.keySet();
 
       for (Recipe recp : recommendations) {
@@ -578,13 +576,13 @@ public class Gui {
         fields[0] = recp.getLabel();
         recipePageRecipes.put(recp.getCompactUri(), fields);
       }
-      Map<String, String> nutrientsMap = new HashMap<String, String>();
+      Map<String, String> nutrientsMap = new HashMap<>();
 
       Map<String, double[]> map = currRecipe.getNutrientsMap();
       for (String string : map.keySet()) {
 //        System.out.println("KEY:::  " + string);
       }
-     Map<String, double[]> nuts = currRecipe.getNutrientsMap();
+      Map<String, double[]> nuts = currRecipe.getNutrientsMap();
       String[] nutValues = new String[nuts.keySet().size()];
       int i = 0;
 //      int j = 1;
@@ -595,7 +593,7 @@ public class Gui {
 //        i+=2;
 //        j+=2;
       }
-     ImmutableMap<String,Object> variables = ImmutableMap.<String, Object>builder()
+      ImmutableMap<String, Object> variables = ImmutableMap.<String, Object>builder()
               .put("recipeList", recipePageRecipes)
               .put("title", " " + actualName)
               .put("ingredients", ingredientsList)
@@ -607,9 +605,9 @@ public class Gui {
     }
   }
 
-  private class NutrientHandler implements Route{
+  private class NutrientHandler implements Route {
     @Override
-    public Object handle(Request request, Response response) throws Exception {
+    public Object handle(Request request, Response response) {
       QueryParamsMap qm = request.queryMap();
       String nutrient = qm.value("nut");
       if (nutrients.contains(nutrient)) {
@@ -638,5 +636,4 @@ public class Gui {
       res.body(stacktrace.toString());
     }
   }
-
 }

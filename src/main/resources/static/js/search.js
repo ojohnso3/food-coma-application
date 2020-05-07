@@ -5,7 +5,7 @@ $(document).ready(() => {
 });
 
 const preferences = $("#preferences");
-const button = $("#submit");
+const button = $("#submit_search");
 console.log("HERE " + preferences.val());
 
 $(document).ready(function(){
@@ -20,6 +20,7 @@ button.click(event => {
         alert("Please make sure you're signed in before making searches!")
         return "";
     } else {
+        console.log("searching her enowoowowoowow");
         return makeQuery();
     }
 
@@ -128,7 +129,10 @@ button.click(event => {
 });
 
 
-function makeQuery(){
+function makeQuery() {
+    
+    document.getElementById("search_label").innerHTML = "Your Search: " + preferences.val();
+
     const balanced = $("#balanced").is(":checked");
     const lowfat = $("#low-fat").is(":checked");
     const lowcarb = $("#low-carb").is(":checked");

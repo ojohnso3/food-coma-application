@@ -8,14 +8,17 @@
 
     <div class="row">
         <div class="column">
-            <h2>Recipe Ingredients: </h2>
+            <h4><em>Note</em>: click title above to view full recipe.</h4>
+            <h2 style="text-decoration: underline">Recipe Ingredients: </h2>
             <p id="ingredients" aria-live=polite></p>
             <img class=recipeFood src="" id="foodImage">
+            <br>
+            <h4 style="text-decoration: underline" id="nutrients_title"></h4>
             <p id="nutrients"></p>
         </div>
 
         <div class="column2">
-            <h3>Other Recipes to Consider:</h3>
+            <h3 style="text-decoration: underline">Other Recipes to Consider:</h3>
             <h2 id="recipes" aria-live=polite></h2>
         </div>
 
