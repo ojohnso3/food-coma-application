@@ -534,7 +534,13 @@ public class KDTree<N extends KDNode<N>> {
       for (int j = 0; j < sz2; j++) { //nodes size
         double n = axisCoords.get(j);
         double weight = axisWeights.get(i);
-        double normalized = weight * (n - mins.get(i)) / (maxes.get(i) - mins.get(i));
+        double denominator = maxes.get(i) - mins.get(i);
+        double normalized;
+        if (denominator == 0) {
+          normalized = 0;
+        } else {
+          normalized = weight * (n - mins.get(i)) / denominator;
+        }
         // replace coords with their new values
         nodes.get(j).getCoords().set(i, normalized);
       }

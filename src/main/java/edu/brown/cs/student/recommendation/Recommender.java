@@ -45,16 +45,20 @@ public class Recommender {
       this.recipeTree = new KDTree<>(dim);
       // User History: get, nodify, and normalize previous recipes
       List<RecipeNode> prevRecipeNodes = prepUserHistoryNodes();
+
       //generate a target node for an ideal recipe using the history
       RecipeNode target = getTargetNode(prevRecipeNodes);
 
       // Nutrients: get the nutrients to weight higher
       List<Double> weightedAxes = getNutrientIndices();
 
+      Recipe[] recipesArray = new Recipe[0];
       // Query Recs: get recipes based on the query and put into a queried recipes tree
-      List<Recipe> recipesList = Arrays.asList(FieldParser.getRecipesFromQuery(input,
-              restrictions, paramsMap));
+      recipesArray = FieldParser.getRecipesDBandAPI(input, recipesArray, restrictions, paramsMap);
+      List<Recipe> recipesList = Arrays.asList(recipesArray);
       List<RecipeNode> queryNodes = convertRecipesToRecipeNodes(recipesList);
+
+
       this.recipeTree.initializeTree(queryNodes);
       // add the target nodes' coordinates to each node in tree to make the origin the target point
       this.recipeTree.translateTree(target.getCoords());
@@ -141,6 +145,7 @@ public class Recommender {
     } catch (KDTreeException e) {
       throw new RecommendationException(e.getMessage());
     }
+    System.out.println("TARGET NODE " + target.getCoords());
     return target;
   }
 
@@ -168,7 +173,6 @@ public class Recommender {
     for (String code : NutrientInfo.getNutrientCodes()) {
       coords.add(r.getRecipe().getNutrientVals(code)[0]);
     }
-
     r.setCoords(coords);
   }
 }
