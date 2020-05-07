@@ -28,9 +28,25 @@ function getRecipes(params){
         document.getElementById("title").innerHTML = " <h1><a target=_blank href=\"" + obj.URL + "\"> " + obj.title + " </a></h1>";
         console.log(obj.URL);
         document.getElementById("title").href = obj.URL;
-        $.each(obj.recipeList, function printRecipe(key, value){
-            console.log(key + ": " + value[0]);
-            document.getElementById("recipes").innerHTML += " <h6 id=\"recipes\"><a href=\"/recipe/" + key + "\"> " + value[0] + " </a></h6>";
+        var first = true;
+        const map = obj.recipeList;
+        var sortedRecipes = obj.sortedArray;
+        for(let i = 0; i < obj.sortedArray.length; i++){
+            console.log(sortedRecipes[i]);
+            // console.log(sortedRecipes[i].get(2));
+            // console.log(sortedRecipes[i].get(3));
+        }
+        // var sorted = Object.keys(map)
+        //     .sort(function(a,b) { return +b - +a })
+        //     .map(function(k) { return map[k] });
+
+        $.each(sorted, function printRecipe(key, value){
+            if(first = true){
+                // sort.sort(compComaScores);
+                first = false;
+            }
+            console.log(key + ": " + value[0] + "foodcoma score: " + value[1]);
+            document.getElementById("recipes").innerHTML += " <h6 id=\"recipes\"><a href=\"/recipe/" + key + "\"> " + value[0] + " foodCOMA score: " + value[1] + " </a></h6>";
             document.getElementById("foodImage").src = obj.image;
         })
         for(let i = 0; i < obj.ingredients.length; i ++){
@@ -55,6 +71,14 @@ function getRecipes(params){
         document.getElementById("nutrients").innerHTML += obj.Nutrients[30] + ": " + obj.Nutrients[31] + " kcal <br>";
         document.getElementById("nutrients").innerHTML += obj.Nutrients[32] + ": " + obj.Nutrients[33] + " kcal <br>";
 
+
     });
+
 };
 
+function compComaScores(one, two){
+    var valOne = one.value[1];
+    var valTwo =two.value[1];
+    console.log("v1 " + valOne);
+    console.log("v2 " + valTwo);
+}

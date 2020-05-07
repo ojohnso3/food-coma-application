@@ -8,12 +8,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -242,14 +237,12 @@ public class Gui {
 //        }
 //      }
         recipes = FieldParser.getRecipesDBandAPI(query, restrictions, paramsMap);
-        for(Recipe rec : recipes){
-          System.out.println(rec.getLabel());
-        }
         simpleRecipeList = Gui.this.setUpRecipesList(recipes);
 
-      } catch (FileNotFoundException | ClassNotFoundException | SQLException ignored) {
-
-      }
+      } catch (FileNotFoundException e) {
+      } catch( ClassNotFoundException e){
+      }catch( SQLException e) {
+        }
 
 
       Map<String, Object> variables = ImmutableMap.of("recipes", recipes, "simpleRecipeList",
@@ -489,9 +482,6 @@ public class Gui {
       }
       assert currUser != null;
       Recommender recommender = currUser.getRecommender();
-//
-      // TODO: use Recommender object below!
-      
       Pattern load = Pattern.compile("localhost:.+/recipe/(.+)");
       String recipeURI = null;
       if (url != null) {
@@ -549,7 +539,7 @@ public class Gui {
         }
       }
       if (currRecipe == null) {
-        System.out.println("EXCEEDED RECIPES LOOKUP!!");
+        System.out.println("Exceeded Recipes Lookup");
       }
 
       assert currRecipe != null;
@@ -561,6 +551,7 @@ public class Gui {
 //      HashMap<String, String> map = new HashMap<String, String>();
 //      Set<String> keys = recipes.keySet();
       List<Recipe> recommendations = new ArrayList<>();
+      List<Double> foodComaWeights = new ArrayList<>();
       try {
         System.out.println("Prev Query: " + prevQuery);
         System.out.println("Prev REstrict: " + prevRestrictions);
@@ -579,18 +570,22 @@ public class Gui {
       }
 
       Map<String, String[]> recipePageRecipes = new HashMap<>();
+      Collection[] collections = new Collection[recommendations.size()];
       Set<String> keys = gui.recipesMap.keySet();
-
+      int k = 0;
+      List<Double> foodComaScores = recommender.getFoodComaScores();
       for (Recipe recp : recommendations) {
-//        if(key == currRecipe.getCompactUri()){
-//          continue;
-//        }
-//        String[] fields = new String[gui.recipesMap.get(key).getIngredients().size() + 1];
-//        Recipe currRec = gui.recipesMap.get(key);
-//        fields[0] = currRec.getLabel();
-        String[] fields = new String[1];
+        String[] fields = new String[2];
         fields[0] = recp.getLabel();
+        System.out.println("Weight inputted: " + foodComaScores.get(k).toString());
+        fields[1] = foodComaScores.get(k).toString();
+        Collection coll = new ArrayList();
+        coll.add(recp.getCompactUri());
+        coll.add(fields[0]);
+        coll.add(fields[1]);
+        collections[k] = coll;
         recipePageRecipes.put(recp.getCompactUri(), fields);
+        k++;
       }
       Map<String, String> nutrientsMap = new HashMap<>();
 
@@ -609,6 +604,15 @@ public class Gui {
         i+=2;
         j+=2;
       }
+      List<Map.Entry<String, String[]>> recipeListSet = new LinkedList<>(recipePageRecipes.entrySet());
+      Collections.sort(recipeListSet, new CompRecipes());
+      Map<String, String[]> newMap = new HashMap<>();
+      for(Map.Entry<String, String[]> itm : recipeListSet){
+        newMap.put(itm.getKey(), itm.getValue());
+      }
+      for(Map.Entry<String, String[]> o : newMap.entrySet()) {
+        System.out.println("Score aaaa: " + o.getValue()[1]);
+      }
       ImmutableMap<String, Object> variables = ImmutableMap.<String, Object>builder()
               .put("recipeList", recipePageRecipes)
               .put("title", " " + actualName)
@@ -616,9 +620,34 @@ public class Gui {
               .put("image", currRecipe.getImage())
               .put("URL", currRecipe.getUrl())
               .put("Nutrients", nutValues)
+              .put("sortedArray", collections)
               .build();
       return GSON.toJson(variables);
     }
+  }
+  private class CompRecipes implements Comparator<Map.Entry<String, String[]>>{
+    @Override
+    public int compare(Map.Entry<String, String[]> t1, Map.Entry<String, String[]> t2) {
+      System.out.println("Val 1 " + t1.getValue()[1]);
+      System.out.println("Val 2 " + t2.getValue()[1]);
+      return Double.compare(Double.parseDouble(t1.getValue()[1]), Double.parseDouble(t2.getValue()[1]));
+    }
+  }
+
+
+  private Collection[] recpPageToArray(Map<String, String[]> recipes){
+    Collection[] coll = new Collection[recipes.keySet().size()];
+    int i = 0;
+    for(String uri : recipes.keySet()){
+      Collection collection = new ArrayList();
+      collection.add(uri);
+      collection.add(recipes.get(uri)[0]);
+      collection.add(recipes.get(uri)[1]);
+      System.out.println("Score is: " + recipes.get(uri)[1]);
+      coll[i] = collection;
+      i++;
+    }
+    return coll;
   }
 
   private class NutrientHandler implements Route {

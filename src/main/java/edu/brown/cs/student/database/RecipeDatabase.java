@@ -353,7 +353,6 @@ public final class RecipeDatabase {
     } catch (SQLException e) {
       e.printStackTrace();
     }
-
     return retVal;
   }
 
@@ -380,6 +379,12 @@ public final class RecipeDatabase {
     return retVal;
   }
 
+  /**
+   * This method prepares the set of restrictions to be inserted to the
+   * SQL database in alphabetical order
+   * @param restrictions The list of restrictions to insert
+   * @return The String which represents this list of restrictions
+   */
   public static String prepRestrictionsForDB(Set<String> restrictions){
     String insertThis = "";
     if(restrictions.contains("alcohol-free")){
