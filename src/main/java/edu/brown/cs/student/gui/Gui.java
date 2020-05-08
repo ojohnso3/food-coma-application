@@ -190,7 +190,7 @@ public class Gui {
         System.out.println("File Not Found Exception: " + e.getMessage());
       } catch( ClassNotFoundException e){
         System.out.println("Class Not Found Exception: " + e.getMessage());
-      }catch( SQLException e) {
+      }catch(SQLException | InterruptedException | APIException | IOException e) {
         System.out.println("SQLException: " + e.getMessage());
       }
       Map<String, Object> variables = ImmutableMap.of("recipes", recipes, "simpleRecipeList",
@@ -510,7 +510,7 @@ public class Gui {
         }
         recommendations = recommender.makeRecommendation(prevQuery, new HashMap<>(),
                 prevRestrictions);
-      } catch (RecommendationException e) {
+      } catch (RecommendationException | InterruptedException | SQLException | APIException | IOException e) {
         System.out.println("RecommendationException in getting recommendations on recipe page: " + e.getMessage());
       }
 //      } catch(InterruptedException e){

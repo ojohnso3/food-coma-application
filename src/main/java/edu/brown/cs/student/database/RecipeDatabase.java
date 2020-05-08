@@ -122,7 +122,6 @@ public final class RecipeDatabase {
     if (checkRecipeInDatabase(recipe.getUri())) {
       throw new SQLException("duplicate");
     }
-    System.out.println(recipe.prepareForInsert());
     PreparedStatement prep = conn.prepareStatement("INSERT INTO recipe VALUES("
             + recipe.prepareForInsert() + ");");
     prep.executeUpdate();
@@ -376,7 +375,6 @@ public final class RecipeDatabase {
     } catch (SQLException e) {
       e.printStackTrace();
     }
-    System.out.println("QUERY IN DB : " + retVal);
     return retVal;
   }
 
@@ -423,9 +421,7 @@ public final class RecipeDatabase {
       PreparedStatement prep = conn.prepareStatement(
           "SELECT recipe_uri FROM new_queries WHERE query = ? AND restrictions = ?");
 
-      System.out.println("query: " +query);
       prep.setString(1, query);
-      System.out.println("prepRest: " + prepRestrictionsForDB(restrictions));
       prep.setString(2, prepRestrictionsForDB(restrictions));
       ResultSet recipeSet = prep.executeQuery();
       while (recipeSet.next()) {

@@ -169,7 +169,7 @@ public final class UserDatabase {
     }
 
     PreparedStatement prep = conn.prepareStatement("SELECT health_label FROM restriction"
-            + "WHERE username = ?");
+            + " WHERE username = ?");
     prep.setString(1, username);
     ResultSet restrictionSet = prep.executeQuery();
     List<String> dietaryRestrictions = setToList(restrictionSet);

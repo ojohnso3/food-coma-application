@@ -31,7 +31,7 @@ public class UserDatabaseTest {
       UserDatabase.loadDatabase("data/userDatabase.sqlite3");
       RecipeDatabase.loadDatabase("data/recipeDatabase.sqlite3");
       NutrientInfo.createNutrientsList();
-      String user1name = "1000";
+      String user1name = "3000";
       String user2name = "2000";
       this.user1 = new User(user1name, "password", PATH_CSV);
       this.user2 = new User(user2name, "password", PATH_CSV);
@@ -42,8 +42,9 @@ public class UserDatabaseTest {
       this.testInsertToPrevRecipe();
       this.testInsertToNutrient();
 
-      UserDatabase.deleteUser(user1.getUsername());
-      UserDatabase.deleteUser(user2.getUsername());
+      UserDatabase.deleteUser("3000");
+      UserDatabase.deleteUser("3000");
+      UserDatabase.deleteUser("2000");
     } catch (AccountException e) {
       e.printStackTrace();
     } catch (SQLException e) {
