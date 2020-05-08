@@ -1,4 +1,6 @@
 package edu.brown.cs.student.recommendation;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -6,6 +8,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+import edu.brown.cs.student.database.APIException;
 import edu.brown.cs.student.database.FieldParser;
 import edu.brown.cs.student.food.NutrientInfo;
 import edu.brown.cs.student.food.Recipe;
@@ -42,7 +45,7 @@ public class Recommender {
    * @return List of recommended recipes
    */
   public List<Recipe> makeRecommendation(String input, Map<String, String[]> paramsMap,
-                                         Set<String> restrictions) throws RecommendationException {
+                                         Set<String> restrictions) throws RecommendationException, InterruptedException, SQLException, APIException, IOException {
     try {
       this.recipeTree = new KDTree<>(dim);
       // User History: get, nodify, and normalize previous recipes
