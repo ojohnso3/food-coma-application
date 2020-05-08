@@ -25,7 +25,6 @@ public class Recommender {
   private static final double SEC_NUT_WEIGHT = 1.;
   private final User user;
   private static List<Double> distances;
-  private RecipeNode targetNode;
 
   /**
    * constructor; should be called on initial survey or on user recreation.
@@ -33,10 +32,6 @@ public class Recommender {
    */
   public Recommender(User user) {
     this.user = Objects.requireNonNullElseGet(user, User::new);
-  }
-
-  public RecipeNode getTargetNode() {
-    return targetNode;
   }
 
   /**
@@ -54,8 +49,7 @@ public class Recommender {
       List<RecipeNode> prevRecipeNodes = prepUserHistoryNodes();
 
       //generate a target node for an ideal recipe using the history
-      RecipeNode target = getTargetNode(prevRecipeNodes);
-      this.targetNode = target;
+      RecipeNode target = makeTargetNode(prevRecipeNodes);
 
       // Nutrients: get the nutrients to weight higher
       List<Double> weightedAxes = getNutrientIndices();
@@ -86,6 +80,28 @@ public class Recommender {
     } catch (KDTreeException e) {
       throw new RecommendationException(e.getMessage());
     }
+  }
+
+  public RecipeNode getUnnormalizedTargetNode() throws RecommendationException {
+    List<Recipe> userHistory = this.user.getPreviousRecipes();
+    List<RecipeNode> prevRecipeNodes = this.convertRecipesToRecipeNodes(userHistory);
+    // prepare target
+    List<Double> coords = new ArrayList<>();
+    // default values
+    for (int i = 0; i < NutrientInfo.getMainNutrients().size(); i++) {
+      coords.add(MAIN_NUT_WEIGHT / 2);
+    }
+    for (int i = 0; i < NutrientInfo.getSecondaryNutrients().size(); i++) {
+      coords.add(SEC_NUT_WEIGHT / 2);
+    }
+    RecipeNode target = new RecipeNode(coords);
+    // set the coords to be the midpoint
+    try {
+      recipeTree.makeAverageNode(target, prevRecipeNodes);
+    } catch (KDTreeException e) {
+      throw new RecommendationException(e.getMessage());
+    }
+    return target;
   }
 
   /*
@@ -137,7 +153,7 @@ public class Recommender {
    * @param prevRecipeNodes - the previous recipes that the user has accessed as nodes.
    * @return - a RecipeNode at the coordinates determined by the query and the user's history.
    */
-  private RecipeNode getTargetNode(List<RecipeNode> prevRecipeNodes) throws
+  private RecipeNode makeTargetNode(List<RecipeNode> prevRecipeNodes) throws
           RecommendationException {
     // prepare target
     List<Double> coords = new ArrayList<>();
@@ -155,7 +171,7 @@ public class Recommender {
     } catch (KDTreeException e) {
       throw new RecommendationException(e.getMessage());
     }
-    System.out.println("TARGET NODE " + target.getCoords());
+
     return target;
   }
 
@@ -186,8 +202,8 @@ public class Recommender {
     r.setCoords(coords);
   }
 
-  public List<Double> getFoodComaScores(){
-    for(Double d : distances) {
+  public List<Double> getFoodComaScores() {
+    for (Double d : distances) {
       System.out.println(d);
     }
     return distances;

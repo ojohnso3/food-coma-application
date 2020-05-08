@@ -559,7 +559,6 @@ public class KDTree<N extends KDNode<N>> {
   }
 
   public LinkedList<Double> getDistances() {
-    System.out.println("Is dist null? " + dist);
     return dist;
   }
 }
