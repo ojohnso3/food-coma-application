@@ -180,7 +180,7 @@ public final class RecipeDatabase {
 //    }
     String inputRestrict = prepRestrictionsForDB(restrictions);
 
-    for(String uri : uriList){
+    for (String uri : uriList) {
       PreparedStatement prep = conn.prepareStatement("INSERT INTO new_queries VALUES("
               +"\"" + query + "\" , \"" + uri + "\" , \"" + inputRestrict + "\");");
       prep.executeUpdate();
@@ -359,6 +359,7 @@ public final class RecipeDatabase {
   /**
    * Function to check if the given query is already in the database.
    * @param query - String uri of a recipe.
+   * @param restrictions - the restrictions to apply to the results of the query.
    * @return - boolean representing whether the given uri is in the database.
    */
   public static boolean checkQueryInDatabase(String query, Set<String> restrictions){
@@ -386,37 +387,41 @@ public final class RecipeDatabase {
    * @return The String which represents this list of restrictions
    */
   public static String prepRestrictionsForDB(Set<String> restrictions){
+
     String insertThis = "";
-    if(restrictions.contains("alcohol-free")){
-      insertThis+="a";
+    if (restrictions.contains("alcohol-free")) {
+      insertThis += "a";
     }
-    if(restrictions.contains("vegan")){
-      insertThis+="e";
+    if (restrictions.contains("vegan")) {
+      insertThis += "e";
     }
-    if(restrictions.contains("peanut-free")){
-      insertThis+="p";
+    if (restrictions.contains("peanut-free")) {
+      insertThis += "p";
     }
-    if(restrictions.contains("sugar-conscious")){
-      insertThis+="s";
+    if (restrictions.contains("sugar-conscious")) {
+      insertThis += "s";
     }
-    if(restrictions.contains("tree-nut-free")){
-      insertThis+="t";
+    if (restrictions.contains("tree-nut-free")) {
+      insertThis += "t";
     }
-    if(restrictions.contains("vegetarian")){
-      insertThis+="v";
+    if (restrictions.contains("vegetarian")) {
+      insertThis += "v";
     }
     return insertThis;
   }
       /**
        * Function to retrieve the list of uris that correspond to the given query.
        * @param query - the query to find recipes for.
+       * @param restrictions - the restrictions to apply to the results of the given query.
        * @return - a list of the recipes that correspond to the given query.
        */
-  public static List<Recipe> getQueryRecipesFromDatabase(String query, Set<String> restrictions, Map<String, String[]> paramsMap) {
+  public static List<Recipe> getQueryRecipesFromDatabase(String query, Set<String> restrictions,
+                                                         Map<String, String[]> paramsMap) {
     List<String> recipesFromExactQuery = new ArrayList<String>();
     List<Recipe> recipesFromExact = new ArrayList<>();
     try {
-      PreparedStatement prep = conn.prepareStatement("SELECT recipe_uri FROM new_queries WHERE query = ? AND restrictions = ?");
+      PreparedStatement prep = conn.prepareStatement(
+          "SELECT recipe_uri FROM new_queries WHERE query = ? AND restrictions = ?");
 
       System.out.println("query: " +query);
       prep.setString(1, query);

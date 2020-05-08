@@ -46,12 +46,11 @@ public class RecipeDatabaseTest {
     List<String> labels = new ArrayList<>();
     labels.add("a");
 
-    Random rand = new Random();
-    String uri = rand.nextInt(1000) + "";
+    String uri = "1000";
     this.r2 = new Recipe(uri, "label", "image", "source", "url", 0.0,
         0.0, 0.0, 0.0, ingredients, nutrients, labels, labels);
 
-    int num = rand.nextInt(1000);
+    int num = 2000;
     this.r3 = new Recipe("http://edamam.api.com/Ontology#" + num, "label", "image" , "source",
         "url", 0.0, 0.0, 0.0, 0.0, ingredients, nutrients, labels, labels);
 

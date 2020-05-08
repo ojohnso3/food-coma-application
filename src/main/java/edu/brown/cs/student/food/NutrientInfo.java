@@ -93,7 +93,7 @@ public final class NutrientInfo {
     nutrients.put("FAT", fat);
     allNutrients.put("Fat", "FAT");
     nutrientCodes.add("FAT");
-    mainNutrients.add("CHOCDF");
+    mainNutrients.add("FAT");
   }
 
   private static void setSecondaryNutrients() {

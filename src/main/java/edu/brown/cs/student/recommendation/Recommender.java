@@ -1,5 +1,4 @@
 package edu.brown.cs.student.recommendation;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -83,7 +82,6 @@ public class Recommender {
         recommendations.add(node.getRecipe());
       }
       distances = this.recipeTree.getDistances();
-
       return recommendations;
     } catch (KDTreeException e) {
       throw new RecommendationException(e.getMessage());

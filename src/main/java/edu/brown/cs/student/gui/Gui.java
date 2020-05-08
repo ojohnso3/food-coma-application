@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -49,6 +50,9 @@ public class Gui {
   private final Set<String> nutrients;
   private String prevQuery;
   private final Set<String> prevRestrictions;
+  private User scoresUser;
+  private static final int CENT = 100;
+
   public Gui() {
     clickedSet  = new HashSet<>();
     nutrients = new HashSet<>();
@@ -423,8 +427,11 @@ public class Gui {
       String username = qm.value("username");
 
       User currUser = null;
+      System.out.println("pre BAGELS");
       try {
+        System.out.println("PIZZA BAGELS");
         currUser = Accounts.getUser(username);
+        Gui.this.setUserForScores(currUser);
       } catch (AccountException e) {
         System.out.println("AccountException getting User in RecipeHandler: " + e.getMessage());
       }
@@ -500,22 +507,37 @@ public class Gui {
       }
       List<Recipe> recommendations = new ArrayList<>();
       try {
+        if (prevQuery == null) {
+          prevQuery = "";
+        }
+        System.out.println("MakingRecommendations");
         recommendations = recommender.makeRecommendation(prevQuery, new HashMap<>(),
                 prevRestrictions);
       } catch (RecommendationException e) {
         System.out.println("RecommendationException in getting recommendations on recipe page: " + e.getMessage());
       }
+//      } catch(InterruptedException e){
+//        System.out.println("InterruptedException in getting recommendations on recipe page: " + e.getMessage());
+//      } catch( IOException e){
+//        System.out.println("IOException in getting recommendations on recipe page: " + e.getMessage());
+//      } catch(APIException e) {
+//        System.out.println("APIException in getting recommendations on recipe page: " + e.getMessage());
+//      }
 
       Map<String, String[]> recipePageRecipes = new HashMap<>();
       Collection[] collections = new Collection[recommendations.size()];
       Set<String> keys = gui.recipesMap.keySet();
       int k = 0;
       List<Double> foodComaScores = recommender.getFoodComaScores();
+      processScores(foodComaScores);
       for (Recipe recp : recommendations) {
         String[] fields = new String[2];
         fields[0] = recp.getLabel();
-        System.out.println("Weight inputted: " + foodComaScores.get(k).toString());
-        fields[1] = foodComaScores.get(k).toString();
+        // only give 2 decimals
+        String foodComaScore = new DecimalFormat("#.00").format(foodComaScores.get(k));
+        System.out.println("Weight inputted: " + foodComaScore);
+
+        fields[1] = foodComaScore;
         Collection coll = new ArrayList();
         coll.add(recp.getCompactUri());
         coll.add(fields[0]);
@@ -533,15 +555,15 @@ public class Gui {
       int j = 1;
       int l = 2;
       for (String itm : nuts.keySet()) {
-        nutValues[i] = nutrientConversion.get(itm)[0];
-        nutValues[j] = Double.toString(nuts.get(itm)[1]);
-        nutValues[l] = nutrientConversion.get(itm)[1];
-        System.out.println("NUT i " + nutValues[i]);
-        System.out.println("NUT j " + nutValues[j]);
-        System.out.println("NUT l " + nutValues[l]);
-        i+=3;
-        j+=3;
-        l+=3;
+        System.out.println("ITEM " + itm);
+        if (nutrientConversion.keySet().contains(itm)) {
+          nutValues[i] = nutrientConversion.get(itm)[0];
+          nutValues[j] = Double.toString(nuts.get(itm)[1]);
+          nutValues[l] = nutrientConversion.get(itm)[1];
+          i+=3;
+          j+=3;
+          l+=3;
+        }
       }
       List<Map.Entry<String, String[]>> recipeListSet = new LinkedList<>(recipePageRecipes.entrySet());
       Collections.sort(recipeListSet, new CompRecipes());
@@ -558,14 +580,56 @@ public class Gui {
               .put("Nutrients", nutValues)
               .put("sortedArray", collections)
               .build();
-      return GSON.toJson(variables);
+      String json = GSON.toJson(variables);
+      System.out.println("JSON " + json);
+      return json;
     }
   }
+  
+  public void setUserForScores(User user) {
+    scoresUser = user;
+  }
+  
+  public User getUserForScores() {
+    return scoresUser;
+  }
+  
   private class CompRecipes implements Comparator<Map.Entry<String, String[]>>{
     @Override
     public int compare(Map.Entry<String, String[]> t1, Map.Entry<String, String[]> t2) {
       return Double.compare(Double.parseDouble(t1.getValue()[1]), Double.parseDouble(t2.getValue()[1]));
     }
+  }
+
+  private void processScores(List<Double> scores) {
+//    List<String> strs = new ArrayList<>();
+    // create lists, maxes, mins for each considered nutrient
+    Double max = Double.NEGATIVE_INFINITY;
+    Double min = Double.POSITIVE_INFINITY;
+
+    // check for max/min
+    for (double score : scores) {
+      if (score > max) {
+        max = score;
+      }
+      if (score < min) {
+        min = score;
+      }
+    }
+
+    // normalize all nutrients for each type
+    for (double score : scores) {
+      if (max == min) {
+        double fcs = score / 6 * 100;
+//        strs.add(String.valueOf(fcs));
+        scores.set(scores.indexOf(score), fcs);
+      } else {
+        double fcs = CENT - (CENT * ((score - min) / (max - min)));
+//        strs.add(new DecimalFormat("#.00").format(fcs));
+        scores.set(scores.indexOf(score), fcs);
+      }
+    }
+//    return strs;
   }
 
 
@@ -601,20 +665,12 @@ public class Gui {
     @Override
     public Object handle(Request request, Response response) {
       QueryParamsMap map = request.queryMap();
-      String username = map.value("user");
-
-      User currUser = null;
-      try {
-        currUser = Accounts.getUser(username);
-      } catch (AccountException e) {
-        System.out.println("AccountException error: " + e.getMessage());
-      }
+      User currUser = Gui.this.getUserForScores();
       if (currUser == null) {
         Map<String, Object> noUserVars = ImmutableMap.of("title", "User", "output",
-                new HashMap<String, String>());
+                new ArrayList<String>());
         return GSON.toJson(noUserVars);
       }
-      
       RecipeNode target = currUser.getRecommender().getTargetNode();
       List<Double> weights = target.getCoords();
       List<String> nutrients = NutrientInfo.getMainNutrients();
@@ -624,9 +680,11 @@ public class Gui {
       
       
       List<String> weightsAsStrings = new ArrayList<String>();
+      Map<String, String[]> nutrientConversion = NutrientInfo.getNutrients();
 
       for (int i = 0; i < nutrients.size(); i++) {
-        weightsAsStrings.add(nutrients.get(i));
+        String conversion = nutrientConversion.get(nutrients.get(i))[0];
+        weightsAsStrings.add(conversion);
         weightsAsStrings.add(Double.toString(weights.get(i)));
       }
       
