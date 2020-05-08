@@ -148,4 +148,5 @@ times, and I wasn't going to make a separate function for that.
 The BCrypt solution has many checkstyle errors and uses tabs
 instead of spaces (666 errors!!!), and we did not mess with it.
 
-Thank you Tim, HTAs and UTAs for a fantastic semester! Special thanks to Gabi, who was supportive of all our ideas throughout this project. We really couldn't have made it through without such a wonderful and thoughtful TA!
+## Thank You!
+Thank you Tim, HTAs and UTAs for a fantastic semester! This was a difficult project for us due to the circumstances, and we realize that it is equally hard on the staff of CS32. Special thanks to Gabi, who was supportive of all our ideas throughout this project. We really couldn't have made it through without such a wonderful and thoughtful TA!
