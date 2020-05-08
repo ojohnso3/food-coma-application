@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -49,6 +50,8 @@ public class Gui {
   private final Set<String> nutrients;
   private String prevQuery;
   private final Set<String> prevRestrictions;
+  private static final int CENT = 100;
+
   public Gui() {
     clickedSet  = new HashSet<>();
     nutrients = new HashSet<>();
@@ -521,7 +524,12 @@ public class Gui {
         String[] fields = new String[2];
         fields[0] = recp.getLabel();
         System.out.println("Weight inputted: " + foodComaScores.get(k).toString());
-        fields[1] = foodComaScores.get(k).toString(); //TODO:
+        //only give 5 digits
+        String sc = foodComaScores.get(k).toString().substring(0, 5);
+        System.out.println("5 DIGITS: " + sc);
+        // only give 2 decimals
+        System.out.println("TRUNCATED 2:" + new DecimalFormat("#.##").format(foodComaScores.get(k)));
+        fields[1] = sc;
         Collection coll = new ArrayList();
         coll.add(recp.getCompactUri());
         coll.add(fields[0]);
@@ -613,7 +621,7 @@ public class Gui {
       if (max == min) {
         return;
       } else {
-        scores.set(scores.indexOf(score), 100 - 100 * ((score - min) / (max - min)));
+        scores.set(scores.indexOf(score), CENT - (CENT * ((score - min) / (max - min))));
       }
     }
   }
