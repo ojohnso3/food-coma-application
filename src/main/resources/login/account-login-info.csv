@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 username,passwordHash,salt
 lasttry,$2a$10$1J2KeiDzc2tdoJhMR6So9e35T9ptrHaTpijQfXEPBw//yijgNBBvS,$2a$10$1J2KeiDzc2tdoJhMR6So9e
 pleasework,$2a$10$CPCb8y.idkUejdVKRYW6COyr5qwuSqJxKQU7cDLuMJWMD7vCgKCiW,$2a$10$CPCb8y.idkUejdVKRYW6CO
 newnewnew,$2a$10$ZcjyWaj.HDYLs//z9r43ruJTgI5jpnjCgRWfDxwWIPOLOdOj2ZmAS,$2a$10$ZcjyWaj.HDYLs//z9r43ru
+=======
+username,passwordHash,salt
+>>>>>>> ea1a5b721a603e4dffbd769e7764530b1de5825a
