@@ -563,3 +563,20 @@ input[type="submit"].survey_button {
     width: 450px;
     font-size: 20px;
 }
+
+.score {
+    color: #fee6c2;
+    font-size: 16px;
+}
+
+.side_recipes {
+    font-size: 24px;
+}
+
+#score_note {
+    background-color: black;
+    font-size: 30px;
+    padding: 5px;
+    margin-left: 30%;
+    margin-right: 30%;
+}

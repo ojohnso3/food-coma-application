@@ -23,6 +23,7 @@ import edu.brown.cs.student.login.AccountException;
 import edu.brown.cs.student.login.Accounts;
 import edu.brown.cs.student.login.User;
 import edu.brown.cs.student.login.UserCreationException;
+import edu.brown.cs.student.recommendation.RecipeNode;
 import edu.brown.cs.student.recommendation.RecommendationException;
 import edu.brown.cs.student.recommendation.Recommender;
 import freemarker.template.Configuration;
@@ -90,6 +91,7 @@ public class Gui {
             new ArrayList<Recipe>()), freeMarker);
     Spark.get("/user", new SetupHandler("user.ftl", "User Profile",
             new ArrayList<Recipe>()), freeMarker);
+    Spark.get("/score", new SetupHandler("score.ftl", "Your Score", new ArrayList<Double>()), freeMarker);
 
     Spark.post("/search", new SearchPostHandler());
     Spark.post("/logged", new LoginHandler());
@@ -98,6 +100,8 @@ public class Gui {
     Spark.post("/survey_post", new SurveyHandler());
     Spark.post("/recipe/recipeuri", new RecipeHandler(this));
     Spark.post("/toggleNutrient", new NutrientHandler());
+    Spark.post("/score", new ScoreHandler());
+
     // OLD Routes
 //    Spark.get("/results", new SubmitHandler(), freeMarker);
 //    Spark.get("/recipe/:recipeuri", new RecipeHandler());
@@ -525,15 +529,34 @@ public class Gui {
 //        System.out.println("KEY:::  " + string);
       }
 
-     Map<String, double[]> nuts = currRecipe.getNutrientsMap();
-      String[] nutValues = new String[nuts.keySet().size()*2];
+      Map<String, double[]> nuts = currRecipe.getNutrientsMap();
+      Map<String, String[]> nutrientConversion = NutrientInfo.getNutrients();
+//      String[] nutValues = new String[nuts.keySet().size()*2];
+//      int i = 0;
+//      int j = 1;
+//      for (String itm : nuts.keySet()) {
+//        // nutValues[i] = itm;
+//        nutValues[i] = nutrientConversion.get(itm)[0];
+//        nutValues[j] = Double.toString(nuts.get(itm)[1]);
+//        System.out.println("NUT i " + nutValues[i]);
+//        System.out.println("NUT j " + nutValues[j]);
+//        i+=2;
+//        j+=2;
+//      }
+      String[] nutValues = new String[nuts.keySet().size()*3];
       int i = 0;
       int j = 1;
+      int l = 2;
       for (String itm : nuts.keySet()) {
-        nutValues[i] = itm;
+        nutValues[i] = nutrientConversion.get(itm)[0];
         nutValues[j] = Double.toString(nuts.get(itm)[1]);
-        i+=2;
-        j+=2;
+        nutValues[l] = nutrientConversion.get(itm)[1];
+        System.out.println("NUT i " + nutValues[i]);
+        System.out.println("NUT j " + nutValues[j]);
+        System.out.println("NUT l " + nutValues[l]);
+        i+=3;
+        j+=3;
+        l+=3;
       }
       List<Map.Entry<String, String[]>> recipeListSet = new LinkedList<>(recipePageRecipes.entrySet());
       Collections.sort(recipeListSet, new CompRecipes());
@@ -586,6 +609,47 @@ public class Gui {
         nutrients.add(nutrient);
       }
       return null;
+    }
+  }
+  
+  private class ScoreHandler implements Route {
+    @Override
+    public Object handle(Request request, Response response) {
+      QueryParamsMap map = request.queryMap();
+      String username = map.value("user");
+
+      User currUser = null;
+      try {
+        currUser = Accounts.getUser(username);
+      } catch (AccountException e) {
+        System.out.println("AccountException error: " + e.getMessage());
+      }
+      if (currUser == null) {
+        Map<String, Object> noUserVars = ImmutableMap.of("title", "User", "output",
+                new HashMap<String, String>());
+        return GSON.toJson(noUserVars);
+      }
+      
+      RecipeNode target = currUser.getRecommender().getTargetNode();
+      List<Double> weights = target.getCoords();
+      List<String> nutrients = NutrientInfo.getMainNutrients();
+      nutrients.addAll(NutrientInfo.getSecondaryNutrients());
+      
+      assert(nutrients.size() == weights.size());
+      
+      
+      List<String> weightsAsStrings = new ArrayList<String>();
+
+      for (int i = 0; i < nutrients.size(); i++) {
+        weightsAsStrings.add(nutrients.get(i));
+        weightsAsStrings.add(Double.toString(weights.get(i)));
+      }
+      
+      assert(weightsAsStrings.size() == weights.size() * 2);
+
+      Map<String, Object> variables = ImmutableMap.of("title", "User", "output", weightsAsStrings);
+  
+      return GSON.toJson(variables);
     }
   }
   /**
