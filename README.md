@@ -113,7 +113,7 @@ _On your first meeting with your mentor TA, you should plan dates for at least t
 **Adversary Checkpoint:** _(Schedule for on or before April 29 once you are assigned an adversary TA)_
 
 ## How to Build and Run
-_A necessary part of any README!_
+to build use `mvn package`, then run using `./run --gui`
 
 ## Recipe Database API
 **The database's tagging isn't perfect; for example, checking
@@ -129,7 +129,9 @@ https://howtodoinjava.com/security/how-to-generate-secure-password-hash-md5-sha-
 ## Checkstyle Errors:
 I have a few extra method overrides in Account in case a user wanted to 
 login through the repl or some other cases, so there are some
-unused functions errors.
+unused functions errors. 
+
+It sometimes gets mad about "new ArrayList"
 
 The BCrypt solution has some checkstyle errors and uses tabs
 instead of spaces but I didn't want to mess with it.
