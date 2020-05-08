@@ -30,6 +30,22 @@ public class Recipe {
   private final Map<String, double[]> nutrients;
 
 
+  /**
+   * This is the constructor for our recipe. It creates a recipe with the given fields.
+   * @param uri This recipe's URI
+   * @param label This recipe's title (label)
+   * @param image This recipe's image URL
+   * @param source The source of the recipe URL
+   * @param url The Edamam Recipe URL
+   * @param yield The yield of this recipe
+   * @param calories The calories of this recipe
+   * @param totalWeight The total weight of this recipe
+   * @param totalTime The total time of this recipe
+   * @param ingredients The ingredients of this recipe
+   * @param nutrients The nutrients of this recipe
+   * @param dietLabels The diet labels of this recipe
+   * @param healthLabels The health labels of this recipe
+   */
   public Recipe(String uri, String label, String image, String source, String url, double yield,
                 double calories, double totalWeight, double totalTime, List<Ingredient> ingredients,
                 Map<String, double[]> nutrients, List<String> dietLabels,
@@ -49,6 +65,21 @@ public class Recipe {
     this.nutrients = nutrients;
   }
 
+  /**
+   * This is another constructor for our Recipe. It differs because it has less.
+   * fields due to testing
+   * @param uri This recipe's URI
+   * @param label This recipe's title (label)
+   * @param image This recipe's image URL
+   * @param source The source of the recipe URL
+   * @param url The Edamam Recipe URL
+   * @param yield The yield of this recipe
+   * @param calories The calories of this recipe
+   * @param totalWeight The total weight of this recipe
+   * @param totalTime The total time of this recipe
+   * @param ingredients The ingredients of this recipe
+   * @param nutrients The nutrients of this recipe
+   */
   public Recipe(String uri, String label, String image, String source, String url, double yield,
                 double calories, double totalWeight, double totalTime, List<Ingredient> ingredients,
                 Map<String, double[]> nutrients) {
@@ -65,14 +96,27 @@ public class Recipe {
     this.nutrients = nutrients;
   }
 
+  /**
+   * This method gets the ingredients in this recipe.
+   * @return The ingredients
+   */
   public List<Ingredient> getIngredients() {
     return ingredients;
   }
 
+  /**
+   * This method gets the URI in this recipe.
+   * @return The URI of the recipe
+   */
   public String getUri() {
     return uri;
   }
 
+  /**
+   * This method gets the Nutrient Values in this recipe.
+   * @param nutrientCode the nutrient code searching for
+   * @return The nutrient of the recipe
+   */
   public double[] getNutrientVals(String nutrientCode) {
     if (this.nutrients == null) {
       return null;
@@ -80,27 +124,49 @@ public class Recipe {
     return this.nutrients.get(nutrientCode);
   }
 
+  /**
+   * Gets the nutrient map of this recipe.
+   * @return The nutrient map
+   */
   public Map<String, double[]> getNutrientsMap() {
     return nutrients;
   }
 
+  /**
+   * This method prepares the recipe for insertion into the DB.
+   * @return The string of the insertion
+   */
   public String prepareForInsert() {
     label = label.replace("\"", "");
     return "\"" + uri + "\",\"" + label + "\",\"" + image + "\",\"" + source + "\",\"" + url
         + "\"," + yield + "," + calories + "," + totalWeight + "," + totalTime;
   }
 
+  /**
+   * This method gets the name of the recipe.
+   * @return The name of the recipe
+   */
   public String getLabel() {
     return label;
   }
-
+  /**
+   * This method gets the image of the recipe.
+   * @return The image of the recipe
+   */
   public String getImage() {
     return image;
   }
-
+  /**
+   * This method gets the URL of the recipe.
+   * @return The URL of the recipe
+   */
   public String getUrl() {
     return url;
   }
+  /**
+   * This method gets the Compact URL of the recipe for our website's URL generation.
+   * @return The URL of the recipe
+   */
   public String getCompactUri() {
     Pattern load = Pattern.compile("#recipe_(.+)");
     Matcher matchUri = load.matcher(this.getUri());
@@ -111,10 +177,18 @@ public class Recipe {
     }
   }
 
+  /**
+   * Gets the diet labels of this recipe.
+   * @return The diet labels
+   */
   public List<String> getDietLabels() {
     return dietLabels;
   }
 
+  /**
+   * Gets the health labels of this recipe.
+   * @return The health labels
+   */
   public List<String> getHealthLabels() {
     return healthLabels;
   }
