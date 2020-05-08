@@ -15,7 +15,7 @@ function getWeights() {
     $.post("/score", postParameters, response => {
 
         const output = JSON.parse(response);
-        console.log("SCOR POST");
+        console.log("SCORE POST");
 
         if (output.output.length == 0) {
             document.getElementById("weights").innerHTML += " <h4 id=\"all_weights\">Weights are unable to be processed at this time.</h4>";

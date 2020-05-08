@@ -240,7 +240,6 @@ public class KDTree<N extends KDNode<N>> {
     dist = new LinkedList<>();
     EuclideanComparator<N> dc = new EuclideanComparator<>(target);
     while (!nearbyNodes.isEmpty()) {
-//      System.out.println("DIST: " + distance(nearbyStars.peek(), target));
       N curr = nearbyNodes.poll();
       ls.addFirst(curr);
       dist.addFirst(dc.getDist(curr, target));
@@ -283,7 +282,6 @@ public class KDTree<N extends KDNode<N>> {
     N skippedTree = null;
     N newFarthest = nearbyNodes.peek();
     assert newFarthest != null;
-//    System.out.println(distance(target,newFarthest));
     if (distance(target, newFarthest) >= Math.abs(currCoord - targetCoord)) {
       nearestSearchRec(target, k, curr.getLeftChild(), nearbyNodes, (axis + 1) % this.dim);
       nearestSearchRec(target, k, curr.getRightChild(), nearbyNodes, (axis + 1) % this.dim);
@@ -457,8 +455,6 @@ public class KDTree<N extends KDNode<N>> {
     // find the average for each coord by dividing by the total # of recipes and set
     List<Double> targetCoords = target.getCoords();
     for (int i = 0; i < coordsSum.size(); i++) {
-      System.out.println("Nodes size (CANNOT be 0) kdtree:459: " + nodes.size());
-      System.out.println("SUM kdtree 460: " + coordsSum.get(i));
       targetCoords.set(i, coordsSum.get(i) / nodes.size());
     }
   }

@@ -78,8 +78,6 @@ public class Gui {
   public void runSparkServer(int port) {
     Spark.port(port);
     Spark.externalStaticFileLocation("src/main/resources/static");
-//    Spark.exception(Exception.class, new ExceptionPrinter());
-
     FreeMarkerEngine freeMarker = createEngine();
 
     // Setup Spark Routes
@@ -102,15 +100,11 @@ public class Gui {
     Spark.post("/signed", new SignupHandler());
     Spark.post("/saved", new SavedHandler());
     Spark.post("/survey_post", new SurveyHandler());
-    Spark.post("/recipe/recipeuri", new RecipeHandler(this));
+    Spark.post("/recipe/recipeuri", new RecipeHandler());
     Spark.post("/toggleNutrient", new NutrientHandler());
     Spark.post("/score", new ScoreHandler());
-
-    // OLD Routes
-//    Spark.get("/results", new SubmitHandler(), freeMarker);
-//    Spark.get("/recipe/:recipeuri", new RecipeHandler());
-
   }
+
   // handlers for gui that interact w/html and javascript
   /**
    * Handle GET requests.
@@ -135,7 +129,7 @@ public class Gui {
     }
   }
 
-  /*
+  /**
    * This class handles post requests from the Search page
    */
   private class SearchPostHandler implements Route {
@@ -188,10 +182,16 @@ public class Gui {
 
       } catch (FileNotFoundException e) {
         System.out.println("File Not Found Exception: " + e.getMessage());
-      } catch( ClassNotFoundException e){
+      } catch(ClassNotFoundException e){
         System.out.println("Class Not Found Exception: " + e.getMessage());
-      }catch( SQLException e) {
+      }catch(SQLException e){
         System.out.println("SQLException: " + e.getMessage());
+      } catch(InterruptedException e){
+        System.out.println("InterruptedException: " + e.getMessage());
+      } catch(APIException e){
+        System.out.println("APIException: " + e.getMessage());
+      }catch(IOException e) {
+        System.out.println("IOException: " + e.getMessage());
       }
       Map<String, Object> variables = ImmutableMap.of("recipes", recipes, "simpleRecipeList",
               simpleRecipeList);
@@ -240,9 +240,6 @@ public class Gui {
       QueryParamsMap map = req.queryMap();
       String username = map.value("username");
       String feedback = map.value("feedback");
-      
-      System.out.println("USER " + username);
-      System.out.println("FEEDBACK " + feedback);
       User currUser = null;
       try {
         currUser = Accounts.getUser(username);
@@ -254,19 +251,12 @@ public class Gui {
       
       for (String nutrient: nutrientsMap.keySet()) {
         String currNu = map.value(nutrient);
-        System.out.println("1: " + nutrient + "2: " + currNu);
         if (currNu.equals("true")) {
           nutrients.add(nutrientsMap.get(nutrient));
         }
       }
-      
       String output;
-      
-      System.out.println("SIZE OF NUT " + nutrients.size());
-      
       if (nutrients.size() > 2) {
-        System.out.println(nutrients);
-        System.out.println(currUser);
         try {
           currUser.setNutrients(nutrients);
         } catch (SQLException e) {
@@ -281,9 +271,7 @@ public class Gui {
           "Login", "output", output);
 
       return GSON.toJson(variables);
-
     }
-
   }
 
   /**
@@ -341,10 +329,8 @@ public class Gui {
       
       String output = "Failed Sign-up: Please try again.";
       try {
-        System.out.println("CHECK " + Accounts.checkSignUpValidity(user, pass1, pass2));
         if (Accounts.checkSignUpValidity(user, pass1, pass2)) {
           User newUser = new User(user, pass1);
-          System.out.println("NEW USER?: " + newUser);
           newUser.setRecommender(new Recommender(newUser));
           output = "Successful Sign-up!";
         }
@@ -377,7 +363,6 @@ public class Gui {
       QueryParamsMap map = req.queryMap();
       String username = map.value("user");
 
-      System.out.println(username);
       User currUser = null;
       try {
         currUser = Accounts.getUser(username);
@@ -390,20 +375,11 @@ public class Gui {
         return GSON.toJson(noUserVars);
       }
       List<Recipe> prevRecipes = currUser.getPreviousRecipes();
-
-      System.out.println("SIZE " + prevRecipes.size());
-
       Map<String, String> output = new HashMap<>();
 
       for (Recipe r : prevRecipes) {
         output.put(r.getCompactUri(), r.getLabel());
       }
-      
-      System.out.println("MAP SIZE " + output.size());
-//      output.put("URI1", "NAME1");
-//      output.put("URI2", "NAME2");
-//      output.put("URI3", "NAME3");
-
       Map<String, Object> variables = ImmutableMap.of("title", "User", "output", output);
   
       return GSON.toJson(variables);
@@ -416,9 +392,7 @@ public class Gui {
    * calling the Recommender to obtain the recommended recipes.
    */
   private class RecipeHandler implements Route {
-    private final Gui gui;
-    RecipeHandler(Gui g) {
-      gui = g;
+    RecipeHandler() {
     }
     @Override
     public String handle(Request req, Response res) {
@@ -427,9 +401,7 @@ public class Gui {
       String username = qm.value("username");
 
       User currUser = null;
-      System.out.println("pre BAGELS");
       try {
-        System.out.println("PIZZA BAGELS");
         currUser = Accounts.getUser(username);
         Gui.this.setUserForScores(currUser);
       } catch (AccountException e) {
@@ -465,24 +437,8 @@ public class Gui {
         }
       }
       Recipe currRecipe = null;
-      try {
-        System.out.println("ABOUT TO ENTER " + recipeURI);
-        RecipeDatabase.loadDatabase("/data/recipeDatabase.sqlite3");
-        currRecipe = RecipeDatabase.getRecipeFromURI(recipeURI);
-      } catch (SQLException e){
-        System.out.println("SQLException getting recipe from database: " + e.getMessage());
-      } catch(InterruptedException e){
-        System.out.println("InterruptedException getting recipe from database: " + e.getMessage());
-      } catch(APIException e){
-        System.out.println("API Exception getting recipe from database: " + e.getMessage());
-      } catch(IOException e){
-        System.out.println("IOException getting recipe from database: " + e.getMessage());
-      } catch(ClassNotFoundException e) {
-        System.out.println("ClassNotFoundException getting recipe from database: " + e.getMessage());
-      }
       if (currRecipe == null) {
         try {
-          System.out.println("RECIPE URI LOOKUP" + recipeURI);
           currRecipe = RecipeDatabase.getRecipeFromURI("http://www.edamam.com/ontologies/edamam.owl#recipe_" + recipeURI);
         } catch (IOException e) {
           System.out.println("IOException in getting recipe from API");
@@ -510,33 +466,30 @@ public class Gui {
         if (prevQuery == null) {
           prevQuery = "";
         }
-        System.out.println("MakingRecommendations");
         recommendations = recommender.makeRecommendation(prevQuery, new HashMap<>(),
                 prevRestrictions);
-      } catch (RecommendationException e) {
+      } catch (RecommendationException e){
+        System.out.println("RecommendationException in getting recommendations on recipe page: " + e.getMessage());
+
+      } catch(InterruptedException e){
+        System.out.println("InterruptedException in getting recommendations on recipe page: " + e.getMessage());
+      } catch(SQLException e){
+        System.out.println("SQLException in getting recommendations on recipe page: " + e.getMessage());
+      } catch (APIException e) {
+        System.out.println("APIException in getting recommendations on recipe page: " + e.getMessage());
+      } catch (IOException e) {
         System.out.println("RecommendationException in getting recommendations on recipe page: " + e.getMessage());
       }
-//      } catch(InterruptedException e){
-//        System.out.println("InterruptedException in getting recommendations on recipe page: " + e.getMessage());
-//      } catch( IOException e){
-//        System.out.println("IOException in getting recommendations on recipe page: " + e.getMessage());
-//      } catch(APIException e) {
-//        System.out.println("APIException in getting recommendations on recipe page: " + e.getMessage());
-//      }
 
       Map<String, String[]> recipePageRecipes = new HashMap<>();
       Collection[] collections = new Collection[recommendations.size()];
-      Set<String> keys = gui.recipesMap.keySet();
       int k = 0;
       List<Double> foodComaScores = recommender.getFoodComaScores();
       processScores(foodComaScores);
       for (Recipe recp : recommendations) {
         String[] fields = new String[2];
         fields[0] = recp.getLabel();
-        // only give 2 decimals
         String foodComaScore = new DecimalFormat("#.00").format(foodComaScores.get(k));
-        System.out.println("Weight inputted: " + foodComaScore);
-
         fields[1] = foodComaScore;
         Collection coll = new ArrayList();
         coll.add(recp.getCompactUri());
@@ -555,7 +508,6 @@ public class Gui {
       int j = 1;
       int l = 2;
       for (String itm : nuts.keySet()) {
-        System.out.println("ITEM " + itm);
         if (nutrientConversion.keySet().contains(itm)) {
           nutValues[i] = nutrientConversion.get(itm)[0];
           nutValues[j] = Double.toString(nuts.get(itm)[1]);
@@ -581,19 +533,30 @@ public class Gui {
               .put("sortedArray", collections)
               .build();
       String json = GSON.toJson(variables);
-      System.out.println("JSON " + json);
       return json;
     }
   }
-  
+
+  /**
+   * This method sets the user in able to allow for the foodCOMA score to be obtained
+   * @param user the User we are looking for
+   */
   public void setUserForScores(User user) {
     scoresUser = user;
   }
-  
+
+  /**
+   * This method gets the User to obtain the score
+   * @return the User
+   */
   public User getUserForScores() {
     return scoresUser;
   }
-  
+
+  /*
+   * This class is a comparator which compares the foodCOMA scores to order them before
+   * they are sent to the front end.
+   */
   private class CompRecipes implements Comparator<Map.Entry<String, String[]>>{
     @Override
     public int compare(Map.Entry<String, String[]> t1, Map.Entry<String, String[]> t2) {
@@ -601,8 +564,8 @@ public class Gui {
     }
   }
 
+
   private void processScores(List<Double> scores) {
-//    List<String> strs = new ArrayList<>();
     // create lists, maxes, mins for each considered nutrient
     Double max = Double.NEGATIVE_INFINITY;
     Double min = Double.POSITIVE_INFINITY;
@@ -621,32 +584,17 @@ public class Gui {
     for (double score : scores) {
       if (max == min) {
         double fcs = score / 6 * 100;
-//        strs.add(String.valueOf(fcs));
         scores.set(scores.indexOf(score), fcs);
       } else {
         double fcs = CENT - (CENT * ((score - min) / (max - min)));
-//        strs.add(new DecimalFormat("#.00").format(fcs));
         scores.set(scores.indexOf(score), fcs);
       }
     }
-//    return strs;
   }
 
-
-  private Collection[] recpPageToArray(Map<String, String[]> recipes){
-    Collection[] coll = new Collection[recipes.keySet().size()];
-    int i = 0;
-    for(String uri : recipes.keySet()){
-      Collection collection = new ArrayList();
-      collection.add(uri);
-      collection.add(recipes.get(uri)[0]);
-      collection.add(recipes.get(uri)[1]);
-      coll[i] = collection;
-      i++;
-    }
-    return coll;
-  }
-
+  /**
+   * This class models the handler to obtain the nutrient values
+   */
   private class NutrientHandler implements Route {
     @Override
     public Object handle(Request request, Response response) {
@@ -660,7 +608,11 @@ public class Gui {
       return null;
     }
   }
-  
+
+  /**
+   * This class is the handler for our foodCOMA score "About" page. It gets a special,
+   * non-normalized node from our recommder to display the actual values we are targeting.
+   */
   private class ScoreHandler implements Route {
     @Override
     public Object handle(Request request, Response response) {
