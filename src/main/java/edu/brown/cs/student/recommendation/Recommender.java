@@ -1,6 +1,10 @@
 package edu.brown.cs.student.recommendation;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 import edu.brown.cs.student.database.FieldParser;
 import edu.brown.cs.student.food.NutrientInfo;
@@ -20,6 +24,8 @@ public class Recommender {
   private static final double MAIN_NUT_WEIGHT = 3.;
   private static final double SEC_NUT_WEIGHT = 1.;
   private final User user;
+  private static List<Double> distances;
+  private RecipeNode targetNode;
 
   /**
    * constructor; should be called on initial survey or on user recreation.
@@ -27,6 +33,10 @@ public class Recommender {
    */
   public Recommender(User user) {
     this.user = Objects.requireNonNullElseGet(user, User::new);
+  }
+
+  public RecipeNode getTargetNode() {
+    return targetNode;
   }
 
   /**
@@ -45,6 +55,7 @@ public class Recommender {
 
       //generate a target node for an ideal recipe using the history
       RecipeNode target = getTargetNode(prevRecipeNodes);
+      this.targetNode = target;
 
       // Nutrients: get the nutrients to weight higher
       List<Double> weightedAxes = getNutrientIndices();
@@ -70,10 +81,7 @@ public class Recommender {
       for (RecipeNode node : recNodes) {
         recommendations.add(node.getRecipe());
       }
-      List<Double> distances = this.recipeTree.getDistances();
-      for (Double d : distances) {
-        System.out.println(d);
-      }
+      distances = this.recipeTree.getDistances();
       return recommendations;
     } catch (KDTreeException e) {
       throw new RecommendationException(e.getMessage());
@@ -176,5 +184,12 @@ public class Recommender {
       coords.add(r.getRecipe().getNutrientVals(code)[0]);
     }
     r.setCoords(coords);
+  }
+
+  public List<Double> getFoodComaScores(){
+    for(Double d : distances) {
+      System.out.println(d);
+    }
+    return distances;
   }
 }

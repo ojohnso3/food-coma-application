@@ -233,16 +233,17 @@ public class KDTree<N extends KDNode<N>> {
       return new LinkedList<>();
     }
     // run recursive nearest neighbors fun
-    PriorityQueue<N> nearbyStars = new PriorityQueue<>(new EuclideanComparator<>(target));
-    nearestSearchRec(target, k, this.root, nearbyStars, 0);
+    PriorityQueue<N> nearbyNodes = new PriorityQueue<>(new EuclideanComparator<>(target));
+    nearestSearchRec(target, k, this.root, nearbyNodes, 0);
     // convert pq to list, reversing order so that least distance is first
     LinkedList<N> ls = new LinkedList<>();
     dist = new LinkedList<>();
     EuclideanComparator<N> dc = new EuclideanComparator<>(target);
-    while (!nearbyStars.isEmpty()) {
+    while (!nearbyNodes.isEmpty()) {
 //      System.out.println("DIST: " + distance(nearbyStars.peek(), target));
-      dist.addFirst(distance(nearbyStars.peek(), target));
-      ls.addFirst(nearbyStars.poll());
+      N curr = nearbyNodes.poll();
+      ls.addFirst(curr);
+      dist.addFirst(dc.getDist(curr, target));
     }
 
     return ls;
@@ -250,7 +251,7 @@ public class KDTree<N extends KDNode<N>> {
   /*
    * recursive part of finding the k-nearest neighbors
    */
-  private void nearestSearchRec(N target, int k, N curr, PriorityQueue<N> nearbyStars, int axis) {
+  private void nearestSearchRec(N target, int k, N curr, PriorityQueue<N> nearbyNodes, int axis) {
     // End/Base Case: if curr is null after leaf, end.
     if (curr == null) {
       return;
@@ -260,17 +261,17 @@ public class KDTree<N extends KDNode<N>> {
     EuclideanComparator<N> dc = new EuclideanComparator<>(target);
     // if neighbors is not full or curr is closer than something in it, add (and remove the far)
     if (curr.equals(target)) { // if it's the target, don't add it into neighbors; just move on
-      nearestSearchRec(target, k, curr.getLeftChild(), nearbyStars, (axis + 1) % this.dim);
-      nearestSearchRec(target, k, curr.getRightChild(), nearbyStars, (axis + 1) % this.dim);
+      nearestSearchRec(target, k, curr.getLeftChild(), nearbyNodes, (axis + 1) % this.dim);
+      nearestSearchRec(target, k, curr.getRightChild(), nearbyNodes, (axis + 1) % this.dim);
       return;
-    } else if (nearbyStars.size() < k) { // not full && !nearbyStars.contains(curr)
-      nearbyStars.add(curr);
+    } else if (nearbyNodes.size() < k) { // not full && !nearbyStars.contains(curr)
+      nearbyNodes.add(curr);
     } else {
-      N farthest = nearbyStars.peek(); // peek O(log)
+      N farthest = nearbyNodes.peek(); // peek O(log)
       assert farthest != null;
       if (dc.compare(curr, farthest) >= 0) { //closer && !nearbyStars.contains(curr)
-        nearbyStars.remove(); // remove old/far O(log)
-        nearbyStars.add(curr); // replace w/ new, close
+        nearbyNodes.remove(); // remove old/far O(log)
+        nearbyNodes.add(curr); // replace w/ new, close
       }
     }
 
@@ -280,27 +281,27 @@ public class KDTree<N extends KDNode<N>> {
     Double currCoord = curr.getCoords().get(axis);
     Double targetCoord = target.getCoords().get(axis);
     N skippedTree = null;
-    N newFarthest = nearbyStars.peek();
+    N newFarthest = nearbyNodes.peek();
     assert newFarthest != null;
 //    System.out.println(distance(target,newFarthest));
     if (distance(target, newFarthest) >= Math.abs(currCoord - targetCoord)) {
-      nearestSearchRec(target, k, curr.getLeftChild(), nearbyStars, (axis + 1) % this.dim);
-      nearestSearchRec(target, k, curr.getRightChild(), nearbyStars, (axis + 1) % this.dim);
+      nearestSearchRec(target, k, curr.getLeftChild(), nearbyNodes, (axis + 1) % this.dim);
+      nearestSearchRec(target, k, curr.getRightChild(), nearbyNodes, (axis + 1) % this.dim);
     } else {
       // if the axis dist is already farther, then subtree will also be farther from just axis dist
       // so we only check the subtree that's closer on that axis
       if (currCoord <= targetCoord) {
         skippedTree = curr.getRightChild();
-        nearestSearchRec(target, k, curr.getLeftChild(), nearbyStars, (axis + 1) % this.dim);
+        nearestSearchRec(target, k, curr.getLeftChild(), nearbyNodes, (axis + 1) % this.dim);
       } else {
         skippedTree = curr.getLeftChild();
-        nearestSearchRec(target, k, curr.getRightChild(), nearbyStars, (axis + 1) % this.dim);
+        nearestSearchRec(target, k, curr.getRightChild(), nearbyNodes, (axis + 1) % this.dim);
       }
     }
 
     // if there's a skipped subtree, go through if the list isn't full
-    if (nearbyStars.size() < k && skippedTree != null) {
-      nearestSearchRec(target, k, skippedTree, nearbyStars, (axis + 1) % this.dim);
+    if (nearbyNodes.size() < k && skippedTree != null) {
+      nearestSearchRec(target, k, skippedTree, nearbyNodes, (axis + 1) % this.dim);
     }
   }
 
@@ -319,28 +320,28 @@ public class KDTree<N extends KDNode<N>> {
       throw new KDTreeException("ERROR: must search in a non-negative radius");
     }
     // run recursive nearest neighbors fun
-    PriorityQueue<N> nearbyStars = new PriorityQueue<>(new EuclideanComparator<>(target));
-    radiusSearchRec(target, r, this.root, nearbyStars, 0);
+    PriorityQueue<N> nearbyNodes = new PriorityQueue<>(new EuclideanComparator<>(target));
+    radiusSearchRec(target, r, this.root, nearbyNodes, 0);
     // convert to list, reversing order so that least distance is first
     LinkedList<N> ls = new LinkedList<>();
-    while (!nearbyStars.isEmpty()) {
-      ls.addFirst(nearbyStars.poll());
+    while (!nearbyNodes.isEmpty()) {
+      ls.addFirst(nearbyNodes.poll());
     }
     return ls;
   }
   /*
    * recursive component.
    */
-  private void radiusSearchRec(N target, double r, N curr, PriorityQueue<N> nearbyStars, int axis) {
+  private void radiusSearchRec(N target, double r, N curr, PriorityQueue<N> nearbyNodes, int axis) {
     // Base: if curr is null after leaf, end.
     if (curr == null) {
       return;
     }
     // Curr: if it's within the radius, add it; must search both children
     if (distance(curr, target) <= r && !curr.equals(target)) { // don't add the target to list
-      nearbyStars.add(curr);
-      radiusSearchRec(target, r, curr.getLeftChild(), nearbyStars, (axis + 1) % this.dim);
-      radiusSearchRec(target, r, curr.getRightChild(), nearbyStars, (axis + 1) % this.dim);
+      nearbyNodes.add(curr);
+      radiusSearchRec(target, r, curr.getLeftChild(), nearbyNodes, (axis + 1) % this.dim);
+      radiusSearchRec(target, r, curr.getRightChild(), nearbyNodes, (axis + 1) % this.dim);
       return; // End here.
     }
 
@@ -349,14 +350,14 @@ public class KDTree<N extends KDNode<N>> {
     Double targetCoord = target.getCoords().get(axis);
     // if the axis distance is less than the radius, search both; else, only search under tree
     if (r + EPSILON >= Math.abs(currCoord - targetCoord)) {
-      radiusSearchRec(target, r, curr.getLeftChild(), nearbyStars, (axis + 1) % this.dim);
-      radiusSearchRec(target, r, curr.getRightChild(), nearbyStars, (axis + 1) % this.dim);
+      radiusSearchRec(target, r, curr.getLeftChild(), nearbyNodes, (axis + 1) % this.dim);
+      radiusSearchRec(target, r, curr.getRightChild(), nearbyNodes, (axis + 1) % this.dim);
     } else if (currCoord < targetCoord) {
       // curr is too negative of the target area, search greater side subtree
-      radiusSearchRec(target, r, curr.getRightChild(), nearbyStars, (axis + 1) % this.dim);
+      radiusSearchRec(target, r, curr.getRightChild(), nearbyNodes, (axis + 1) % this.dim);
     } else {
       // search more negative side subtree
-      radiusSearchRec(target, r, curr.getLeftChild(), nearbyStars, (axis + 1) % this.dim);
+      radiusSearchRec(target, r, curr.getLeftChild(), nearbyNodes, (axis + 1) % this.dim);
     }
   }
 

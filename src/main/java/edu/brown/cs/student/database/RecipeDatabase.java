@@ -353,7 +353,6 @@ public final class RecipeDatabase {
     } catch (SQLException e) {
       e.printStackTrace();
     }
-
     return retVal;
   }
 
@@ -382,11 +381,13 @@ public final class RecipeDatabase {
   }
 
   /**
-   * Function to turn the set of restrictions into a string that can be inserted into the database.
-   * @param restrictions - the set of restrictions to insert to the database.
-   * @return - the string to insert to the database.
+   * This method prepares the set of restrictions to be inserted to the
+   * SQL database in alphabetical order
+   * @param restrictions The list of restrictions to insert
+   * @return The String which represents this list of restrictions
    */
-  public static String prepRestrictionsForDB(Set<String> restrictions) {
+  public static String prepRestrictionsForDB(Set<String> restrictions){
+
     String insertThis = "";
     if (restrictions.contains("alcohol-free")) {
       insertThis += "a";
