@@ -26,7 +26,7 @@ h1 {
     bottom: 0;
     width: 8px;
     margin-top: 133px;
-    height: 600px;
+    height: 650px;
 }
 
 #left {
@@ -86,7 +86,7 @@ a:hover {
     justify-content: center;
     margin-top: 132px;
     border: solid 3px black;
-    height: 630px;
+    height: 680px;
     width: 100px;
     width: 99.6%;
     display: cover;
