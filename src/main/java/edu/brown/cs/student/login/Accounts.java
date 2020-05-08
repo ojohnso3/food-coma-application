@@ -32,6 +32,7 @@ public class Accounts {
    * get a specific User.
    * @param username - name
    * @return the User, null if they don't exist
+   * @throws AccountException if no user is found
    */
   public static User getUser(String username) throws AccountException {
     User user = nameUserMap.get(username);
@@ -116,8 +117,11 @@ public class Accounts {
   public static void checkHeader() throws AccountException {
     checkHeader(LOGIN_INFO_PATH);
   }
-  /*
-   * implementation
+
+  /**
+   * implementation.
+   * @param path filepath for project
+   * @throws AccountException if header is malformed
    */
   public static void checkHeader(String path) throws AccountException {
     if (!path.equals("username,passwordHash,salt")
@@ -162,13 +166,16 @@ public class Accounts {
    * @param inpUser username
    * @param inpPass password
    * @return true if can login, false else
-   * @throws AccountException for file errors
+   * @throws AccountException on malformed csv
    */
   public static boolean checkLogin(String inpUser, String inpPass) throws AccountException {
     return checkLogin(inpUser, inpPass, LOGIN_INFO_PATH);
   }
-  /*
+
+  /**
    * for repl, reads in username and password from user keyboard (System.in)
+   * @return true if can login
+   * @throws AccountException on malformed csv
    */
   public static boolean checkLogin() throws AccountException {
     try (Scanner keyboard = new Scanner(System.in)) {
@@ -180,8 +187,14 @@ public class Accounts {
       return checkLogin(inpUser, inpPass, LOGIN_INFO_PATH);
     }
   }
-  /*
-   * implementation
+
+  /**
+   * implementation.
+   * @param inpUser username inputted
+   * @param inpPass passwrod inputted
+   * @param path filepath from project
+   * @return true if can login
+   * @throws AccountException on malformed csv
    */
   public static boolean checkLogin(String inpUser, String inpPass, String path) throws
           AccountException {

@@ -21,7 +21,7 @@ import java.security.SecureRandom;
 /**
  * BCrypt implements OpenBSD-style Blowfish password hashing using
  * the scheme described in "A Future-Adaptable Password Scheme" by
- * Niels Provos and David Mazieres.
+ * Niels Provos and David Mazieres
  * <p>
  * This password hashing system tries to thwart off-line password
  * cracking using a computationally-intensive hashing algorithm,

@@ -131,7 +131,8 @@ I have a few extra method overrides in Account in case a user wanted to
 login through the repl or some other cases, so there are some
 unused functions errors. 
 
-It sometimes gets mad about "new ArrayList"
+It sometimes gets mad about creating "new ArrayList<>()" multiple
+times, and I wasn't going to make a separate function for that.
 
-The BCrypt solution has some checkstyle errors and uses tabs
-instead of spaces but I didn't want to mess with it.
+The BCrypt solution has many checkstyle errors and uses tabs
+instead of spaces (666 errors!!!), and we did not mess with it.

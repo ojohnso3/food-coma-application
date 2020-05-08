@@ -68,6 +68,9 @@ public class User {
     // don't add test users to map or user database
   }
 
+  /**
+   * empty user for null occasions.
+   */
   public User() {
     this.username = "";
     this.previousRecipes = new ArrayList<>();
@@ -176,6 +179,10 @@ public class User {
     return this.recommender;
   }
 
+  /**
+   * setter.
+   * @param r rec
+   */
   public void setRecommender(Recommender r) {
     this.recommender = r;
   }
