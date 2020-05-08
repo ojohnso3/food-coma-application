@@ -56,7 +56,7 @@ public class Gui {
   public Gui() {
     clickedSet  = new HashSet<>();
     nutrients = new HashSet<>();
-    prevRestrictions = new HashSet<String>();
+    prevRestrictions = new HashSet<>();
   }
 
   private static FreeMarkerEngine createEngine() {
@@ -571,14 +571,8 @@ public class Gui {
         System.out.println("User: " + currUser);
         recommendations = recommender.makeRecommendation(prevQuery, new HashMap<>(),
                 prevRestrictions);
-      } catch (RecommendationException e){
+      } catch (RecommendationException e) {
         System.out.println("RecommendationException in getting recommendations on recipe page: " + e.getMessage());
-      } catch(InterruptedException e){
-        System.out.println("InterruptedException in getting recommendations on recipe page: " + e.getMessage());
-      } catch( IOException e){
-        System.out.println("IOException in getting recommendations on recipe page: " + e.getMessage());
-      } catch(APIException e) {
-        System.out.println("APIException in getting recommendations on recipe page: " + e.getMessage());
       }
 
       Map<String, String[]> recipePageRecipes = new HashMap<>();
@@ -598,9 +592,9 @@ public class Gui {
       Map<String, String> nutrientsMap = new HashMap<>();
 
       Map<String, double[]> map = currRecipe.getNutrientsMap();
-      for (String string : map.keySet()) {
+//      for (String string : map.keySet()) {
 //        System.out.println("KEY:::  " + string);
-      }
+//      }
 
      Map<String, double[]> nuts = currRecipe.getNutrientsMap();
       String[] nutValues = new String[nuts.keySet().size()*2];
