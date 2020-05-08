@@ -1,8 +1,2 @@
 username,passwordHash,salt
-olivia1,$2a$10$bmh5ryGyfZGTgBl5a4tlseyEUmDlIsGdLP61wpvHZkU4AmTPIQ2A.,$2a$10$bmh5ryGyfZGTgBl5a4tlse
-newuser2,$2a$10$JDGbuGVls7FLmLsISYh3zOKYP/f/Vf4lmNOeelNbH6tqMENenBEtq,$2a$10$JDGbuGVls7FLmLsISYh3zO
-abcd,$2a$10$uCTZJU5NDHD4ozo6mZ0iTukjhtnxeykUKy3QibcEM3d5Aci4w1Z6.,$2a$10$uCTZJU5NDHD4ozo6mZ0iTu
-newwe,$2a$10$B6rkzWto0EoZLanXZ.uyt.w8oeAVpp3kdFcu/vgQ4e6bE.g8hbO.G,$2a$10$B6rkzWto0EoZLanXZ.uyt.
-5678,$2a$10$vd9KEBwgq74JV6yp.9ioNu1G.0mUnruXzvQ3rIz.DqHu7S2VElY/G,$2a$10$vd9KEBwgq74JV6yp.9ioNu
-q23456,$2a$10$HP.Z6qSyX7Zv6LWlD9IsjePL8OJqADafBLpDsYyTJBu2X2XnTWxt.,$2a$10$HP.Z6qSyX7Zv6LWlD9Isje
-123435,$2a$10$bF5al9BqC25SLHdtnZIax.kWGeNRatlB6hnlPnzd.fb3..7Sl.32u,$2a$10$bF5al9BqC25SLHdtnZIax.
+user,$2a$10$KXH3Qa90rPZj5WaLh1p8u.AO./NL0u3B/tiAtUaiusVxFn0RqShM.,$2a$10$KXH3Qa90rPZj5WaLh1p8u.

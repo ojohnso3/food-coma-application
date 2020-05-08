@@ -671,7 +671,12 @@ public class Gui {
                 new ArrayList<String>());
         return GSON.toJson(noUserVars);
       }
-      RecipeNode target = currUser.getRecommender().getTargetNode();
+      RecipeNode target = null;
+      try {
+        target = currUser.getRecommender().getUnnormalizedTargetNode();
+      } catch (RecommendationException e) {
+        System.out.println("RecommendationException: " + e.getMessage());
+      }
       List<Double> weights = target.getCoords();
       List<String> nutrients = NutrientInfo.getMainNutrients();
       nutrients.addAll(NutrientInfo.getSecondaryNutrients());

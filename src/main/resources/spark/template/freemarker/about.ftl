@@ -19,7 +19,7 @@
 <div class="container">
   <div class="art">
     <p>Cameron Wenzel</p>
-    <img class="portrait" src="https://scontent-lga3-1.xx.fbcdn.net/v/t1.0-9/1513723_273839846118410_1334459865_n.jpg?_nc_cat=104&_nc_sid=7aed08&_nc_ohc=vKLYpNJ1nAUAX92jurX&_nc_ht=scontent-lga3-1.xx&oh=18e1ed3b429e77853cfad9b3dbdecee8&oe=5ED654BB" style="width:100%">
+    <img class="portrait" src="../css/cam.png" style="width:100%">
   </div>
   <div class="art">
     <p>Olivia Johnson</p>
