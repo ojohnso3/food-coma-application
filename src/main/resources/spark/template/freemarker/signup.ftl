@@ -6,22 +6,22 @@
     <input id="user" class="u-full-width"
         type="text"
         placeholder="Username"
-        value=""></input>
+        value="">
     <br>    
     <input id="pass" class="u-full-width"
         type="text"
         placeholder="Password"
-        value=""></input>
+        value="">
     <br>
     <input id="pass2" class="u-full-width"
         type="text"
         placeholder="Confirm Password"
-        value=""></input>
+        value="">
     <br>
     <input id="bday" class="u-full-width"
         type="text"
         placeholder="Date of Birth"
-        value=""></input>
+        value="">
     <br>
     <button id="sub">Submit</button> 
     <br>

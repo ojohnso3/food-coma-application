@@ -6,7 +6,6 @@
     <p>If you don't want to fill out the survey, press below. <br>
     <em>NOTE</em>: this survey is for recipe recommendation purposes only, <br> and we 
     will maintain your privacy at all costs.</p>
-    <#--  <button id="survey_skip">Skip the Survey Here</button>   -->
     <input class="survey_button" id="survey_skip" type="submit" value="Skip the Survey Here">
     <br>
 </div>
@@ -106,7 +105,6 @@
 <br>
 <br>
 <div class="submit">
-    <#--  <button id="survey_submit">Submit Survey Here!</button>   -->
     <input class="survey_button" id="survey_submit" type="submit" value="Submit the Survey Here">
     <br>
 </div>
@@ -117,29 +115,3 @@
 
 </#assign>
 <#include "main.ftl">
-
-
-        <#--  <label class="check">Magnesium
-            <input id="magnesium" type="checkbox">
-            <span class="checkmark"></span>
-        </label>  -->      
-        <#--  <label class="check">Vitamin A
-            <input id="vitaminA" type="checkbox">
-            <span class="checkmark"></span>
-        </label>
-        <label class="check">Vitamin B6
-            <input id="vitaminB6" type="checkbox">
-            <span class="checkmark"></span>
-        </label>
-        <label class="check">Vitamin C
-            <input id="vitaminC" type="checkbox">
-            <span class="checkmark"></span>
-
-        <label class="check">Vitamin E
-            <input id="vitaminE" type="checkbox">
-            <span class="checkmark"></span>
-        </label> 
-        <label class="check">Vitamin K
-            <input id="vitaminK" type="checkbox">
-            <span class="checkmark"></span>
-        </label>  -->

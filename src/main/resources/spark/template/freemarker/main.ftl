@@ -17,17 +17,13 @@
     <script src="../js/jquery-3.1.1.js"></script>
     <script src="https://developer.edamam.com/attribution/badge.js"></script>
     
-    <#--  <div class="border" id="left"></div>
-    <div class="border" id="right"></div>  -->
 
     <div class="navigation_bar">   
       <a href="/home" class="bar_item">Home</a>   
       <a href="/login" id="login_header" class="bar_item">Join</a>
-      <#--  <img src="../css/foodCOMA.png" alt="Logo" id="real_logo">  -->
       <a href="/home" class="bar_item"><img src="../css/foodCOMA.png" alt="Logo" id="real_logo"></a>
       <a href="/search" class="bar_item">Search</a>
       <a href="/about" class="bar_item">About</a>   
-      <#--  <a href="/signup" class="bar_item">Sign Up</a>     -->
     </div>
     
     <script src="../js/global.js"></script>
@@ -35,7 +31,6 @@
     ${content}
 
     <footer class="footer">
-      <#--  <a href="https://www.youtube.com/watch?v=astISOttCQ0" target="_blank">Press me!</a>  -->
       <br>
       <a target="_blank" href="https://www.facebook.com/bonappetitmag/"><i class="fa fa-facebook-official"></i></a>
       <a target="_blank" href="https://www.instagram.com/bonappetitmag/?hl=en"><i class="fa fa-instagram"></i></a>
@@ -46,11 +41,9 @@
       <div id="edamam-badge" data-color="white"></div>
       <br>
     </footer>
-    <#--  <div id="bottom_border"></div>  -->
 
     <script src="../js/main.js"></script>
 
-     <!-- Again, we're serving up the unminified source for clarity. -->
 
   </body>
   <!-- See http://html5boilerplate.com/ for a good place to start
