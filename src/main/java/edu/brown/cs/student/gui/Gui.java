@@ -23,6 +23,7 @@ import edu.brown.cs.student.login.AccountException;
 import edu.brown.cs.student.login.Accounts;
 import edu.brown.cs.student.login.User;
 import edu.brown.cs.student.login.UserCreationException;
+import edu.brown.cs.student.recommendation.RecipeNode;
 import edu.brown.cs.student.recommendation.RecommendationException;
 import edu.brown.cs.student.recommendation.Recommender;
 import freemarker.template.Configuration;
@@ -51,7 +52,7 @@ public class Gui {
   public Gui() {
     clickedSet  = new HashSet<>();
     nutrients = new HashSet<>();
-    prevRestrictions = new HashSet<String>();
+    prevRestrictions = new HashSet<>();
   }
 
   private static FreeMarkerEngine createEngine() {
@@ -90,6 +91,7 @@ public class Gui {
             new ArrayList<Recipe>()), freeMarker);
     Spark.get("/user", new SetupHandler("user.ftl", "User Profile",
             new ArrayList<Recipe>()), freeMarker);
+    Spark.get("/score", new SetupHandler("score.ftl", "Your Score", new ArrayList<Double>()), freeMarker);
 
     Spark.post("/search", new SearchPostHandler());
     Spark.post("/logged", new LoginHandler());
@@ -98,6 +100,8 @@ public class Gui {
     Spark.post("/survey_post", new SurveyHandler());
     Spark.post("/recipe/recipeuri", new RecipeHandler(this));
     Spark.post("/toggleNutrient", new NutrientHandler());
+    Spark.post("/score", new ScoreHandler());
+
     // OLD Routes
 //    Spark.get("/results", new SubmitHandler(), freeMarker);
 //    Spark.get("/recipe/:recipeuri", new RecipeHandler());
@@ -401,7 +405,12 @@ public class Gui {
       return GSON.toJson(variables);
     }
   }
-  
+
+  /**
+   * This class models the handler for the Recipe page. It deals with setting up the
+   * current recipe, inlcuding its title, link, image and ingredients, as well as
+   * calling the Recommender to obtain the recommended recipes.
+   */
   private class RecipeHandler implements Route {
     private final Gui gui;
     RecipeHandler(Gui g) {
@@ -472,9 +481,11 @@ public class Gui {
           System.out.println("IOException in getting recipe from API");
         } catch (InterruptedException e) {
           System.out.println("InterruptedException in getting recipe from API");
-        } catch (APIException | SQLException e) {
+        } catch (APIException e) {
           System.out.println("APIException in getting recipe from API");
           System.out.println("Error message: " + e.getMessage());
+        } catch(SQLException e){
+          System.out.println("SQLException in getting recipes: " + e.getMessage());
         }
       }
       if (currRecipe == null) {
@@ -488,15 +499,10 @@ public class Gui {
         ingredientsList.add(currRecipe.getIngredients().get(i).getText());
       }
       List<Recipe> recommendations = new ArrayList<>();
-      List<Double> foodComaWeights = new ArrayList<>();
       try {
-        System.out.println("Prev Query: " + prevQuery);
-        System.out.println("Prev REstrict: " + prevRestrictions);
-        System.out.println("Recommender: " + recommender);
-        System.out.println("User: " + currUser);
         recommendations = recommender.makeRecommendation(prevQuery, new HashMap<>(),
                 prevRestrictions);
-      } catch (RecommendationException e){
+      } catch (RecommendationException e) {
         System.out.println("RecommendationException in getting recommendations on recipe page: " + e.getMessage());
       }
 
@@ -519,21 +525,23 @@ public class Gui {
         k++;
       }
       Map<String, String> nutrientsMap = new HashMap<>();
-
       Map<String, double[]> map = currRecipe.getNutrientsMap();
-      for (String string : map.keySet()) {
-//        System.out.println("KEY:::  " + string);
-      }
-
-     Map<String, double[]> nuts = currRecipe.getNutrientsMap();
-      String[] nutValues = new String[nuts.keySet().size()*2];
+      Map<String, double[]> nuts = currRecipe.getNutrientsMap();
+      Map<String, String[]> nutrientConversion = NutrientInfo.getNutrients();
+      String[] nutValues = new String[nuts.keySet().size()*3];
       int i = 0;
       int j = 1;
+      int l = 2;
       for (String itm : nuts.keySet()) {
-        nutValues[i] = itm;
+        nutValues[i] = nutrientConversion.get(itm)[0];
         nutValues[j] = Double.toString(nuts.get(itm)[1]);
-        i+=2;
-        j+=2;
+        nutValues[l] = nutrientConversion.get(itm)[1];
+        System.out.println("NUT i " + nutValues[i]);
+        System.out.println("NUT j " + nutValues[j]);
+        System.out.println("NUT l " + nutValues[l]);
+        i+=3;
+        j+=3;
+        l+=3;
       }
       List<Map.Entry<String, String[]>> recipeListSet = new LinkedList<>(recipePageRecipes.entrySet());
       Collections.sort(recipeListSet, new CompRecipes());
@@ -586,6 +594,47 @@ public class Gui {
         nutrients.add(nutrient);
       }
       return null;
+    }
+  }
+  
+  private class ScoreHandler implements Route {
+    @Override
+    public Object handle(Request request, Response response) {
+      QueryParamsMap map = request.queryMap();
+      String username = map.value("user");
+
+      User currUser = null;
+      try {
+        currUser = Accounts.getUser(username);
+      } catch (AccountException e) {
+        System.out.println("AccountException error: " + e.getMessage());
+      }
+      if (currUser == null) {
+        Map<String, Object> noUserVars = ImmutableMap.of("title", "User", "output",
+                new HashMap<String, String>());
+        return GSON.toJson(noUserVars);
+      }
+      
+      RecipeNode target = currUser.getRecommender().getTargetNode();
+      List<Double> weights = target.getCoords();
+      List<String> nutrients = NutrientInfo.getMainNutrients();
+      nutrients.addAll(NutrientInfo.getSecondaryNutrients());
+      
+      assert(nutrients.size() == weights.size());
+      
+      
+      List<String> weightsAsStrings = new ArrayList<String>();
+
+      for (int i = 0; i < nutrients.size(); i++) {
+        weightsAsStrings.add(nutrients.get(i));
+        weightsAsStrings.add(Double.toString(weights.get(i)));
+      }
+      
+      assert(weightsAsStrings.size() == weights.size() * 2);
+
+      Map<String, Object> variables = ImmutableMap.of("title", "User", "output", weightsAsStrings);
+  
+      return GSON.toJson(variables);
     }
   }
   /**

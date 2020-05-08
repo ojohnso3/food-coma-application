@@ -4,7 +4,6 @@
 
 <img id="rollingDonut" src="" class="rollingDonut">
 
-
 <div class="queryBox">
     <div id="searchbox" class="queryOption">
         <div class="buttonBox">
