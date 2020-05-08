@@ -22,7 +22,7 @@ public class KDTree<N extends KDNode<N>> {
    * @throws KDTreeException when the dimension is invalid
    */
   public KDTree(int dim) throws KDTreeException {
-    dist = new LinkedList<Double>();
+    dist = new LinkedList<>();
     if (dim < 1) {
       throw new KDTreeException("dim must be a positive integer");
     } else {
