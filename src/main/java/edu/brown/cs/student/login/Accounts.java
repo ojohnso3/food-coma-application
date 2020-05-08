@@ -173,7 +173,7 @@ public class Accounts {
   }
 
   /**
-   * for repl, reads in username and password from user keyboard (System.in)
+   * for repl, reads in username and password from user keyboard (System.in).
    * @return true if can login
    * @throws AccountException on malformed csv
    */

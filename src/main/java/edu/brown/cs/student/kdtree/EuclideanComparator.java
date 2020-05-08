@@ -33,7 +33,7 @@ class EuclideanComparator<N extends KDNode<N>> implements Comparator<N> {
     return Double.compare(dist2, dist1);
   }
 
-  public double getDist(N o1, N o2){
+  public double getDist(N o1, N o2) {
     double dist1 = 0.;
     double dist2 = 0.;
     // get each list of coords only once

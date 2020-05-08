@@ -217,6 +217,10 @@ public class Recommender {
     r.setCoords(coords);
   }
 
+  /**
+   * getter.
+   * @return dists
+   */
   public List<Double> getFoodComaScores() {
     return distances;
   }

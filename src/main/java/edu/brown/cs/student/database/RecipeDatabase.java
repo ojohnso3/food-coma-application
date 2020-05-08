@@ -181,15 +181,13 @@ public final class RecipeDatabase {
    * @param uriList -  a list of recipes that conform to the given query.
    * @throws SQLException - when there is a database error.
    */
-  public static void insertQuery(String query, String[] uriList, Set<String> restrictions, Map<String, String[]> paramsMap) throws SQLException {
-//    if (checkQueryInDatabase(query)) {
-//      throw new SQLException("duplicate");
-//    }
+  public static void insertQuery(String query, String[] uriList, Set<String> restrictions,
+                                 Map<String, String[]> paramsMap) throws SQLException {
     String inputRestrict = prepRestrictionsForDB(restrictions);
 
     for (String uri : uriList) {
       PreparedStatement prep = conn.prepareStatement("INSERT INTO new_queries VALUES("
-              +"\"" + query + "\" , \"" + uri + "\" , \"" + inputRestrict + "\");");
+              + "\"" + query + "\" , \"" + uri + "\" , \"" + inputRestrict + "\");");
       prep.executeUpdate();
       prep.close();
     }
@@ -375,11 +373,11 @@ public final class RecipeDatabase {
    * @param restrictions - the restrictions to apply to the results of the query.
    * @return - boolean representing whether the given uri is in the database.
    */
-  public static boolean checkQueryInDatabase(String query, Set<String> restrictions){
-
+  public static boolean checkQueryInDatabase(String query, Set<String> restrictions) {
     boolean retVal = false;
     try {
-      PreparedStatement prep = conn.prepareStatement("SELECT query FROM new_queries WHERE query = ? AND restrictions = ?");
+      PreparedStatement prep = conn.prepareStatement("SELECT query FROM new_queries WHERE query"
+              + "= ? AND restrictions = ?");
       prep.setString(1, query);
       prep.setString(2, prepRestrictionsForDB(restrictions));
       ResultSet recipeSet = prep.executeQuery();
@@ -394,12 +392,11 @@ public final class RecipeDatabase {
 
   /**
    * This method prepares the set of restrictions to be inserted to the
-   * SQL database in alphabetical order
+   * SQL database in alphabetical order.
    * @param restrictions The list of restrictions to insert
    * @return The String which represents this list of restrictions
    */
-  public static String prepRestrictionsForDB(Set<String> restrictions){
-
+  public static String prepRestrictionsForDB(Set<String> restrictions) {
     String insertThis = "";
     if (restrictions.contains("alcohol-free")) {
       insertThis += "a";
@@ -443,10 +440,8 @@ public final class RecipeDatabase {
         String uri = recipeSet.getString("recipe_uri");
 
         Recipe currRecipe = RecipeDatabase.getRecipeFromURI(uri);
-//        if (FieldParser.checkRecipeValidity(currRecipe, restrictions, paramsMap)) {
-          recipesFromExactQuery.add(uri);
-          recipesFromExact.add(currRecipe);
-//        }
+        recipesFromExactQuery.add(uri);
+        recipesFromExact.add(currRecipe);
       }
       prep.close();
       recipeSet.close();
@@ -470,14 +465,14 @@ public final class RecipeDatabase {
        * @param paramsMap - the parameters to be applied to the results of the given query.
        * @return - a list of recipe uris that correspond to the given query.
        */
-  public static List<Recipe> getSimilar(String query, Set<String> dietaryRestrictions, Map<String, String[]> paramsMap) {
-
+  public static List<Recipe> getSimilar(String query, Set<String> dietaryRestrictions, Map<String,
+          String[]> paramsMap) {
     List<String> recipesFromSimilarQuery = new ArrayList<>();
     List<Recipe> recipesFromSimilar = new ArrayList<>();
     try {
       String q = "%" + query + "%";
       PreparedStatement prep = conn.prepareStatement("SELECT uri FROM recipe WHERE label LIKE ?");
-      prep.setString(1,q);
+      prep.setString(1, q);
       ResultSet recipeSet = prep.executeQuery();
       while (recipeSet.next()) {
         Recipe currRecipe = RecipeDatabase.getRecipeFromURI(recipeSet.getString("uri"));
@@ -488,14 +483,7 @@ public final class RecipeDatabase {
       }
       recipeSet.close();
       prep.close();
-    } catch (SQLException e) {
-      e.printStackTrace();
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    } catch (APIException e) {
-      e.printStackTrace();
-    } catch (IOException e) {
-      e.printStackTrace();
+    } catch (SQLException | InterruptedException | APIException | IOException ignored) {
     }
     return recipesFromSimilar;
   }

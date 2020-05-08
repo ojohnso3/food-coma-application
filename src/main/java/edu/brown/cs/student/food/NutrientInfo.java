@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Holds api specific nutrient info.
+ */
 public final class NutrientInfo {
   private static Map<String, String[]> nutrients;
   private static Map<String, String> allNutrients;
@@ -15,18 +18,34 @@ public final class NutrientInfo {
 
   private NutrientInfo() { }
 
+  /**
+   * getter.
+   * @return nutrients
+   */
   public static Map<String, String[]> getNutrients() {
     return nutrients;
   }
 
+  /**
+   * getter.
+   * @return nutrient code list
+   */
   public static List<String> getNutrientCodes() {
     return nutrientCodes;
   }
 
+  /**
+   * getter.
+   * @return main nutrients
+   */
   public static List<String> getMainNutrients() {
     return mainNutrients;
   }
 
+  /**
+   * getter.
+   * @return secondary nutrients
+   */
   public static List<String> getSecondaryNutrients() {
     return secondaryNutrients;
   }
@@ -51,7 +70,6 @@ public final class NutrientInfo {
 
     setMainNutrients();
     setSecondaryNutrients();
-//    setOtherNutrients();
   }
 
   private static void setMainNutrients() {

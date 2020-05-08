@@ -13,7 +13,10 @@ import joptsimple.OptionSet;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * The Main class of our project. This is where execution begins.
@@ -59,26 +62,6 @@ public final class Main {
       Gui gui = new Gui();
       gui.runSparkServer((int) options.valueOf("port"));
     } else {
-//      try {
-////        NutrientInfo.createNutrientsList();
-////        RecipeDatabase.loadDatabase("data/recipeDatabase.sqlite3");
-////        RecipeDatabase.testDatabaseFile();
-////        Recipe r = RecipeDatabase.getRecipeFromURI("1234");
-////        UserDatabase.loadDatabase("data/userDatabase.sqlite3");
-////        UserDatabase.testDatabaseFile();
-//      } catch (FileNotFoundException e) {
-//        e.printStackTrace();
-//      } catch (ClassNotFoundException e) {
-//        e.printStackTrace();
-//      } catch (SQLException e) {
-//        e.printStackTrace();
-////      } catch (InterruptedException e) {
-//////        e.printStackTrace();
-//////      } catch (APIException e) {
-//////        e.printStackTrace();
-//      } catch (IOException e) {
-//        e.printStackTrace();
-//      }
       try {
         RecipeDatabase.loadDatabase("data/recipeDatabase.sqlite3");
         NutrientInfo.createNutrientsList();
@@ -94,6 +77,5 @@ public final class Main {
         ie.printStackTrace();
       }
     }
-    // TODO: add functionality here
   }
 }

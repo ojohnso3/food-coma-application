@@ -560,6 +560,10 @@ public class KDTree<N extends KDNode<N>> {
     }
   }
 
+  /**
+   * getter.
+   * @return dists
+   */
   public LinkedList<Double> getDistances() {
     return dist;
   }

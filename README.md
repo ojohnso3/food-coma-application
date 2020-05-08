@@ -134,5 +134,10 @@ unused functions errors.
 It sometimes gets mad about creating "new ArrayList<>()" multiple
 times, and I wasn't going to make a separate function for that.
 
+Recipe constructors have a large amount of inputs, but they should
+only be created with all these inputs and we didn't to introduce
+unnecessary complexity by forcing it to be in a list or use
+multiple setters.
+
 The BCrypt solution has many checkstyle errors and uses tabs
 instead of spaces (666 errors!!!), and we did not mess with it.
