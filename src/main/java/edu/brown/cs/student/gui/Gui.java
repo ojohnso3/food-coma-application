@@ -679,7 +679,7 @@ public class Gui {
   private class ScoreHandler implements Route {
     @Override
     public Object handle(Request request, Response response) {
-      QueryParamsMap map = request.queryMap();
+//      QueryParamsMap map = request.queryMap();
 //      String username = map.value("user");
 //
 //      User currUser = null;
@@ -697,31 +697,43 @@ public class Gui {
         return GSON.toJson(noUserVars);
       }
 
-      RecipeNode target = null;
-      try {
-        target = currUser.getRecommender().getUnnormalizedTargetNode();
-      } catch (RecommendationException e) {
-        System.out.println("RecommendationException: " + e.getMessage());
-      }
-      List<Double> weights = target.getCoords();
-      List<String> nutrients = NutrientInfo.getMainNutrients();
-      nutrients.addAll(NutrientInfo.getSecondaryNutrients());
+//      RecipeNode target = null;
+//      try {
+//        target = currUser.getRecommender().getUnnormalizedTargetNode();
+//      } catch (RecommendationException e) {
+//        System.out.println("RecommendationException: " + e.getMessage());
+//      }
+//      List<Double> weights = target.getCoords();
+//      List<String> nutrients = NutrientInfo.getMainNutrients();
+//      nutrients.addAll(NutrientInfo.getSecondaryNutrients());
+//      
+//      assert(nutrients.size() == weights.size());
+//      
+//      
+//      List<String> weightsAsStrings = new ArrayList<String>();
+//      Map<String, String[]> nutrientConversion = NutrientInfo.getNutrients();
+//
+//      for (int i = 0; i < nutrients.size(); i++) {
+//        String conversion = nutrientConversion.get(nutrients.get(i))[0];
+//        weightsAsStrings.add(conversion);
+//        weightsAsStrings.add(Double.toString(weights.get(i)));
+//      }
+//      
+//      assert(weightsAsStrings.size() == weights.size() * 2);
       
-      assert(nutrients.size() == weights.size());
-      
-      
-      List<String> weightsAsStrings = new ArrayList<String>();
+      List<String> nutrients = currUser.getNutrients();
       Map<String, String[]> nutrientConversion = NutrientInfo.getNutrients();
-
+      List<String> fullNutrients = new ArrayList<String>();
+      
       for (int i = 0; i < nutrients.size(); i++) {
-        String conversion = nutrientConversion.get(nutrients.get(i))[0];
-        weightsAsStrings.add(conversion);
-        weightsAsStrings.add(Double.toString(weights.get(i)));
+         String conversion = nutrientConversion.get(nutrients.get(i))[0];
+         fullNutrients.add(conversion);
       }
       
-      assert(weightsAsStrings.size() == weights.size() * 2);
+      System.out.println("NUTS " + fullNutrients.size());
+      
 
-      Map<String, Object> variables = ImmutableMap.of("title", "User", "output", weightsAsStrings);
+      Map<String, Object> variables = ImmutableMap.of("title", "User", "output", fullNutrients);
   
       return GSON.toJson(variables);
     }
