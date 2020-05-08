@@ -55,14 +55,13 @@ public class Recommender {
           InterruptedException, SQLException, APIException, IOException {
     try {
       this.recipeTree = new KDTree<>(dim);
+      // Nutrients: get the weights for each axis based on chosen nutrients and defaults
+      List<Double> axisWeights = getNutrientIndices();
+
       // User History: get, nodify, and normalize previous recipes
-      List<RecipeNode> prevRecipeNodes = prepUserHistoryNodes();
-
-      //generate a target node for an ideal recipe using the history
+      List<RecipeNode> prevRecipeNodes = prepUserHistoryNodes(axisWeights);
+      //generate a target node for an ideal recipe using the history, negated
       RecipeNode target = makeTargetNode(prevRecipeNodes);
-
-      // Nutrients: get the nutrients to weight higher
-      List<Double> weightedAxes = getNutrientIndices();
 
       Recipe[] recipesArray;
       // Query Recs: get recipes based on the query and put into a queried recipes tree
@@ -76,7 +75,7 @@ public class Recommender {
       this.recipeTree.translateTree(target.getCoords());
       // normalize the query tree, weighted using the nutrients
 
-      this.recipeTree.normalizeAxes(queryNodes, weightedAxes); //weight special axes higher
+      this.recipeTree.normalizeAxes(queryNodes, axisWeights); //weight special axes higher
 
       // Recommend: return the nearest neighbors to the target (the origin now).
       List<RecipeNode> recNodes = recipeTree.nearestSearch(originNode(), REC_QUANTITY);
@@ -86,6 +85,12 @@ public class Recommender {
         recommendations.add(node.getRecipe());
       }
       distances = this.recipeTree.getDistances();
+
+      RecipeNode abnormal = getUnnormalizedTargetNode();
+      System.out.println("Target unnormal coords");
+      for (double c : abnormal.getCoords()) {
+        System.out.println(c);
+      }
       return recommendations;
     } catch (KDTreeException e) {
       throw new RecommendationException(e.getMessage());
@@ -123,11 +128,11 @@ public class Recommender {
    * returns the users history in a form usable for getTarget:
    * gets its recipe history, converts it to nodes, normalizes.
    */
-  private List<RecipeNode> prepUserHistoryNodes() throws KDTreeException {
+  private List<RecipeNode> prepUserHistoryNodes(List<Double> axisWeights) throws KDTreeException {
     //get, turn into nodes, and normalize user history
     List<Recipe> userHistory = this.user.getPreviousRecipes();
     List<RecipeNode> prevRecipeNodes = this.convertRecipesToRecipeNodes(userHistory);
-    this.recipeTree.normalizeAxes(prevRecipeNodes, null);
+    this.recipeTree.normalizeAxes(prevRecipeNodes, axisWeights);
     return prevRecipeNodes;
   }
 
@@ -185,6 +190,13 @@ public class Recommender {
       recipeTree.makeAverageNode(target, prevRecipeNodes);
     } catch (KDTreeException e) {
       throw new RecommendationException(e.getMessage());
+    }
+
+    // negate the values
+    List<Double> newCoords = target.getCoords();
+    int sz = newCoords.size();
+    for (int i = 0; i < sz; i++) {
+      newCoords.set(i, -1 * newCoords.get(i));
     }
 
     return target;

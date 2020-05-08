@@ -12,7 +12,7 @@ public final class NutrientInfo {
   private static Map<String, String[]> nutrients;
   private static Map<String, String> allNutrients;
   private static List<String> nutrientCodes;
-  private static List<String> mainNutrients; //carbs, sugars, fats, kcal, sugara, protein
+  private static List<String> mainNutrients; //kcal, carbs, sugars, fats, sugara, protein
   private static List<String> secondaryNutrients;
   //calcium, cholesterol, monof, polyf, tranf, iron, fiber, potas, satf, b12
 
