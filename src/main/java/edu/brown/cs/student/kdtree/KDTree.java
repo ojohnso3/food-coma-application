@@ -457,7 +457,8 @@ public class KDTree<N extends KDNode<N>> {
     // find the average for each coord by dividing by the total # of recipes and set
     List<Double> targetCoords = target.getCoords();
     for (int i = 0; i < coordsSum.size(); i++) {
-      targetCoords.set(i, coordsSum.get(i) / nodes.size());
+      double avg = coordsSum.get(i) / nodes.size();
+      targetCoords.set(i, avg);
     }
   }
 
