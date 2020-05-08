@@ -116,6 +116,7 @@ public final class RecipeDatabase {
   /**
    * Function to insert a recipe into the sqlite database.
    * @param recipe - the Recipe object to be inserted.
+   * @throws SQLException - when there is a database error.
    */
   public static void insertRecipe(Recipe recipe) throws SQLException {
 
@@ -171,7 +172,10 @@ public final class RecipeDatabase {
   /**
    * Function to insert a query into the query table of the database.
    * @param query - the query that corresponds to the given recipes.
+   * @param restrictions - the restrictions that were selected when the query was called.
+   * @param paramsMap - the parameters that were selected when the query was called.
    * @param uriList -  a list of recipes that conform to the given query.
+   * @throws SQLException - when there is a database error.
    */
   public static void insertQuery(String query, String[] uriList, Set<String> restrictions, Map<String, String[]> paramsMap) throws SQLException {
 //    if (checkQueryInDatabase(query)) {
@@ -221,6 +225,7 @@ public final class RecipeDatabase {
    * @param nutrientSet - the ResultSet with data from the nutrient_info table.
    * @return - a map from String nutrient codes to a double of the total daily value and the total
    * nutrient value of that nutrient for a certain recipe.
+   * @throws SQLException - when there is a database error.
    */
   private static Map<String, double[]> createNutrients(ResultSet nutrientSet) throws SQLException {
     Map<String, double[]> nutrients = new HashMap<>();
@@ -287,6 +292,10 @@ public final class RecipeDatabase {
    * Function to retrieve a recipe from the database that corresponds to the given uri.
    * @param uri - String uri of the desired recipe.
    * @return - A Recipe object corresponding to the given uri.
+   * @throws SQLException - when there is a database error.
+   * @throws InterruptedException - when there is a problem connecting to the API.
+   * @throws APIException - when there is a problem with the API response.
+   * @throws IOException - when there is a problem connecting to the API.
    */
   public static Recipe getRecipeFromURI(String uri) throws SQLException, InterruptedException,
       APIException, IOException {
@@ -325,6 +334,7 @@ public final class RecipeDatabase {
    * Gets a list of Ingredients from recipe id from the database.
    * @param uri string id that corresponds to a recipe
    * @return List of Ingredients
+   * @throws SQLException - when there is a database error.
    */
   public static List<Ingredient> getIngredientsByRecipeID(String uri) throws SQLException {
     PreparedStatement prep = conn.prepareStatement(
@@ -411,6 +421,7 @@ public final class RecipeDatabase {
        * Function to retrieve the list of uris that correspond to the given query.
        * @param query - the query to find recipes for.
        * @param restrictions - the restrictions to apply to the results of the given query.
+       * @param paramsMap - the parameters to apply to the results of the given query.
        * @return - a list of the recipes that correspond to the given query.
        */
   public static List<Recipe> getQueryRecipesFromDatabase(String query, Set<String> restrictions,
@@ -450,6 +461,9 @@ public final class RecipeDatabase {
       /**
        * Function to find recipes whose labels are similar to the given query.
        * @param query - the query to search on.
+       * @param dietaryRestrictions - the restrictions to be applied to the results of the given
+       * query.
+       * @param paramsMap - the parameters to be applied to the results of the given query.
        * @return - a list of recipe uris that correspond to the given query.
        */
   public static List<Recipe> getSimilar(String query, Set<String> dietaryRestrictions, Map<String, String[]> paramsMap) {

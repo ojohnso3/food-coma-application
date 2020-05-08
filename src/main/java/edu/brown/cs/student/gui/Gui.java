@@ -643,9 +643,6 @@ public class Gui {
          String conversion = nutrientConversion.get(nutrients.get(i))[0];
          fullNutrients.add(conversion);
       }
-      
-      System.out.println("NUTS " + fullNutrients.size());
-      
 
       Map<String, Object> variables = ImmutableMap.of("title", "User", "output", fullNutrients);
   

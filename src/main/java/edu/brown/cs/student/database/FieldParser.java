@@ -110,12 +110,14 @@ public final class FieldParser {
     return null; //should never be reached.
   }
 
+
   /**
    * This function retrieves a recipe from the api that corresponds to the given uri.
    * @param uri - the uri of the desired recipe.
    * @return - the recipe object corresponding to the given uri.
    * @throws IOException - when httpClient.send fails.
    * @throws InterruptedException - when httpClient.send fails.
+   * @throws APIException - when the API fails.
    */
   public static Recipe getRecipeFromURI(String uri) throws IOException, InterruptedException,
       APIException {
@@ -151,6 +153,10 @@ public final class FieldParser {
    * @param paramsMap - the map of constraints for the query -- see comment in InputMatcher for
    * more details.
    * @return - an array of recipes that correspond to the given query in the api.
+   * @throws IOException in case of IO exception in query call
+   * @throws InterruptedException In case of Interruption in DB call
+   * @throws APIException In case API returns error
+   * @throws SQLException In case database reading returns error
    */
   public static Recipe[] getRecipesFromQuery(String query, Set<String> dietaryRestrictions,
                                              Map<String, String[]> paramsMap)
@@ -210,6 +216,10 @@ public final class FieldParser {
    * @param restrictions - the diet and health labels to include in the query.
    * @param paramsMap - the map of constraints for the query -- see comment in InputMatcher for
    * more details.
+   * @throws SQLException In case of a bad SQL call to DB
+   * @throws InterruptedException In case call is interrupted
+   * @throws APIException In case API returns an error
+   * @throws IOException In case DB File IO returns an exception
    * @return - an array of recipes that correspond to the given query in the api.
    */
   public static Recipe[] getRecipesDBandAPI(String query, Set<String> restrictions,

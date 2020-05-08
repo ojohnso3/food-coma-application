@@ -222,6 +222,7 @@ public class KDTree<N extends KDNode<N>> {
    * @param target target node to be close to
    * @param k      num of neighbors to find
    * @return list of closest node
+   * @throws KDTreeException In case the KD tree returns error
    */
   public List<N> nearestSearch(N target, int k) throws KDTreeException {
     // error cases: empty tree or returning negative stars
@@ -309,6 +310,7 @@ public class KDTree<N extends KDNode<N>> {
    * @param target target node, center of radius
    * @param r      radius
    * @return list of node in radius
+   * @throws KDTreeException in case the KDTree returns error
    */
   public List<N> radiusSearch(N target, double r) throws KDTreeException {
     // base cases, if negative radius or have an empty tree, return null
@@ -364,6 +366,7 @@ public class KDTree<N extends KDNode<N>> {
    *
    * @param coordBounds a dim-length list of pair-list of bounds
    * @return list of node in box
+   * @throws KDTreeException In case the KDTree returns error
    */
   public List<N> boxSearch(List<List<Double>> coordBounds) throws KDTreeException {
     List<N> boxNodes = new ArrayList<>();
@@ -429,7 +432,8 @@ public class KDTree<N extends KDNode<N>> {
   /**
    * sets a target node with coords as the average/midpoint of given list of nodes.
    * @param target - node to change the coords of
-   * @param nodes - list
+   * @param nodes - list of nodes
+   * @throws KDTreeException In case the KDTree returns error
    */
   public void makeAverageNode(N target, List<N> nodes) throws KDTreeException {
     if (nodes == null || nodes.size() == 0) {
@@ -497,6 +501,7 @@ public class KDTree<N extends KDNode<N>> {
    * @param nodes - all nodes to be normalized.
    * @param axisWeights - how much each axis should be weights (index i corres. to axis i), null for
    *                    default.
+   * @throws KDTreeException In case the KDTree returns error
    */
   public void normalizeAxes(List<N> nodes, List<Double> axisWeights) throws KDTreeException {
     if (axisWeights == null) {
