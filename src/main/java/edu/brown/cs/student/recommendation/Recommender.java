@@ -45,7 +45,8 @@ public class Recommender {
    * @return List of recommended recipes
    */
   public List<Recipe> makeRecommendation(String input, Map<String, String[]> paramsMap,
-                                         Set<String> restrictions) throws RecommendationException, InterruptedException, SQLException, APIException, IOException {
+                                         Set<String> restrictions) throws RecommendationException,
+          InterruptedException, SQLException, APIException, IOException {
     try {
       this.recipeTree = new KDTree<>(dim);
       // User History: get, nodify, and normalize previous recipes
