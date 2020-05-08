@@ -106,6 +106,7 @@ public final class UserDatabase {
       throw new AccountException("Username not available");
     }
 
+    System.out.println("INSERT USER " + user.getUsername());
     PreparedStatement prep = conn.prepareStatement("INSERT INTO account VALUES("
         + "\"" + user.getUsername() + "\");");
     prep.executeUpdate();

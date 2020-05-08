@@ -516,11 +516,12 @@ public class Gui {
       Set<String> keys = gui.recipesMap.keySet();
       int k = 0;
       List<Double> foodComaScores = recommender.getFoodComaScores();
+      processScores(foodComaScores);
       for (Recipe recp : recommendations) {
         String[] fields = new String[2];
         fields[0] = recp.getLabel();
         System.out.println("Weight inputted: " + foodComaScores.get(k).toString());
-        fields[1] = foodComaScores.get(k).toString();
+        fields[1] = foodComaScores.get(k).toString(); //TODO:
         Collection coll = new ArrayList();
         coll.add(recp.getCompactUri());
         coll.add(fields[0]);
@@ -589,6 +590,31 @@ public class Gui {
     @Override
     public int compare(Map.Entry<String, String[]> t1, Map.Entry<String, String[]> t2) {
       return Double.compare(Double.parseDouble(t1.getValue()[1]), Double.parseDouble(t2.getValue()[1]));
+    }
+  }
+
+  private void processScores(List<Double> scores) {
+    // create lists, maxes, mins for each considered nutrient
+    Double max = Double.NEGATIVE_INFINITY;
+    Double min = Double.POSITIVE_INFINITY;
+
+    // check for max/min
+    for (double score : scores) {
+      if (score > max) {
+        max = score;
+      }
+      if (score < min) {
+        min = score;
+      }
+    }
+
+    // normalize all nutrients for each type
+    for (double score : scores) {
+      if (max == min) {
+        return;
+      } else {
+        scores.set(scores.indexOf(score), 100 - 100 * ((score - min) / (max - min)));
+      }
     }
   }
 
