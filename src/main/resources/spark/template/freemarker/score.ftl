@@ -4,9 +4,9 @@
 
 <div class="details">
   <p>
-  Your foodCOMA Score is calculated directly based of the weights of your search history and your preferred nutrients.
+  Your foodCOMA Score is calculated directly based of your search history and your preferred nutrients.
   <br><br>
-  We've provided these personalized weight values below.
+  Below are the nutrients you indicated as valuable from the survey.
   </p>
 </div> 
 
