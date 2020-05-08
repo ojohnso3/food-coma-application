@@ -516,13 +516,11 @@ public class Gui {
       for (Recipe recp : recommendations) {
         String[] fields = new String[2];
         fields[0] = recp.getLabel();
-        System.out.println("Weight inputted: " + foodComaScores.get(k).toString());
-        //only give 5 digits
-        String sc = foodComaScores.get(k).toString().substring(0, 5);
-        System.out.println("5 DIGITS: " + sc);
         // only give 2 decimals
-        System.out.println("TRUNCATED 2:" + new DecimalFormat("#.##").format(foodComaScores.get(k)));
-        fields[1] = sc;
+        String foodComaScore = new DecimalFormat("#.00").format(foodComaScores.get(k));
+        System.out.println("Weight inputted: " + foodComaScore);
+
+        fields[1] = foodComaScore;
         Collection coll = new ArrayList();
         coll.add(recp.getCompactUri());
         coll.add(fields[0]);
@@ -593,6 +591,7 @@ public class Gui {
   }
 
   private void processScores(List<Double> scores) {
+//    List<String> strs = new ArrayList<>();
     // create lists, maxes, mins for each considered nutrient
     Double max = Double.NEGATIVE_INFINITY;
     Double min = Double.POSITIVE_INFINITY;
@@ -610,11 +609,16 @@ public class Gui {
     // normalize all nutrients for each type
     for (double score : scores) {
       if (max == min) {
-        return;
+        double fcs = score / 6 * 100;
+//        strs.add(String.valueOf(fcs));
+        scores.set(scores.indexOf(score), fcs);
       } else {
-        scores.set(scores.indexOf(score), CENT - (CENT * ((score - min) / (max - min))));
+        double fcs = CENT - (CENT * ((score - min) / (max - min)));
+//        strs.add(new DecimalFormat("#.00").format(fcs));
+        scores.set(scores.indexOf(score), fcs);
       }
     }
+//    return strs;
   }
 
 
