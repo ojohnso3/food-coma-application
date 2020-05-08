@@ -6,7 +6,7 @@ package edu.brown.cs.student.database;
 public class APIException extends Exception {
 
   /**
-   * Constructor for APIException
+   * Constructor for APIException.
    * @param message - description of the error.
    */
   public APIException(String message) {

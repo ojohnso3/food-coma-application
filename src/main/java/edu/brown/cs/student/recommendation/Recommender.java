@@ -92,6 +92,11 @@ public class Recommender {
     }
   }
 
+  /**
+   * for the gui to print average history values.
+   * @return target node with real values
+   * @throws RecommendationException on algorithm error
+   */
   public RecipeNode getUnnormalizedTargetNode() throws RecommendationException {
     List<Recipe> userHistory = this.user.getPreviousRecipes();
     List<RecipeNode> prevRecipeNodes = this.convertRecipesToRecipeNodes(userHistory);

@@ -7,7 +7,7 @@ import java.util.List;
 
 /**
  *
- * Class comment.
+ * Recipe Node class.
  *
  */
 public class RecipeNode implements KDNode<RecipeNode> {
@@ -17,11 +17,19 @@ public class RecipeNode implements KDNode<RecipeNode> {
   private RecipeNode rightNode;
   private String id;
 
+  /**
+   * whole recipe constructor.
+   * @param r recipe
+   */
   public RecipeNode(Recipe r) {
     this.recipe = r;
     this.id = r.getUri();
   }
 
+  /**
+   * coordinate constructor.
+   * @param coordinates coords
+   */
   public RecipeNode(List<Double> coordinates) {
     this.coordinates = coordinates;
   }
@@ -63,6 +71,10 @@ public class RecipeNode implements KDNode<RecipeNode> {
     this.rightNode = rc;
   }
 
+  /**
+   * setter.
+   * @param coords c
+   */
   public void setCoords(List<Double> coords) {
     this.coordinates = coords;
   }
