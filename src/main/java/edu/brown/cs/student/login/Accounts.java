@@ -54,6 +54,9 @@ public class Accounts {
    * adds previously added users in the UserDatabase to the current process' nameUser map;
    * to be called at the start of running application.
    * @throws AccountException on file UserDatabase failure
+   * @throws FileNotFoundException no file
+   * @throws ClassNotFoundException shouldn't happen
+   * @throws SQLException on database query
    */
   public static void initializeMap() throws AccountException, FileNotFoundException,
           ClassNotFoundException, SQLException {
@@ -225,6 +228,7 @@ public class Accounts {
    * @param pass1 - password
    * @param pass2 - password
    * @return boolean for conditions
+   * @throws UserCreationException if user input is invalid
    */
   public static boolean checkSignUpValidity(String user, String pass1, String pass2) throws
           UserCreationException {

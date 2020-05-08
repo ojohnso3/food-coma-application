@@ -43,6 +43,12 @@ public class Recommender {
    * @param paramsMap - parameters for the query the user has entered.
    * @param restrictions - list of restrictions the user has applied to the query.
    * @return List of recommended recipes
+   *
+   * @throws RecommendationException - algorithm error
+   * @throws InterruptedException - query parsing error
+   * @throws SQLException - query parsing error
+   * @throws APIException - query parsing error
+   * @throws IOException - query parsing error
    */
   public List<Recipe> makeRecommendation(String input, Map<String, String[]> paramsMap,
                                          Set<String> restrictions) throws RecommendationException,

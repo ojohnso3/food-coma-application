@@ -123,6 +123,10 @@ public class User {
   /**
    * Function to add to the previousRecipes field given the uri of a Recipe.
    * @param uri - the uri of the Recipe to add to previousRecpes.
+   * @throws InterruptedException concurrency
+   * @throws SQLException on query
+   * @throws APIException on query
+   * @throws IOException on query
    */
   public void addToPreviousRecipesByURI(String uri) throws InterruptedException, SQLException,
       APIException, IOException {
@@ -154,13 +158,14 @@ public class User {
 
   /**
    * setter.
-   * @param n - nutrients
+   * @param nutrients - list
+   * @throws SQLException on database insert
    */
-  public void setNutrients(List<String> n) throws SQLException {
-    for (String nutrient : n) {
+  public void setNutrients(List<String> nutrients) throws SQLException {
+    for (String nutrient : nutrients) {
       UserDatabase.insertToNutrients(this.username, nutrient);
     }
-    this.nutrients = n;
+    this.nutrients = nutrients;
   }
 
   /**
