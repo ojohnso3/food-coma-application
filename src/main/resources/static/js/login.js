@@ -18,10 +18,6 @@ submit.click(event => {
         if (output.output == "Valid Login!") {
             window.location.href = "/user";
             checkCookie(log_user.val());
-            // console.log("WORKING");
-            // document.getElementById("login_header").innerHTML = "User";
-            // login_head.innerHTML = "CHANGED HERE";
-            // login_header.attr("href", "/user");
         }
     });
 });

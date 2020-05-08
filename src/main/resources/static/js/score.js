@@ -7,7 +7,6 @@ $(document).ready(function(){
 
 function getNutrients() {
     const postParameters = {
-        // username: getCookie("username")
     };
 
     $.post("/score", postParameters, response => {
@@ -23,4 +22,3 @@ function getNutrients() {
         }
     });
 };
-
