@@ -19,11 +19,8 @@ class EuclideanComparator<N extends KDNode<N>> implements Comparator<N> {
     double dist2 = 0.;
     // get each list of coords only once
     List<Double> ls1 = o1.getCoords();
-//    System.out.println("Node 1 coords:" + ls1);
     List<Double> ls2 = o2.getCoords();
-//    System.out.println("Node 2 coords:" + ls2);
     List<Double> lst = this.target.getCoords();
-//    System.out.println("Target coords:" + ls2);
     // slightly lazier distance (one loop, no sqrt)
     int sz = o1.getCoords().size();
     for (int i = 0; i < sz; i++) {
@@ -33,7 +30,6 @@ class EuclideanComparator<N extends KDNode<N>> implements Comparator<N> {
       dist2 += d2 * d2;
     }
     // switched (* -1) so that more positive, larger distances are at the head and can be polled
-//    System.out.println("DIST for real: " + dist1 + " dist2 " + dist2);
     return Double.compare(dist2, dist1);
   }
 

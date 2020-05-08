@@ -9,7 +9,6 @@ button.click(event => {
         user: user.val(), 
         pass1: pass1.val(),
         pass2: pass2.val(),
-        // birth: birth.val()
     };
 
     $.post("/signed", postParameters, response => {

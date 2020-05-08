@@ -2,7 +2,6 @@
 
 <h1>About</h1>
 
-<#--  <img src="css/foodCOMA.png" alt="HELP">  -->
 <div class="details">
   <p>
   We are a committed team of 4 Brown students who are passionate about technology and cooking.

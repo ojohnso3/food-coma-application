@@ -11,8 +11,6 @@
   <img class="home_slides" src="https://tinyurl.com/y8wbbpub">
 </div>
 
-<#--  <h1>Home</h1>  -->
-
 <br>
 <div>
   <h2>OUR MISSION</h2>

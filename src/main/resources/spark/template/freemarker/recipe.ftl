@@ -6,7 +6,6 @@
 
     </div>
     <h4 id="link_note"></h4>
-    <#--  <a href="/score"><h4 id="link_note">About Your foodCOMA Score</h4></a>  -->
     <h4 id="score_note"><a href="/score">About Your foodCOMA Score</a></h4>
 
     <div class="row">
