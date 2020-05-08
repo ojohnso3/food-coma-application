@@ -32,9 +32,6 @@ function getRecipes(params){
                 first = false;
             }
             console.log(key + ": " + value[0] + "foodcoma score: " + value[1]);
-            // document.getElementById("recipes").innerHTML += " <h6 id=\"recipes\"><a href=\"/recipe/" + value[0] + "\"> " + value[1] + " foodCOMA score: " + value[2] + " </a></h6>";
-            // document.getElementById("recipes").innerHTML += " <h6 class=\"side_recipes\" id=\"recipes\"><a href=\"/recipe/" + value[0] + "\"> " + value[1] + " </a></h6>";
-            // document.getElementById("recipes").innerHTML += " <p class=\"score\">foodCOMA score: " + value[2] + " </p>";
 
             document.getElementById("recipes").innerHTML += "<div><p class=\"side_recipes\" id=\"recipes\"><a href=\"/recipe/" + value[0] + "\"> " + value[1] + " </a></p>";
             document.getElementById("recipes").innerHTML += "<p class=\"score\">foodCOMA score: " + value[2] + " </p></div><br>";
@@ -45,18 +42,10 @@ function getRecipes(params){
             console.log(obj.ingredients[i]);
         }
         document.getElementById("nutrients_title").innerHTML = "Recipe Nutrients:";
-        for(let j = 0; j < obj.Nutrients.length / 3; j+=3){
+        for(let j = 0; j < obj.Nutrients.length; j+=3){
             console.log("Js " + j + (j+1) + (j+2) + " fin");
             document.getElementById("nutrients").innerHTML += obj.Nutrients[j] + ": " + obj.Nutrients[j+1] + " " + obj.Nutrients[j+2] + "<br>";
-        }    
-        
+        }
     });
 
 };
-
-function compComaScores(one, two){
-    var valOne = one.value[1];
-    var valTwo = two.value[1];
-    console.log("v1 " + valOne);
-    console.log("v2 " + valTwo);
-}

@@ -207,9 +207,6 @@ public class Recommender {
   }
 
   public List<Double> getFoodComaScores() {
-    for (Double d : distances) {
-      System.out.println(d);
-    }
     return distances;
   }
 }
