@@ -136,40 +136,12 @@ public class User {
   }
 
   /**
-   * Function to add to the previousRecipes field.
-   * @param recipe - to add
-   */
-  public void addToPreviousRecipes(Recipe recipe) throws SQLException {
-    UserDatabase.insertToPrevRecipe(this.username, recipe.getUri());
-    previousRecipes.add(recipe);
-  }
-
-  /**
    * Function to get the dietary restrictions of a user.
    * @return - the dietaryRestrictions field.
    */
   public List<String> getDietaryRestrictions() {
     //returning defensive copy.
     return new ArrayList<>(this.dietaryRestrictions);
-  }
-
-  /**
-   * setter.
-   * @param newRestrictions - whole new list to replace old restrictions
-   */
-  public void setDietaryRestrictions(List<String> newRestrictions) throws SQLException {
-    for (String label : newRestrictions) {
-      UserDatabase.insertToRestriction(this.username, label);
-    }
-  }
-
-  /**
-   * add to dietary restrictions.
-   * @param label - the diet or health label to be added to dietaryRestrictions.
-   */
-  public void addToRestrictions(String label) throws SQLException {
-    UserDatabase.insertToRestriction(this.username, label);
-    dietaryRestrictions.add(label);
   }
 
   /**
