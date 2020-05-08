@@ -135,21 +135,4 @@ public class Recipe {
   public int hashCode() {
     return this.uri.hashCode();
   }
-
-  public boolean containsLabel(String lab) {
-    boolean ret = false;
-    for (String item : healthLabels) {
-      if (item.equals(lab)) {
-        ret = true;
-        break;
-      }
-    }
-    for (String item : dietLabels) {
-      if (item.equals(lab)) {
-        ret = true;
-        break;
-      }
-    }
-    return ret;
-  }
 }
