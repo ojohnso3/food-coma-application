@@ -86,6 +86,7 @@ public final class UserDatabase {
    * Function to check if a given username is already in the database.
    * @param username - the username to check for in the database.
    * @return - boolean representing whether the username is in the database.
+   * @throws SQLException for issue with db
    */
   public static boolean checkUsername(String username) throws SQLException {
     PreparedStatement prep = conn.prepareStatement("SELECT * FROM account WHERE username = ?");
@@ -98,6 +99,8 @@ public final class UserDatabase {
   /**
    * Function to insert a User object into the database.
    * @param user - a User object to be inserted.
+   * @throws SQLException for issue with db
+   * @throws AccountException for issue with accounts
    */
   public static void insertUser(User user) throws SQLException, AccountException {
 
@@ -114,7 +117,7 @@ public final class UserDatabase {
    * Function to insert to the restriction table.
    * @param username - the username to add the restriction to.
    * @param label - the label of the restriction.
-   * @throws SQLException
+   * @throws SQLException for issue with db
    */
   public static void insertToRestriction(String username, String label) throws SQLException {
     PreparedStatement prep = conn.prepareStatement("INSERT INTO restriction VALUES(\"" + username
@@ -126,6 +129,7 @@ public final class UserDatabase {
    * Function to insert to the prev_recipe table.
    * @param username - the username to add the recipe to.
    * @param uri - the uri of the previous Recipe.
+   * @throws SQLException for issues w db
    */
   public static void insertToPrevRecipe(String username, String uri) throws SQLException {
     PreparedStatement prep = conn.prepareStatement("INSERT INTO prev_recipe VALUES(\"" + username
@@ -137,6 +141,7 @@ public final class UserDatabase {
    * Function to insert to the nutrients table.
    * @param username - the username to add the recipe to.
    * @param code - the uri of the previous Recipe.
+   * @throws SQLException for issue w db
    */
   public static void insertToNutrients(String username, String code) throws SQLException {
     PreparedStatement prep = conn.prepareStatement("INSERT INTO nutrient VALUES(\"" + username
@@ -148,6 +153,7 @@ public final class UserDatabase {
    * Function to convert a ResultSet to a List.
    * @param rs - ResultSet to convert.
    * @return - the List representation of the ResultSet.
+   * @throws SQLException for issue w db
    */
   private static List<String> setToList(ResultSet rs) throws SQLException {
     List<String> toReturn = new ArrayList<>();
@@ -161,6 +167,11 @@ public final class UserDatabase {
    * Function to retrieve a User object from the database.
    * @param username - the username of the desired User.
    * @return - the User object that was retrieved from the database.
+   * @throws SQLException for issue w db
+   * @throws InterruptedException for interreuption with accessing user
+   * @throws IOException for issue with file
+   * @throws APIException for issue w API
+   * @throws AccountException for issue w accounts
    */
   public static User getUser(String username) throws SQLException, InterruptedException,
       IOException, APIException, AccountException {
