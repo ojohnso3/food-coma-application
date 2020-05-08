@@ -485,7 +485,7 @@ public class Gui {
         System.out.println("APIException in getting recommendations on "
             + "recipe page: " + e.getMessage());
       } catch (IOException e) {
-        System.out.println("RecommendationException in getting recommendations on "
+        System.out.println("IOException in getting recommendations on "
             + "recipe page: " + e.getMessage());
       }
 
@@ -566,7 +566,7 @@ public class Gui {
    * This class is a comparator which compares the foodCOMA scores to order
    * them before they are sent to the front end.
    */
-  private class CompRecipes implements Comparator<Map.Entry<String, String[]>> {
+  private static class CompRecipes implements Comparator<Map.Entry<String, String[]>> {
     @Override
     public int compare(Map.Entry<String, String[]> t1, Map.Entry<String, String[]> t2) {
       return Double.compare(Double.parseDouble(t1.getValue()[1]),
@@ -577,8 +577,8 @@ public class Gui {
 
   private void processScores(List<Double> scores) {
     // create lists, maxes, mins for each considered nutrient
-    Double max = Double.NEGATIVE_INFINITY;
-    Double min = Double.POSITIVE_INFINITY;
+    double max = Double.NEGATIVE_INFINITY;
+    double min = Double.POSITIVE_INFINITY;
 
     // check for max/min
     for (double score : scores) {
@@ -637,8 +637,8 @@ public class Gui {
       Map<String, String[]> nutrientConversion = NutrientInfo.getNutrients();
       List<String> fullNutrients = new ArrayList<String>();
 
-      for (int i = 0; i < userNutrients.size(); i++) {
-        String conversion = nutrientConversion.get(userNutrients.get(i))[0];
+      for (String userNutrient : userNutrients) {
+        String conversion = nutrientConversion.get(userNutrient)[0];
         fullNutrients.add(conversion);
       }
 
