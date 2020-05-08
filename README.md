@@ -126,3 +126,10 @@ not be as expected.
 Accreditations: We use a BCrypt solution in this project from: 
 https://howtodoinjava.com/security/how-to-generate-secure-password-hash-md5-sha-pbkdf2-bcrypt-examples/
 
+## Checkstyle Errors:
+I have a few extra method overrides in Account in case a user wanted to 
+login through the repl or some other cases, so there are some
+unused functions errors.
+
+The BCrypt solution has some checkstyle errors and uses tabs
+instead of spaces but I didn't want to mess with it.

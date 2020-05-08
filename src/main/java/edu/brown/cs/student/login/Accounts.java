@@ -34,10 +34,6 @@ public class Accounts {
    * @return the User, null if they don't exist
    */
   public static User getUser(String username) throws AccountException {
-    for (String k : nameUserMap.keySet()) {
-      System.out.println("USER NAME " + k + " done");
-      System.out.println("USER VAL " + nameUserMap.get(username) + " finished");
-    }
     User user = nameUserMap.get(username);
     if (user == null) {
       throw new AccountException("no user found with name " + username);
@@ -51,10 +47,6 @@ public class Accounts {
       throw new AccountException("ERROR: name-user map not initialized");
     } else {
       nameUserMap.put(user.getUsername(), user);
-//      for (String k : nameUserMap.keySet()) {
-//        System.out.println("USER " + k + " done");
-//      }
-//      System.out.println("ADDING USER " + nameUserMap.get(user.getUsername()) + " finished");
     }
   }
 
@@ -72,29 +64,22 @@ public class Accounts {
    * implementation
    */
   protected static void initializeMap(String path) throws AccountException {
-    System.out.println("START MAP MAKING");
     nameUserMap = new HashMap<>();
     // create users from info files and databases
     try (Scanner loginInfo = new Scanner(new FileReader(path))) {
       // get rid of header
       checkHeader(loginInfo.nextLine());
       // create each user
-      System.out.println("GETS HERE");
       while (loginInfo.hasNext()) {
         String line = loginInfo.nextLine();
-        System.out.println("LINE " + line);
         String[] login = line.split(",");
         String username = login[0];
-        System.out.println("USERNAME " + username);
         User user = UserDatabase.getUser(username);
         user.setRecommender(new Recommender(user));
-        System.out.println("Line 4 " + user);
         nameUserMap.putIfAbsent(username, user);
-        System.out.println("Line 5 " + nameUserMap.get(username));
       }
     } catch (Exception e) {
-      e.printStackTrace();
-      //throw new AccountException(e.getMessage());
+      throw new AccountException(e.getMessage());
     }
   }
 
@@ -185,9 +170,9 @@ public class Accounts {
   public static boolean checkLogin() throws AccountException {
     try (Scanner keyboard = new Scanner(System.in)) {
       // get input from user
-      System.out.println("Username: ");
+      System.out.print("Username: ");
       String inpUser = keyboard.nextLine();
-      System.out.println("Password: ");
+      System.out.print("Password: ");
       String inpPass = keyboard.nextLine();
       return checkLogin(inpUser, inpPass, LOGIN_INFO_PATH);
     }
@@ -212,7 +197,7 @@ public class Accounts {
         user = login[0];
         passHash = login[1];
         salt = login[2];
-        // check if user and pass match. BCrypt.checkpw(inpPass, passHash)
+        // check if user and pass match.
         if (user.equals(inpUser) && passHash.equals(BCrypt.hashpw(inpPass, salt))) {
           return true;
         }
@@ -268,8 +253,6 @@ public class Accounts {
    * @throws UserCreationException if false
    */
   private static boolean userExists(String user) throws UserCreationException {
-    System.out.println("USER EXISTS " + nameUserMap.containsKey(user));
-    System.out.println("USER VAL " + nameUserMap.get(user));
     if (!nameUserMap.containsKey(user)) {
       return true;
     } else {

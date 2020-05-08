@@ -50,6 +50,7 @@ public class Gui {
   private final Set<String> nutrients;
   private String prevQuery;
   private final Set<String> prevRestrictions;
+  private User scoresUser;
   private static final int CENT = 100;
 
   public Gui() {
@@ -421,8 +422,11 @@ public class Gui {
       String username = qm.value("username");
 
       User currUser = null;
+      System.out.println("pre BAGELS");
       try {
+        System.out.println("PIZZA BAGELS");
         currUser = Accounts.getUser(username);
+        Gui.this.setUserForScores(currUser);
       } catch (AccountException e) {
         System.out.println("AccountException getting User in RecipeHandler: " + e.getMessage());
       }
@@ -501,6 +505,9 @@ public class Gui {
         System.out.println("Prev REstrict: " + prevRestrictions);
         System.out.println("Recommender: " + recommender);
         System.out.println("User: " + currUser);
+        if (prevQuery == null) {
+          prevQuery = "";
+        }
         recommendations = recommender.makeRecommendation(prevQuery, new HashMap<>(),
                 prevRestrictions);
       } catch (RecommendationException e) {
@@ -523,13 +530,11 @@ public class Gui {
       for (Recipe recp : recommendations) {
         String[] fields = new String[2];
         fields[0] = recp.getLabel();
-        System.out.println("Weight inputted: " + foodComaScores.get(k).toString());
-        //only give 5 digits
-        String sc = foodComaScores.get(k).toString().substring(0, 5);
-        System.out.println("5 DIGITS: " + sc);
         // only give 2 decimals
-        System.out.println("TRUNCATED 2:" + new DecimalFormat("#.##").format(foodComaScores.get(k)));
-        fields[1] = sc;
+        String foodComaScore = new DecimalFormat("#.00").format(foodComaScores.get(k));
+        System.out.println("Weight inputted: " + foodComaScore);
+
+        fields[1] = foodComaScore;
         Collection coll = new ArrayList();
         coll.add(recp.getCompactUri());
         coll.add(fields[0]);
@@ -547,6 +552,7 @@ public class Gui {
 
       Map<String, double[]> nuts = currRecipe.getNutrientsMap();
       Map<String, String[]> nutrientConversion = NutrientInfo.getNutrients();
+      System.out.println("NUT CONV " + nutrientConversion);
 //      String[] nutValues = new String[nuts.keySet().size()*2];
 //      int i = 0;
 //      int j = 1;
@@ -564,15 +570,15 @@ public class Gui {
       int j = 1;
       int l = 2;
       for (String itm : nuts.keySet()) {
-        nutValues[i] = nutrientConversion.get(itm)[0];
-        nutValues[j] = Double.toString(nuts.get(itm)[1]);
-        nutValues[l] = nutrientConversion.get(itm)[1];
-        System.out.println("NUT i " + nutValues[i]);
-        System.out.println("NUT j " + nutValues[j]);
-        System.out.println("NUT l " + nutValues[l]);
-        i+=3;
-        j+=3;
-        l+=3;
+        System.out.println("ITEM " + itm);
+        if (nutrientConversion.keySet().contains(itm)) {
+          nutValues[i] = nutrientConversion.get(itm)[0];
+          nutValues[j] = Double.toString(nuts.get(itm)[1]);
+          nutValues[l] = nutrientConversion.get(itm)[1];
+          i+=3;
+          j+=3;
+          l+=3;
+        }
       }
       List<Map.Entry<String, String[]>> recipeListSet = new LinkedList<>(recipePageRecipes.entrySet());
       Collections.sort(recipeListSet, new CompRecipes());
@@ -594,6 +600,15 @@ public class Gui {
       return json;
     }
   }
+  
+  public void setUserForScores(User user) {
+    scoresUser = user;
+  }
+  
+  public User getUserForScores() {
+    return scoresUser;
+  }
+  
   private class CompRecipes implements Comparator<Map.Entry<String, String[]>>{
     @Override
     public int compare(Map.Entry<String, String[]> t1, Map.Entry<String, String[]> t2) {
@@ -602,6 +617,7 @@ public class Gui {
   }
 
   private void processScores(List<Double> scores) {
+//    List<String> strs = new ArrayList<>();
     // create lists, maxes, mins for each considered nutrient
     Double max = Double.NEGATIVE_INFINITY;
     Double min = Double.POSITIVE_INFINITY;
@@ -619,11 +635,16 @@ public class Gui {
     // normalize all nutrients for each type
     for (double score : scores) {
       if (max == min) {
-        return;
+        double fcs = score / 6 * 100;
+//        strs.add(String.valueOf(fcs));
+        scores.set(scores.indexOf(score), fcs);
       } else {
-        scores.set(scores.indexOf(score), CENT - (CENT * ((score - min) / (max - min))));
+        double fcs = CENT - (CENT * ((score - min) / (max - min)));
+//        strs.add(new DecimalFormat("#.00").format(fcs));
+        scores.set(scores.indexOf(score), fcs);
       }
     }
+//    return strs;
   }
 
 
@@ -659,17 +680,20 @@ public class Gui {
     @Override
     public Object handle(Request request, Response response) {
       QueryParamsMap map = request.queryMap();
-      String username = map.value("user");
-
-      User currUser = null;
-      try {
-        currUser = Accounts.getUser(username);
-      } catch (AccountException e) {
-        System.out.println("AccountException error: " + e.getMessage());
-      }
+//      String username = map.value("user");
+//
+//      User currUser = null;
+//      System.out.println("pre SQUARES");
+//      try {
+//        System.out.println("PIZZA SQUARES");
+//        currUser = Accounts.getUser(username);
+//      } catch (AccountException e) {
+//        System.out.println("AccountException error: " + e.getMessage());
+//      }
+      User currUser = Gui.this.getUserForScores();
       if (currUser == null) {
         Map<String, Object> noUserVars = ImmutableMap.of("title", "User", "output",
-                new HashMap<String, String>());
+                new ArrayList<String>());
         return GSON.toJson(noUserVars);
       }
       
@@ -682,9 +706,11 @@ public class Gui {
       
       
       List<String> weightsAsStrings = new ArrayList<String>();
+      Map<String, String[]> nutrientConversion = NutrientInfo.getNutrients();
 
       for (int i = 0; i < nutrients.size(); i++) {
-        weightsAsStrings.add(nutrients.get(i));
+        String conversion = nutrientConversion.get(nutrients.get(i))[0];
+        weightsAsStrings.add(conversion);
         weightsAsStrings.add(Double.toString(weights.get(i)));
       }
       
