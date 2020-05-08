@@ -580,3 +580,7 @@ input[type="submit"].survey_button {
     margin-left: 30%;
     margin-right: 30%;
 }
+
+#weights {
+    min-height: 150px;
+}
