@@ -29,6 +29,7 @@ public class User {
   private final List<String> dietaryRestrictions;
   private List<String> nutrients;
   private Recommender recommender;
+  private static final int NUM_HISTORY = 50;
 
   /**
    * Constructors for adding a new User on sign up.
@@ -128,6 +129,10 @@ public class User {
     Recipe r = RecipeDatabase.getRecipeFromURI(uri);
     UserDatabase.insertToPrevRecipe(this.username, uri);
     this.previousRecipes.add(r);
+
+    if (this.previousRecipes.size() > NUM_HISTORY) {
+      this.previousRecipes.remove(this.previousRecipes.size() - 1);
+    }
   }
 
   /**

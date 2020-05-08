@@ -506,6 +506,13 @@ public class Gui {
       } catch (RecommendationException e) {
         System.out.println("RecommendationException in getting recommendations on recipe page: " + e.getMessage());
       }
+//      } catch(InterruptedException e){
+//        System.out.println("InterruptedException in getting recommendations on recipe page: " + e.getMessage());
+//      } catch( IOException e){
+//        System.out.println("IOException in getting recommendations on recipe page: " + e.getMessage());
+//      } catch(APIException e) {
+//        System.out.println("APIException in getting recommendations on recipe page: " + e.getMessage());
+//      }
 
       Map<String, String[]> recipePageRecipes = new HashMap<>();
       Collection[] collections = new Collection[recommendations.size()];
@@ -580,7 +587,9 @@ public class Gui {
               .put("Nutrients", nutValues)
               .put("sortedArray", collections)
               .build();
-      return GSON.toJson(variables);
+      String json = GSON.toJson(variables);
+      System.out.println("JSON " + json);
+      return json;
     }
   }
   private class CompRecipes implements Comparator<Map.Entry<String, String[]>>{
