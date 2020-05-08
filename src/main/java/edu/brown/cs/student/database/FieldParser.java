@@ -9,7 +9,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import edu.brown.cs.student.food.Recipe;
-import edu.brown.cs.student.gui.Gui;
 
 import java.io.IOException;
 import java.net.URI;
@@ -17,7 +16,6 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -261,64 +259,59 @@ public final class FieldParser {
 //  }
 
 
-
-
-
-
-
-  public static Recipe[] getRecipesDBandAPI(String query, Set<String> restrictions, Map<String, String[]> paramsMap){
+  public static Recipe[] getRecipesDBandAPI(String query, Set<String> restrictions, Map<String,
+      String[]> paramsMap) {
     Recipe[] recipes = new Recipe[0];
-    try{
-    if(RecipeDatabase.checkQueryInDatabase(query, restrictions)){
-      System.out.println("QUERY ALREADY IN DB...Query: " + query + "Rest: " + RecipeDatabase.prepRestrictionsForDB(restrictions));
-      List<Recipe> exactQueryRecipes = RecipeDatabase.getQueryRecipesFromDatabase(query, restrictions, paramsMap);
-      System.out.println("uris size is " + exactQueryRecipes.size());
-      recipes = new Recipe[exactQueryRecipes.size()];
-      for(int i = 0; i < exactQueryRecipes.size(); i++){
-        recipes[i] = exactQueryRecipes.get(i);
+    try {
+      if (RecipeDatabase.checkQueryInDatabase(query, restrictions)) {
+        System.out.println("QUERY ALREADY IN DB...Query: " + query + "Rest: " + RecipeDatabase.prepRestrictionsForDB(restrictions));
+        List<Recipe> exactQueryRecipes = RecipeDatabase.getQueryRecipesFromDatabase(
+            query, restrictions, paramsMap);
+        System.out.println("uris size is " + exactQueryRecipes.size());
+        recipes = new Recipe[exactQueryRecipes.size()];
+        for (int i = 0; i < exactQueryRecipes.size(); i++) {
+          recipes[i] = exactQueryRecipes.get(i);
+        }
+  //      simpleRecipeList = Gui.this.setUpRecipesList(recipes);
+        System.out.println("Recipes size is (2): " + recipes.length);
       }
-//      simpleRecipeList = Gui.this.setUpRecipesList(recipes);
-      System.out.println("Recipes size is (2): " + recipes.length);
+      if (!RecipeDatabase.checkQueryInDatabase(query, restrictions) || recipes.length == 0) {
+        System.out.println("MAKING API CALL");
+        recipes = FieldParser.getRecipesFromQuery(query, restrictions, paramsMap);
+        String[] recipesForDb = new String[recipes.length];
+        for (int i = 0; i < recipes.length; i++) {
+          recipesForDb[i] = recipes[i].getUri();
+        }
+        if (!RecipeDatabase.checkQueryInDatabase(query, restrictions)) {
+          RecipeDatabase.insertQuery(query, recipesForDb, restrictions, paramsMap);
+        }
+  //      simpleRecipeList = Gui.this.setUpRecipesList(recipes);
+
+      }
+    } catch (IOException e) {
+      System.out.println("IOException getting recipes from query: " + e.getMessage());
+    } catch (InterruptedException e) {
+      System.out.println("InterruptedException getting recipes from query");
+    } catch (APIException e) {
+      System.out.println("API Exception getting recipes from query. Message:  " + e.getMessage());
+  //  } catch (ClassNotFoundException e) {
+  //    System.out.println("Database not found when loading during search");
+    } catch (SQLException e) {
+      System.out.println("SQLException in getting recipes from database: " + e.getMessage());
     }
-    if(!RecipeDatabase.checkQueryInDatabase(query, restrictions) || recipes.length == 0){
-      System.out.println("MAKING API CALL");
 
-      recipes = FieldParser.getRecipesFromQuery(query, restrictions, paramsMap);
-      String[] recipesForDb = new String[recipes.length];
-      for(int i = 0; i < recipes.length; i++){
-        recipesForDb[i] = recipes[i].getUri();
-      }
-      if(!RecipeDatabase.checkQueryInDatabase(query, restrictions)){
-        RecipeDatabase.insertQuery(query, recipesForDb, restrictions, paramsMap);
-      }
-//      simpleRecipeList = Gui.this.setUpRecipesList(recipes);
-
-    }
-
-  } catch (IOException e) {
-    System.out.println("IOException getting recipes from query: " + e.getMessage());
-  } catch (InterruptedException e) {
-    System.out.println("InterruptedException getting recipes from query");
-  } catch (APIException e) {
-    System.out.println("API Exception getting recipes from query. Message:  " + e.getMessage());
-//  } catch (ClassNotFoundException e) {
-//    System.out.println("Database not found when loading during search");
-  } catch (SQLException e){
-    System.out.println("SQLException in getting recipes from database: " + e.getMessage());
-  }
-
-      if(recipes.length==0){
-    List<Recipe> sim = RecipeDatabase.getSimilar(query, restrictions, paramsMap);
-    if(sim.size() > 0){
-      recipes = new Recipe[sim.size()];
-      System.out.println("SIMILAR HAS BEEN CALLED. SIZE OF SIMILAR IS: " + sim.size());
-      for(int i = 0; i < sim.size(); i ++){
+    if (recipes.length == 0) {
+      List<Recipe> sim = RecipeDatabase.getSimilar(query, restrictions, paramsMap);
+      if (sim.size() > 0) {
+        recipes = new Recipe[sim.size()];
+        System.out.println("SIMILAR HAS BEEN CALLED. SIZE OF SIMILAR IS: " + sim.size());
+        for (int i = 0; i < sim.size(); i++) {
           recipes[i] = sim.get(i);
+        }
+  //      simpleRecipeList = Gui.this.setUpRecipesList(recipes);
       }
-//      simpleRecipeList = Gui.this.setUpRecipesList(recipes);
     }
-  }
-      return recipes;
+    return recipes;
   }
 
 

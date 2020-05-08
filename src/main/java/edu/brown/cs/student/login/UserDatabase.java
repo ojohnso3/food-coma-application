@@ -33,7 +33,8 @@ public final class UserDatabase {
    * @throws ClassNotFoundException - thrown if there is an error when connecting to the file.
    * @throws SQLException - thrown if there is an error when connecting to the file.
    */
-  public static void loadDatabase(String fileName) throws FileNotFoundException, SQLException, ClassNotFoundException {
+  public static void loadDatabase(String fileName) throws FileNotFoundException, SQLException,
+      ClassNotFoundException {
     String ext = Files.getFileExtension(fileName);
     if (!ext.equals("sqlite3")) {
       throw new FileNotFoundException("ERROR: File must be .sqlite3!");
@@ -108,24 +109,6 @@ public final class UserDatabase {
     PreparedStatement prep = conn.prepareStatement("INSERT INTO account VALUES("
         + "\"" + user.getUsername() + "\");");
     prep.executeUpdate();
-//    for (String s : user.getDietaryRestrictions()) {
-//      prep = conn.prepareStatement("INSERT INTO restriction VALUES(\"" + user.getUsername()
-//          + "\",\"" + s + "\");");
-//      prep.executeUpdate();
-//    }
-//
-//    for (String s : user.getNutrients()) {
-//      prep = conn.prepareStatement("INSERT INTO nutrient VALUES(\"" + user.getUsername()
-//              + "\",\"" + s + "\");");
-//      prep.executeUpdate();
-//    }
-//
-//
-//    for (Recipe r : user.getPreviousRecipes()) {
-//      prep = conn.prepareStatement("INSERT INTO prev_recipe VALUES(\"" + user.getUsername()
-//          + "\",\"" + r.getUri() + "\");");
-//      prep.executeUpdate();
-//    }
   }
 
   /**
@@ -240,28 +223,4 @@ public final class UserDatabase {
     prep.setString(1, username);
     prep.executeUpdate();
   }
-
-  /**
-   * Database test function.
-   */
-  public static void testDatabaseFile() {
-    try {
-      User user = getUser("ugh");
-//      System.out.println(user.getUsername());
-//      System.out.println(user.getDietaryRestrictions());
-//      System.out.println(user.getPreviousRecipes().get(0).getUri());
-    } catch (SQLException e) {
-      e.printStackTrace();
-    } catch (IOException e) {
-      e.printStackTrace();
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    } catch (APIException e) {
-      e.printStackTrace();
-    } catch (AccountException e) {
-      e.printStackTrace();
-    }
-  }
-
-
 }

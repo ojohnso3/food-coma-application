@@ -1,9 +1,7 @@
 package edu.brown.cs.student.recommendation;
 
-import java.io.IOException;
 import java.util.*;
 
-import edu.brown.cs.student.database.APIException;
 import edu.brown.cs.student.database.FieldParser;
 import edu.brown.cs.student.food.NutrientInfo;
 import edu.brown.cs.student.food.Recipe;
@@ -39,8 +37,7 @@ public class Recommender {
    * @return List of recommended recipes
    */
   public List<Recipe> makeRecommendation(String input, Map<String, String[]> paramsMap,
-                                         Set<String> restrictions) throws
-          RecommendationException, InterruptedException, IOException, APIException {
+                                         Set<String> restrictions) throws RecommendationException {
     try {
       this.recipeTree = new KDTree<>(dim);
       // User History: get, nodify, and normalize previous recipes
@@ -52,7 +49,7 @@ public class Recommender {
       // Nutrients: get the nutrients to weight higher
       List<Double> weightedAxes = getNutrientIndices();
 
-      Recipe[] recipesArray = new Recipe[0];
+      Recipe[] recipesArray;
       // Query Recs: get recipes based on the query and put into a queried recipes tree
       recipesArray = FieldParser.getRecipesDBandAPI(input, restrictions, paramsMap);
       List<Recipe> recipesList = Arrays.asList(recipesArray);
@@ -74,7 +71,7 @@ public class Recommender {
         recommendations.add(node.getRecipe());
       }
       List<Double> distances = this.recipeTree.getDistances();
-      for(Double d : distances){
+      for (Double d : distances) {
         System.out.println(d);
       }
       return recommendations;
